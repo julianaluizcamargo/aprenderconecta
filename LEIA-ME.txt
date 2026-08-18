@@ -1,0 +1,64 @@
+APRENDERCONECTA — PROTÓTIPO DO SITE
+====================================
+
+CONTEÚDO DESTA PASTA
+--------------------
+index.html   → o site inteiro (todas as 9 telas em um único arquivo)
+LEIA-ME.txt  → este arquivo de instruções
+
+
+COMO PUBLICAR
+-------------
+
+OPÇÃO 1 — Netlify Drop (mais fácil, grátis, leva 1 minuto)
+1. Acesse: https://app.netlify.com/drop
+2. Arraste a PASTA descompactada (ou só o arquivo index.html) para a área indicada.
+3. Pronto. O site fica no ar com um endereço tipo:
+   https://nome-aleatorio.netlify.app
+4. Se quiser, crie uma conta grátis para trocar o nome do endereço
+   e depois conectar um domínio próprio (ex.: aprenderconecta.com.br).
+
+OPÇÃO 2 — Vercel
+1. Acesse: https://vercel.com
+2. Crie uma conta grátis e clique em "Add New → Project".
+3. Envie a pasta descompactada.
+
+OPÇÃO 3 — Hospedagem tradicional (Hostinger, HostGator, Locaweb...)
+1. Entre no painel da hospedagem e abra o Gerenciador de Arquivos.
+2. Vá até a pasta public_html
+3. Envie o arquivo index.html para dentro dela.
+4. O site já responde no seu domínio.
+
+
+IMPORTANTE
+----------
+Este é um PROTÓTIPO VISUAL. As telas são navegáveis e o layout é o definitivo,
+mas os dados são fictícios e ainda NÃO existe back-end. Ou seja:
+
+- os botões de cadastro, pagamento e envio de proposta ainda não gravam nada;
+- a busca e os filtros são ilustrativos;
+- os perfis, valores e avaliações são exemplos.
+
+Serve para: mostrar a ideia a sócios, investidores e desenvolvedores,
+validar o visual e a estrutura das telas, e servir de base para o
+desenvolvimento da plataforma real.
+
+
+TELAS INCLUÍDAS
+---------------
+1. Início            — apresentação, busca e os 4 caminhos da plataforma
+2. Aprender          — busca de professores, cursos e mentorias com filtros
+3. Ensinar           — criação de oferta pelo profissional + planos
+4. Serviços          — mural de pedidos e formulário de publicação
+5. Materiais         — Loja de Conhecimento (marketplace de materiais)
+6. Profissionais     — perfil completo com reputação, selos e avaliações
+7. Área do aluno     — painel com cursos, aulas, pedidos e carteira
+8. Painel profissional — ganhos, solicitações, ofertas e materiais
+9. Entrar/Criar conta — cadastro com escolha de papel
+
+
+COMO EDITAR
+-----------
+Abra o index.html em qualquer editor de texto (Bloco de Notas serve).
+Textos, nomes, valores e cores estão todos dentro desse arquivo.
+As cores da marca ficam logo no início, no bloco ":root".
