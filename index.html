@@ -429,11 +429,16 @@ ul{margin:0;padding:0;list-style:none;}
   .topbar-right .btn-ghost{display:none;}
   .wrap{padding:0 18px;}
 }
+
+/* links de texto da tela de entrar/criar conta */
+.link-auth{color:var(--brand-600);cursor:pointer;}
+.link-auth:hover{text-decoration:underline;}
+#auth-msg b{font-weight:700;}
 </style>
 </head>
 <body>
 
-<div class="proto">🔎 Protótipo visual — as telas são navegáveis, mas os dados são fictícios e ainda não há back-end.</div>
+<div class="proto">🔎 Protótipo — <b>cadastro e login já funcionam de verdade</b>. Os demais dados ainda são fictícios.</div>
 
 <!-- ========================= HEADER ========================= -->
 <header class="topbar">
@@ -451,8 +456,16 @@ ul{margin:0;padding:0;list-style:none;}
       <a href="#" data-v="perfil" onclick="go('perfil');return false;">Profissionais</a>
     </nav>
     <div class="topbar-right">
-      <button class="btn btn-ghost btn-sm" onclick="go('entrar')">Entrar</button>
-      <button class="btn btn-primary btn-sm" onclick="go('entrar')">Criar conta</button>
+      <!-- aparece quando NINGUÉM está logado -->
+      <span id="area-visitante" style="display:flex;align-items:center;gap:8px;">
+        <button class="btn btn-ghost btn-sm" onclick="irParaEntrar('entrar')">Entrar</button>
+        <button class="btn btn-primary btn-sm" onclick="irParaEntrar('criar')">Criar conta</button>
+      </span>
+      <!-- aparece quando ALGUÉM está logado -->
+      <span id="area-logado" style="display:none;align-items:center;gap:8px;">
+        <button class="btn btn-ghost btn-sm" onclick="abrirMeuPainel()">Meu painel</button>
+        <button class="btn btn-primary btn-sm" onclick="sair()">Sair</button>
+      </span>
       <button class="burger" onclick="document.getElementById('nav').classList.toggle('open')" aria-label="Menu">☰</button>
     </div>
   </div>
@@ -1506,7 +1519,7 @@ ul{margin:0;padding:0;list-style:none;}
     <div class="wrap" style="display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;">
       <div>
         <div class="crumb">Minha conta › Área do aluno</div>
-        <h1>Olá, Juliana 👋</h1>
+        <h1>Olá, <span id="nome-aluno">visitante</span> 👋</h1>
         <p>Você tem <b>2 aulas</b> esta semana e <b>1 atividade</b> aguardando entrega.</p>
       </div>
       <button class="btn btn-primary" onclick="go('aprender')">＋ Buscar novo professor</button>
@@ -1620,7 +1633,7 @@ ul{margin:0;padding:0;list-style:none;}
     <div class="wrap" style="display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;">
       <div>
         <div class="crumb">Minha conta › Painel profissional</div>
-        <h1>Painel profissional</h1>
+        <h1>Painel de <span id="nome-prof">visitante</span></h1>
         <p>Você recebeu <b>4 novas solicitações</b> e tem <b>R$ 1.284,00</b> a receber este mês.</p>
       </div>
       <button class="btn btn-accent" onclick="go('ensinar')">＋ Criar nova oferta</button>
@@ -1749,36 +1762,39 @@ ul{margin:0;padding:0;list-style:none;}
 
         <div class="panel" style="padding:28px;">
           <div class="auth-tabs">
-            <button class="on" onclick="pick(this)">Criar conta</button>
-            <button onclick="pick(this)">Entrar</button>
+            <button class="on" id="tab-criar" onclick="modoAuth('criar')">Criar conta</button>
+            <button id="tab-entrar" onclick="modoAuth('entrar')">Entrar</button>
           </div>
 
-          <div class="field">
+          <div class="field" id="bloco-papel">
             <label>Como você quer começar?</label>
             <div class="role-pick">
-              <button class="role on" onclick="pick(this)"><i>🎓</i>Quero aprender</button>
-              <button class="role" onclick="pick(this)"><i>👨‍🏫</i>Quero ensinar</button>
-              <button class="role" onclick="pick(this)"><i>💼</i>Quero contratar</button>
-              <button class="role" onclick="pick(this)"><i>📚</i>Quero vender material</button>
+              <button class="role on" data-papel="aluno" onclick="pick(this)"><i>🎓</i>Quero aprender</button>
+              <button class="role" data-papel="professor" onclick="pick(this)"><i>👨‍🏫</i>Quero ensinar</button>
+              <button class="role" data-papel="contratante" onclick="pick(this)"><i>💼</i>Quero contratar</button>
+              <button class="role" data-papel="vendedor" onclick="pick(this)"><i>📚</i>Quero vender material</button>
             </div>
             <small class="muted" style="display:block;font-size:.82rem;">Você pode mudar ou acumular papéis depois — a mesma conta serve para tudo.</small>
           </div>
 
-          <div class="field"><label>Nome completo</label><input type="text" placeholder="Seu nome"></div>
-          <div class="field"><label>E-mail</label><input type="email" placeholder="voce@email.com"></div>
-          <div class="field"><label>Senha</label><input type="password" placeholder="Mínimo de 8 caracteres"></div>
+          <div class="field" id="bloco-nome"><label>Nome completo</label><input type="text" id="in-nome" placeholder="Seu nome" autocomplete="name"></div>
+          <div class="field"><label>E-mail</label><input type="email" id="in-email" placeholder="voce@email.com" autocomplete="email"></div>
+          <div class="field"><label>Senha</label><input type="password" id="in-senha" placeholder="Mínimo de 8 caracteres" autocomplete="current-password"></div>
 
-          <label class="filter" style="margin:4px 0 18px;font-size:.85rem;">
-            <input type="checkbox" checked>Li e aceito os <b>Termos de uso</b> e a <b>Política de privacidade</b>.
+          <label class="filter" id="bloco-termos" style="margin:4px 0 18px;font-size:.85rem;">
+            <input type="checkbox" id="in-termos" checked>Li e aceito os <b>Termos de uso</b> e a <b>Política de privacidade</b>.
           </label>
 
-          <button class="btn btn-primary btn-block" onclick="go('painel')">Criar minha conta grátis</button>
+          <!-- avisos de erro e de sucesso aparecem aqui -->
+          <div id="auth-msg" style="display:none;padding:12px 14px;border-radius:10px;font-size:.88rem;line-height:1.45;margin-bottom:14px;"></div>
+
+          <button class="btn btn-primary btn-block" id="btn-auth" onclick="enviarAuth()">Criar minha conta grátis</button>
 
           <div style="display:flex;align-items:center;gap:12px;margin:22px 0;color:var(--muted);font-size:.83rem;">
             <span style="flex:1;height:1px;background:var(--line);"></span>ou<span style="flex:1;height:1px;background:var(--line);"></span>
           </div>
-          <button class="btn btn-ghost btn-block">Continuar com Google</button>
-          <p class="muted" style="font-size:.83rem;text-align:center;margin-top:18px;">Já tem conta? <b style="color:var(--brand-600);cursor:pointer;">Entrar</b></p>
+          <button class="btn btn-ghost btn-block" onclick="entrarComGoogle()">Continuar com Google</button>
+          <p class="muted" style="font-size:.83rem;text-align:center;margin-top:18px;" id="rodape-auth">Já tem conta? <b style="color:var(--brand-600);cursor:pointer;" onclick="modoAuth('entrar')">Entrar</b></p>
         </div>
 
         <p class="muted" style="font-size:.82rem;text-align:center;margin-top:20px;">Cadastro gratuito. Sem cartão de crédito.</p>
@@ -1841,8 +1857,57 @@ ul{margin:0;padding:0;list-style:none;}
   </div>
 </footer>
 
+<!-- ============================================================
+     BIBLIOTECA DO SUPABASE (o banco de dados)
+     Não precisa mexer nesta linha.
+     ============================================================ -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
+/* ================================================================
+   ⬇⬇⬇  A ÚNICA PARTE QUE VOCÊ PRECISA EDITAR  ⬇⬇⬇
+
+   Troque os dois textos abaixo pelos dados do SEU projeto no Supabase.
+   Onde achar (leia o PASSO-A-PASSO.md, item 4):
+     Supabase → ícone de engrenagem (Settings) → API Keys / Data API
+
+   Exemplo de como deve ficar:
+     var SUPABASE_URL   = 'https://abcdefghijklm.supabase.co';
+     var SUPABASE_CHAVE = 'sb_publishable_AbC123...';
+
+   Pode deixar essa chave no site: ela é pública de propósito.
+   Quem protege os dados são as regras de segurança do banco.
+   NUNCA cole aqui a chave chamada "secret" ou "service_role".
+   ================================================================ */
+
+var SUPABASE_URL   = 'https://pmpwkunsyuanrazrmomb.supabase.co/rest/v1/';
+var SUPABASE_CHAVE = 'sb_publishable_eSh0TNQPFfJEb15Oxl6ZIQ_1TA0w-Ko';
+
+/* ================================================================
+   ⬆⬆⬆  DAQUI PARA BAIXO NÃO PRECISA MEXER  ⬆⬆⬆
+   ================================================================ */
+
+
+/* ---------- ligação com o banco ---------- */
+var bancoConfigurado = SUPABASE_URL.indexOf('https://') === 0 && SUPABASE_CHAVE.length > 20;
+var sb = bancoConfigurado ? window.supabase.createClient(SUPABASE_URL, SUPABASE_CHAVE) : null;
+
+var usuario   = null;   // quem está logado (e-mail, id)
+var perfil    = null;   // nome e papel, vindos da tabela "perfis"
+var modoAtual = 'criar';
+
+var TELAS_PROTEGIDAS = ['painel', 'painel-prof'];
+
+
+/* ---------- navegação entre as telas ---------- */
 function go(view){
+  if(TELAS_PROTEGIDAS.indexOf(view) !== -1 && !usuario){
+    view = 'entrar';
+    setTimeout(function(){
+      modoAuth('entrar');
+      mostrarMsg('Entre na sua conta para acessar o painel.', 'aviso');
+    }, 0);
+  }
   document.querySelectorAll('.view').forEach(function(v){ v.classList.toggle('on', v.id === 'v-' + view); });
   document.querySelectorAll('.mainnav a').forEach(function(a){ a.classList.toggle('on', a.dataset.v === view); });
   document.getElementById('nav').classList.remove('open');
@@ -1859,7 +1924,201 @@ function fromHash(){
   if(!document.getElementById('v-'+h)) h = 'home';
   go(h);
 }
-window.addEventListener('DOMContentLoaded', fromHash);
+
+
+/* ---------- tela de entrar / criar conta ---------- */
+function irParaEntrar(modo){ go('entrar'); modoAuth(modo || 'criar'); }
+
+function modoAuth(modo){
+  modoAtual = (modo === 'entrar') ? 'entrar' : 'criar';
+  var criando = (modoAtual === 'criar');
+
+  document.getElementById('tab-criar').classList.toggle('on', criando);
+  document.getElementById('tab-entrar').classList.toggle('on', !criando);
+
+  document.getElementById('bloco-papel').style.display  = criando ? '' : 'none';
+  document.getElementById('bloco-nome').style.display   = criando ? '' : 'none';
+  document.getElementById('bloco-termos').style.display = criando ? '' : 'none';
+
+  document.getElementById('in-senha').setAttribute('autocomplete', criando ? 'new-password' : 'current-password');
+  document.getElementById('btn-auth').textContent = criando ? 'Criar minha conta grátis' : 'Entrar';
+
+  document.getElementById('rodape-auth').innerHTML = criando
+    ? 'Já tem conta? <b class="link-auth" onclick="modoAuth(\'entrar\')">Entrar</b>'
+    : 'Ainda não tem conta? <b class="link-auth" onclick="modoAuth(\'criar\')">Criar conta</b> &nbsp;·&nbsp; <b class="link-auth" onclick="recuperarSenha()">Esqueci a senha</b>';
+
+  esconderMsg();
+}
+
+function valor(id){ return (document.getElementById(id).value || '').trim(); }
+
+function mostrarMsg(texto, tipo){
+  var cores = {
+    erro:  ['#FEE2E2', '#991B1B'],
+    ok:    ['#DCFCE7', '#166534'],
+    aviso: ['#FEF3C7', '#92400E']
+  };
+  var c = cores[tipo] || cores.aviso;
+  var el = document.getElementById('auth-msg');
+  el.style.background = c[0];
+  el.style.color = c[1];
+  el.innerHTML = texto;
+  el.style.display = 'block';
+}
+function esconderMsg(){ document.getElementById('auth-msg').style.display = 'none'; }
+
+function traduzErro(m){
+  m = String(m || '');
+  if(/Invalid login credentials/i.test(m))          return 'E-mail ou senha incorretos.';
+  if(/already registered|already been registered/i.test(m)) return 'Esse e-mail já tem conta. Clique na aba <b>Entrar</b>.';
+  if(/Password should be at least/i.test(m))        return 'A senha é muito curta. Use pelo menos 6 caracteres.';
+  if(/Email not confirmed/i.test(m))                return 'Você ainda não confirmou o e-mail. Procure a mensagem do Supabase na sua caixa de entrada (e no spam).';
+  if(/Unable to validate email|invalid format/i.test(m)) return 'Esse e-mail não parece válido.';
+  if(/For security purposes|rate limit|Too many/i.test(m)) return 'Muitas tentativas seguidas. Espere um minuto e tente de novo.';
+  if(/Failed to fetch|NetworkError/i.test(m))       return 'Não consegui falar com o banco de dados. Confira se a URL e a chave no topo do arquivo estão corretas.';
+  return 'Não deu certo: ' + m;
+}
+
+async function enviarAuth(){
+  if(!sb){ mostrarMsg(textoSemConfig(), 'erro'); return; }
+  esconderMsg();
+
+  var email = valor('in-email');
+  var senha = valor('in-senha');
+  if(!email || !senha){ mostrarMsg('Preencha o e-mail e a senha.', 'erro'); return; }
+
+  var btn = document.getElementById('btn-auth');
+  var rotulo = btn.textContent;
+  btn.disabled = true; btn.textContent = 'Aguarde…';
+
+  try{
+    if(modoAtual === 'criar'){
+      var nome = valor('in-nome');
+      if(!nome){ mostrarMsg('Escreva seu nome completo.', 'erro'); return; }
+      if(!document.getElementById('in-termos').checked){
+        mostrarMsg('É preciso aceitar os termos de uso para criar a conta.', 'erro'); return;
+      }
+      var botaoPapel = document.querySelector('#bloco-papel .role.on');
+      var papel = botaoPapel ? botaoPapel.dataset.papel : 'aluno';
+
+      var r = await sb.auth.signUp({
+        email: email,
+        password: senha,
+        options: { data: { nome: nome, papel: papel } }
+      });
+      if(r.error) throw r.error;
+
+      if(!r.data.session){
+        mostrarMsg('Conta criada! Enviamos um e-mail de confirmação para <b>' + email +
+                   '</b>. Abra a mensagem, clique no link e depois volte aqui para entrar.', 'ok');
+        return;
+      }
+    } else {
+      var e = await sb.auth.signInWithPassword({ email: email, password: senha });
+      if(e.error) throw e.error;
+    }
+
+    await carregarSessao();
+    document.getElementById('in-senha').value = '';
+    document.getElementById('in-nome').value  = '';
+    abrirMeuPainel();
+
+  } catch(err){
+    mostrarMsg(traduzErro(err && err.message), 'erro');
+  } finally {
+    btn.disabled = false; btn.textContent = rotulo;
+  }
+}
+
+async function entrarComGoogle(){
+  if(!sb){ mostrarMsg(textoSemConfig(), 'erro'); return; }
+  var r = await sb.auth.signInWithOAuth({
+    provider: 'google',
+    options: { redirectTo: location.origin + location.pathname + '#painel' }
+  });
+  if(r.error){
+    mostrarMsg('O login com Google ainda não foi ativado. No Supabase, vá em <b>Authentication → Sign In / Providers → Google</b> para ligar. Por enquanto, use e-mail e senha.', 'aviso');
+  }
+}
+
+async function recuperarSenha(){
+  if(!sb){ mostrarMsg(textoSemConfig(), 'erro'); return; }
+  var email = valor('in-email');
+  if(!email){ mostrarMsg('Escreva seu e-mail no campo acima e clique de novo em "Esqueci a senha".', 'aviso'); return; }
+  var r = await sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin + location.pathname });
+  if(r.error) mostrarMsg(traduzErro(r.error.message), 'erro');
+  else mostrarMsg('Enviamos um link de redefinição para <b>' + email + '</b>.', 'ok');
+}
+
+
+/* ---------- sessão: quem está logado ---------- */
+async function carregarSessao(){
+  if(!sb){ atualizarInterface(); return; }
+  var s = await sb.auth.getSession();
+  usuario = (s.data && s.data.session) ? s.data.session.user : null;
+  perfil = null;
+  if(usuario){
+    var p = await sb.from('perfis').select('nome, papel').eq('id', usuario.id).maybeSingle();
+    perfil = p.data || null;
+  }
+  atualizarInterface();
+}
+
+function atualizarInterface(){
+  var logado = !!usuario;
+  document.getElementById('area-visitante').style.display = logado ? 'none' : 'flex';
+  document.getElementById('area-logado').style.display    = logado ? 'flex' : 'none';
+
+  var nome = (perfil && perfil.nome) || (usuario && usuario.email) || 'visitante';
+  var primeiro = String(nome).split(' ')[0];
+  document.getElementById('nome-aluno').textContent = primeiro;
+  document.getElementById('nome-prof').textContent  = primeiro;
+}
+
+function abrirMeuPainel(){
+  var papel = perfil && perfil.papel;
+  go((papel === 'professor' || papel === 'vendedor') ? 'painel-prof' : 'painel');
+}
+
+async function sair(){
+  if(sb) await sb.auth.signOut();
+  usuario = null; perfil = null;
+  atualizarInterface();
+  go('home');
+}
+
+
+/* ---------- aviso caso as chaves não tenham sido preenchidas ---------- */
+function textoSemConfig(){
+  return 'O banco de dados ainda não foi ligado. Abra o <b>index.html</b> num editor de texto e preencha ' +
+         '<b>SUPABASE_URL</b> e <b>SUPABASE_CHAVE</b> lá no comecinho do bloco &lt;script&gt;. ' +
+         'O arquivo PASSO-A-PASSO.md explica onde achar esses dois valores.';
+}
+function avisarSemConfig(){
+  var faixa = document.createElement('div');
+  faixa.style.cssText = 'background:#7F1D1D;color:#fff;padding:10px 16px;font-size:.86rem;text-align:center;';
+  faixa.innerHTML = '⚠️ Banco de dados não configurado — preencha <b>SUPABASE_URL</b> e <b>SUPABASE_CHAVE</b> no index.html. ' +
+                    'O site funciona normalmente, mas cadastro e login ainda não gravam nada.';
+  document.body.insertBefore(faixa, document.body.firstChild);
+}
+
+
+/* ---------- início ---------- */
+window.addEventListener('DOMContentLoaded', async function(){
+  modoAuth('criar');
+  if(sb){
+    await carregarSessao();
+    sb.auth.onAuthStateChange(function(evento){
+      if(evento === 'SIGNED_IN' || evento === 'SIGNED_OUT' || evento === 'USER_UPDATED'){
+        setTimeout(carregarSessao, 0);
+      }
+    });
+  } else {
+    atualizarInterface();
+    avisarSemConfig();
+  }
+  fromHash();
+});
 window.addEventListener('hashchange', fromHash);
 </script>
 </body>
