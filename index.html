@@ -430,6 +430,11 @@ ul{margin:0;padding:0;list-style:none;}
   .wrap{padding:0 18px;}
 }
 
+/* o card de prévia fica dentro de um .panel, e a regra .panel h4
+   deixava o título em maiúsculas e cinza. aqui a gente devolve o
+   visual normal de card de oferta. */
+.panel .offer-body h4{font-size:1.02rem;text-transform:none;letter-spacing:0;color:var(--ink);font-weight:700;margin-bottom:8px;}
+
 /* links de texto da tela de entrar/criar conta */
 .link-auth{color:var(--brand-600);cursor:pointer;}
 .link-auth:hover{text-decoration:underline;}
@@ -438,7 +443,7 @@ ul{margin:0;padding:0;list-style:none;}
 </head>
 <body>
 
-<div class="proto">🔎 Protótipo — <b>cadastro e login já funcionam de verdade</b>. Os demais dados ainda são fictícios.</div>
+<div class="proto">🔎 <b>Contas e ofertas já funcionam de verdade.</b> Serviços, materiais e pagamentos ainda são telas de exemplo.</div>
 
 <!-- ========================= HEADER ========================= -->
 <header class="topbar">
@@ -751,8 +756,8 @@ ul{margin:0;padding:0;list-style:none;}
       <p>Professores, cursos, mentorias e grupos de estudo — filtre por área, formato e faixa de preço.</p>
       <div class="searchbar" style="margin:24px 0 0;max-width:640px;box-shadow:var(--sh-1);border:1px solid var(--line);">
         <i>🔎</i>
-        <input type="text" placeholder="Ex.: matemática, inglês, alfabetização, violão..." aria-label="Buscar aulas">
-        <button class="btn btn-primary">Buscar</button>
+        <input type="text" id="busca-aprender" placeholder="Ex.: matemática, inglês, alfabetização, violão..." aria-label="Buscar aulas" onkeydown="if(event.key==='Enter')filtrarOfertas()" oninput="filtrarOfertas()">
+        <button class="btn btn-primary" onclick="filtrarOfertas()">Buscar</button>
       </div>
     </div>
   </div>
@@ -762,31 +767,31 @@ ul{margin:0;padding:0;list-style:none;}
 
       <!-- FILTROS -->
       <aside>
-        <div class="panel">
+        <div class="panel" id="filtros-area">
           <h4>Área de conhecimento</h4>
-          <label class="filter"><input type="checkbox" checked>Matemática <span class="muted">(3.870)</span></label>
-          <label class="filter"><input type="checkbox">Idiomas <span class="muted">(2.150)</span></label>
-          <label class="filter"><input type="checkbox">Tecnologia <span class="muted">(1.480)</span></label>
-          <label class="filter"><input type="checkbox">Educação e Pedagogia <span class="muted">(1.240)</span></label>
-          <label class="filter"><input type="checkbox">Música <span class="muted">(640)</span></label>
-          <label class="filter"><input type="checkbox">Ciências <span class="muted">(890)</span></label>
+          <label class="filter"><input type="checkbox" data-area="Matemática" onchange="filtrarOfertas()">Matemática <span class="muted" data-conta="Matemática">(0)</span></label>
+          <label class="filter"><input type="checkbox" data-area="Idiomas" onchange="filtrarOfertas()">Idiomas <span class="muted" data-conta="Idiomas">(0)</span></label>
+          <label class="filter"><input type="checkbox" data-area="Tecnologia" onchange="filtrarOfertas()">Tecnologia <span class="muted" data-conta="Tecnologia">(0)</span></label>
+          <label class="filter"><input type="checkbox" data-area="Educação e Pedagogia" onchange="filtrarOfertas()">Educação e Pedagogia <span class="muted" data-conta="Educação e Pedagogia">(0)</span></label>
+          <label class="filter"><input type="checkbox" data-area="Música" onchange="filtrarOfertas()">Música <span class="muted" data-conta="Música">(0)</span></label>
+          <label class="filter"><input type="checkbox" data-area="Ciências" onchange="filtrarOfertas()">Ciências <span class="muted" data-conta="Ciências">(0)</span></label>
         </div>
-        <div class="panel">
+        <div class="panel" id="filtros-formato">
           <h4>Formato</h4>
-          <label class="filter"><input type="checkbox" checked>Aula individual</label>
-          <label class="filter"><input type="checkbox">Turma</label>
-          <label class="filter"><input type="checkbox">Aula ao vivo</label>
-          <label class="filter"><input type="checkbox">Curso gravado</label>
-          <label class="filter"><input type="checkbox">Mentoria</label>
-          <label class="filter"><input type="checkbox">Grupo de estudos</label>
+          <label class="filter"><input type="checkbox" data-formato="Aula individual" onchange="filtrarOfertas()">Aula individual</label>
+          <label class="filter"><input type="checkbox" data-formato="Turma" onchange="filtrarOfertas()">Turma</label>
+          <label class="filter"><input type="checkbox" data-formato="Aula ao vivo" onchange="filtrarOfertas()">Aula ao vivo</label>
+          <label class="filter"><input type="checkbox" data-formato="Curso gravado" onchange="filtrarOfertas()">Curso gravado</label>
+          <label class="filter"><input type="checkbox" data-formato="Mentoria" onchange="filtrarOfertas()">Mentoria</label>
+          <label class="filter"><input type="checkbox" data-formato="Grupo de estudos" onchange="filtrarOfertas()">Grupo de estudos</label>
         </div>
         <div class="panel">
-          <h4>Preço por hora</h4>
-          <div class="field" style="margin-bottom:8px;"><input type="range" min="20" max="200" value="80" style="padding:0;border:0;accent-color:var(--brand-600);"></div>
-          <div style="display:flex;justify-content:space-between;font-size:.83rem;font-weight:700;color:var(--ink-2);"><span>R$ 20</span><span>até R$ 80</span></div>
+          <h4>Preço máximo</h4>
+          <div class="field" style="margin-bottom:8px;"><input type="range" id="filtro-preco" min="0" max="500" step="10" value="500" style="padding:0;border:0;accent-color:var(--brand-600);" oninput="filtrarOfertas()"></div>
+          <div style="display:flex;justify-content:space-between;font-size:.83rem;font-weight:700;color:var(--ink-2);"><span>R$ 0</span><span id="rotulo-preco">qualquer valor</span></div>
         </div>
         <div class="panel">
-          <h4>Avaliação mínima</h4>
+          <h4>Avaliação mínima <small class="muted" style="font-weight:600;font-size:.72rem;">· em breve</small></h4>
           <label class="filter"><input type="radio" name="av" checked>★ 4,5 ou mais</label>
           <label class="filter"><input type="radio" name="av">★ 4,0 ou mais</label>
           <label class="filter"><input type="radio" name="av">Qualquer</label>
@@ -795,114 +800,33 @@ ul{margin:0;padding:0;list-style:none;}
 
       <!-- RESULTADOS -->
       <div>
-        <div class="pill-row">
-          <button class="pill on" onclick="pick(this)">Todos</button>
-          <button class="pill" onclick="pick(this)">Aulas particulares</button>
-          <button class="pill" onclick="pick(this)">Cursos</button>
-          <button class="pill" onclick="pick(this)">Mentorias</button>
-          <button class="pill" onclick="pick(this)">Grupos de estudo</button>
+        <div class="pill-row" id="atalhos-formato">
+          <button class="pill on" data-grupo="" onclick="pick(this);filtrarOfertas()">Todos</button>
+          <button class="pill" data-grupo="Aula individual" onclick="pick(this);filtrarOfertas()">Aulas particulares</button>
+          <button class="pill" data-grupo="Curso gravado" onclick="pick(this);filtrarOfertas()">Cursos</button>
+          <button class="pill" data-grupo="Mentoria" onclick="pick(this);filtrarOfertas()">Mentorias</button>
+          <button class="pill" data-grupo="Grupo de estudos" onclick="pick(this);filtrarOfertas()">Grupos de estudo</button>
         </div>
         <div class="toolbar">
-          <span class="count">1.284 resultados para <b>“matemática”</b></span>
-          <select style="margin-left:auto;">
-            <option>Mais relevantes</option>
-            <option>Melhor avaliados</option>
-            <option>Menor preço</option>
-            <option>Mais contratados</option>
+          <span class="count" id="contador-ofertas">Carregando ofertas…</span>
+          <select style="margin-left:auto;" id="ordenar-ofertas" onchange="filtrarOfertas()">
+            <option value="recentes">Mais recentes</option>
+            <option value="barato">Menor preço</option>
+            <option value="caro">Maior preço</option>
+            <option value="az">Título (A–Z)</option>
           </select>
         </div>
 
-        <div class="grid g2">
+        <div class="grid g2" id="lista-ofertas"></div>
 
-          <article class="card card-h offer">
-            <div class="offer-top">
-              <div class="ava a2">CR</div>
-              <div class="offer-who"><b>Carlos Ribeiro</b><small>Licenciado em Matemática · UFMT</small>
-                <div class="rate"><i>★</i>4,9 <span>(387)</span></div></div>
-            </div>
-            <div class="offer-body">
-              <h4>Matemática para Ensino Fundamental e Médio</h4>
-              <p>Álgebra, geometria e matemática básica. Aulas com resolução guiada e lista de exercícios semanal.</p>
-              <div class="tags"><span class="tag tag-b">Aula individual</span><span class="tag">Online</span><span class="tag tag-a">🔥 Mais contratado</span></div>
-            </div>
-            <div class="offer-foot"><span class="price">R$ 40 <small>/hora</small></span><button class="btn btn-primary btn-sm" onclick="go('perfil')">Ver perfil</button></div>
-          </article>
-
-          <article class="card card-h offer">
-            <div class="offer-top">
-              <div class="ava a1">MS</div>
-              <div class="offer-who"><b>Maria Silva</b><small>Pedagoga · Especialista em Educação</small>
-                <div class="rate"><i>★</i>4,9 <span>(214)</span></div></div>
-            </div>
-            <div class="offer-body">
-              <h4>Alfabetização e matemática básica — Fundamental I</h4>
-              <p>Plano de estudos individual, material próprio incluso e relatório mensal de evolução para a família.</p>
-              <div class="tags"><span class="tag tag-b">Aula individual</span><span class="tag tag-g">🏅 Verificada</span><span class="tag">Presencial · Cuiabá</span></div>
-            </div>
-            <div class="offer-foot"><span class="price">R$ 55 <small>/hora</small></span><button class="btn btn-primary btn-sm" onclick="go('perfil')">Ver perfil</button></div>
-          </article>
-
-          <article class="card card-h offer">
-            <div class="offer-top">
-              <div class="ava a4">RP</div>
-              <div class="offer-who"><b>Rafael Pinto</b><small>Engenheiro · Mestre em Ensino de Ciências</small>
-                <div class="rate"><i>★</i>4,8 <span>(521)</span></div></div>
-            </div>
-            <div class="offer-body">
-              <h4>Curso gravado: Matemática do zero ao ENEM</h4>
-              <p>48 aulas, 320 exercícios resolvidos e 6 simulados. Acesso vitalício com certificado de conclusão.</p>
-              <div class="tags"><span class="tag tag-b">Curso gravado</span><span class="tag tag-g">🎓 Certificado</span><span class="tag">48 aulas</span></div>
-            </div>
-            <div class="offer-foot"><span class="price">R$ 189 <small>/ curso</small></span><button class="btn btn-primary btn-sm" onclick="go('perfil')">Ver curso</button></div>
-          </article>
-
-          <article class="card card-h offer">
-            <div class="offer-top">
-              <div class="ava a5">BM</div>
-              <div class="offer-who"><b>Beatriz Moura</b><small>Professora de Matemática · 12 anos de sala</small>
-                <div class="rate"><i>★</i>5,0 <span>(143)</span></div></div>
-            </div>
-            <div class="offer-body">
-              <h4>Grupo de estudos: preparação para concursos</h4>
-              <p>Turmas de até 8 alunos, encontros duas vezes por semana com correção coletiva e simulados.</p>
-              <div class="tags"><span class="tag tag-b">Grupo de estudos</span><span class="tag">Turma pequena</span><span class="tag tag-g">🏆 Especialista</span></div>
-            </div>
-            <div class="offer-foot"><span class="price">R$ 120 <small>/mês</small></span><button class="btn btn-primary btn-sm" onclick="go('perfil')">Ver perfil</button></div>
-          </article>
-
-          <article class="card card-h offer">
-            <div class="offer-top">
-              <div class="ava a6">TG</div>
-              <div class="offer-who"><b>Thiago Gomes</b><small>Estatístico · Mentor acadêmico</small>
-                <div class="rate"><i>★</i>4,9 <span>(88)</span></div></div>
-            </div>
-            <div class="offer-body">
-              <h4>Mentoria em estatística aplicada à pesquisa</h4>
-              <p>Para quem está no TCC, dissertação ou tese. Análise de dados, SPSS, R e interpretação de resultados.</p>
-              <div class="tags"><span class="tag tag-b">Mentoria</span><span class="tag">Pós-graduação</span><span class="tag tag-a">Vagas limitadas</span></div>
-            </div>
-            <div class="offer-foot"><span class="price">R$ 95 <small>/hora</small></span><button class="btn btn-primary btn-sm" onclick="go('perfil')">Ver perfil</button></div>
-          </article>
-
-          <article class="card card-h offer">
-            <div class="offer-top">
-              <div class="ava a3">LC</div>
-              <div class="offer-who"><b>Letícia Campos</b><small>Psicopedagoga</small>
-                <div class="rate"><i>★</i>4,9 <span>(176)</span></div></div>
-            </div>
-            <div class="offer-body">
-              <h4>Dificuldades de aprendizagem em matemática</h4>
-              <p>Atendimento psicopedagógico para discalculia e bloqueio com números. Avaliação inicial gratuita.</p>
-              <div class="tags"><span class="tag tag-b">Atendimento</span><span class="tag tag-g">🏅 Verificada</span><span class="tag">Online</span></div>
-            </div>
-            <div class="offer-foot"><span class="price">R$ 130 <small>/sessão</small></span><button class="btn btn-primary btn-sm" onclick="go('perfil')">Ver perfil</button></div>
-          </article>
-
+        <div id="vazio-ofertas" style="display:none;text-align:center;padding:54px 20px;">
+          <div style="font-size:2.4rem;margin-bottom:10px;">🔍</div>
+          <h3 class="h3" style="margin-bottom:8px;">Nenhuma oferta por aqui ainda</h3>
+          <p class="muted" style="font-size:.92rem;max-width:420px;margin:0 auto 20px;">Assim que um professor publicar uma oferta, ela aparece nesta lista automaticamente.</p>
+          <button class="btn btn-primary" onclick="go('ensinar')">Quero publicar a primeira</button>
         </div>
 
-        <div style="text-align:center;margin-top:34px;">
-          <button class="btn btn-ghost">Carregar mais resultados</button>
-        </div>
+
       </div>
     </div>
   </div>
@@ -934,64 +858,71 @@ ul{margin:0;padding:0;list-style:none;}
           <h3 class="h3" style="margin-bottom:6px;">Criar uma nova oferta</h3>
           <p class="muted" style="font-size:.9rem;margin-bottom:24px;">Preencha os campos abaixo. Você pode editar tudo depois.</p>
 
+          <!-- avisos: visitante sem conta, ou conta que ainda não é professor -->
+          <div id="portao-ensinar" style="display:none;padding:18px 20px;border-radius:12px;margin-bottom:24px;"></div>
+
+          <div id="form-oferta">
           <div class="field">
             <label>Título da oferta</label>
-            <input type="text" value="Aulas de Matemática para Ensino Fundamental">
+            <input type="text" id="of-titulo" placeholder="Ex.: Aulas de Matemática para Ensino Fundamental" oninput="atualizarPrevia()">
             <small>Seja específico: o que você ensina e para quem.</small>
           </div>
 
           <div class="grid g2" style="gap:16px;">
             <div class="field">
               <label>Área de conhecimento</label>
-              <select><option>Matemática</option><option>Idiomas</option><option>Tecnologia</option><option>Educação e Pedagogia</option><option>Música</option><option>Ciências</option></select>
+              <select id="of-area"><option>Matemática</option><option>Idiomas</option><option>Tecnologia</option><option>Educação e Pedagogia</option><option>Música</option><option>Ciências</option></select>
             </div>
             <div class="field">
               <label>Nível</label>
-              <select><option>Ensino Fundamental</option><option>Ensino Médio</option><option>Técnico</option><option>Graduação</option><option>Pós-graduação</option></select>
+              <select id="of-nivel"><option>Ensino Fundamental</option><option>Ensino Médio</option><option>Técnico</option><option>Graduação</option><option>Pós-graduação</option></select>
             </div>
           </div>
 
           <div class="field">
             <label>Formato da oferta</label>
-            <div class="pill-row" style="margin-bottom:0;">
-              <button class="pill on" onclick="pick(this)">Aula individual</button>
-              <button class="pill" onclick="pick(this)">Turma</button>
-              <button class="pill" onclick="pick(this)">Aula ao vivo</button>
-              <button class="pill" onclick="pick(this)">Curso gravado</button>
-              <button class="pill" onclick="pick(this)">Mentoria</button>
-              <button class="pill" onclick="pick(this)">Grupo de estudos</button>
+            <div class="pill-row" id="of-formato" style="margin-bottom:0;">
+              <button class="pill on" onclick="pick(this);atualizarPrevia()">Aula individual</button>
+              <button class="pill" onclick="pick(this);atualizarPrevia()">Turma</button>
+              <button class="pill" onclick="pick(this);atualizarPrevia()">Aula ao vivo</button>
+              <button class="pill" onclick="pick(this);atualizarPrevia()">Curso gravado</button>
+              <button class="pill" onclick="pick(this);atualizarPrevia()">Mentoria</button>
+              <button class="pill" onclick="pick(this);atualizarPrevia()">Grupo de estudos</button>
             </div>
           </div>
 
           <div class="field">
             <label>Descrição</label>
-            <textarea rows="4">Aulas de matemática com foco em álgebra, geometria e matemática básica. Material próprio, lista de exercícios semanal e acompanhamento do desempenho.</textarea>
+            <textarea rows="4" id="of-desc" placeholder="Conte como são suas aulas, que material você usa e o que o aluno leva de resultado." oninput="atualizarPrevia()"></textarea>
           </div>
 
           <div class="grid g2" style="gap:16px;">
             <div class="field">
-              <label>Valor</label>
-              <input type="text" value="R$ 40,00">
-              <small>Você recebe R$ 36,00 por hora após a comissão.</small>
+              <label>Valor (R$)</label>
+              <input type="number" id="of-valor" min="0" step="0.01" placeholder="40" oninput="atualizarPrevia()">
+              <small id="of-liquido">A plataforma fica com 10% de comissão.</small>
             </div>
             <div class="field">
               <label>Cobrança por</label>
-              <select><option>Hora</option><option>Aula</option><option>Pacote mensal</option><option>Curso completo</option></select>
+              <select id="of-cobranca" onchange="atualizarPrevia()"><option>Hora</option><option>Aula</option><option>Pacote mensal</option><option>Curso completo</option></select>
             </div>
           </div>
 
           <div class="field">
             <label>Modalidade</label>
-            <div class="pill-row" style="margin-bottom:0;">
-              <button class="pill on" onclick="pick(this)">Online</button>
-              <button class="pill" onclick="pick(this)">Presencial</button>
-              <button class="pill" onclick="pick(this)">Ambos</button>
+            <div class="pill-row" id="of-modalidade" style="margin-bottom:0;">
+              <button class="pill on" onclick="pick(this);atualizarPrevia()">Online</button>
+              <button class="pill" onclick="pick(this);atualizarPrevia()">Presencial</button>
+              <button class="pill" onclick="pick(this);atualizarPrevia()">Ambos</button>
             </div>
           </div>
 
+          <div id="msg-oferta" style="display:none;padding:12px 14px;border-radius:10px;font-size:.88rem;line-height:1.45;margin-top:20px;"></div>
+
           <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:26px;">
-            <button class="btn btn-primary" onclick="go('painel-prof')">Publicar oferta</button>
-            <button class="btn btn-ghost">Salvar rascunho</button>
+            <button class="btn btn-primary" id="btn-publicar" onclick="publicarOferta()">Publicar oferta</button>
+            <button class="btn btn-ghost" onclick="limparOferta()">Limpar formulário</button>
+          </div>
           </div>
         </div>
 
@@ -1001,16 +932,15 @@ ul{margin:0;padding:0;list-style:none;}
             <h4>Prévia da sua oferta</h4>
             <article class="card offer" style="box-shadow:none;">
               <div class="offer-top">
-                <div class="ava a2">CR</div>
-                <div class="offer-who"><b>Carlos Ribeiro</b><small>Licenciado em Matemática</small>
-                  <div class="rate"><i>★</i>4,9 <span>(387)</span></div></div>
+                <div class="ava a2" id="pv-ini">??</div>
+                <div class="offer-who"><b id="pv-nome">Seu nome</b><small id="pv-area">Área de conhecimento</small></div>
               </div>
               <div class="offer-body">
-                <h4>Aulas de Matemática para Ensino Fundamental</h4>
-                <p>Álgebra, geometria e matemática básica com material próprio.</p>
-                <div class="tags"><span class="tag tag-b">Aula individual</span><span class="tag">Online</span></div>
+                <h4 id="pv-titulo">Título da sua oferta</h4>
+                <p id="pv-desc">A descrição aparece aqui conforme você digita.</p>
+                <div class="tags" id="pv-tags"><span class="tag tag-b">Aula individual</span><span class="tag">Online</span></div>
               </div>
-              <div class="offer-foot"><span class="price">R$ 40 <small>/hora</small></span><span class="tag tag-g">Prévia</span></div>
+              <div class="offer-foot"><span class="price" id="pv-preco">R$ 0 <small>/hora</small></span><span class="tag tag-g">Prévia</span></div>
             </article>
           </div>
 
@@ -1706,23 +1636,9 @@ ul{margin:0;padding:0;list-style:none;}
           </div>
 
           <div class="panel">
-            <h4>Minhas ofertas ativas</h4>
-            <div class="list-item">
-              <div class="g"><b>Alfabetização e reforço — Fundamental I</b><small>Aula individual · 42 contratações</small></div>
-              <span class="badge-st st-ok">Ativa</span>
-            </div>
-            <div class="list-item">
-              <div class="g"><b>Grupo de leitura — até 6 alunos</b><small>Grupo de estudos · 4 vagas restantes</small></div>
-              <span class="badge-st st-ok">Ativa</span>
-            </div>
-            <div class="list-item">
-              <div class="g"><b>Sequências didáticas sob medida</b><small>Serviço · 8 pedidos concluídos</small></div>
-              <span class="badge-st st-ok">Ativa</span>
-            </div>
-            <div class="list-item">
-              <div class="g"><b>Curso: Alfabetização na prática</b><small>Curso gravado · em produção</small></div>
-              <span class="badge-st st-wait">Rascunho</span>
-            </div>
+            <h4>Minhas ofertas <span class="tag tag-g" style="margin-left:6px;">dados reais</span></h4>
+            <div id="minhas-ofertas"><p class="muted" style="font-size:.88rem;">Carregando…</p></div>
+            <button class="btn btn-accent btn-block btn-sm" style="margin-top:16px;" onclick="go('ensinar')">＋ Criar nova oferta</button>
           </div>
 
           <div class="panel">
@@ -1865,15 +1781,17 @@ ul{margin:0;padding:0;list-style:none;}
 
 <script>
 /* ================================================================
-   ⬇⬇⬇  A ÚNICA PARTE QUE VOCÊ PRECISA EDITAR  ⬇⬇⬇
+   ⬇⬇⬇  A CONEXÃO COM O SEU BANCO  ⬇⬇⬇
 
-   Troque os dois textos abaixo pelos dados do SEU projeto no Supabase.
-   Onde achar (leia o PASSO-A-PASSO.md, item 4):
-     Supabase → ícone de engrenagem (Settings) → API Keys / Data API
+   JÁ DEIXEI PREENCHIDO com os dados do seu projeto — em condições
+   normais você não precisa mexer aqui.
 
-   Exemplo de como deve ficar:
-     var SUPABASE_URL   = 'https://abcdefghijklm.supabase.co';
-     var SUPABASE_CHAVE = 'sb_publishable_AbC123...';
+   ⚠️ CONFIRA A CHAVE ABAIXO uma vez: eu a copiei de um print seu,
+   então uma letra pode ter saído trocada. Compare com a linha
+   SUPABASE_CHAVE do seu index.html anterior, ou pegue de novo em
+   Supabase → engrenagem (Settings) → API Keys → Publishable key.
+
+   Se aparecer erro de login depois de tudo pronto, é aqui que se olha.
 
    Pode deixar essa chave no site: ela é pública de propósito.
    Quem protege os dados são as regras de segurança do banco.
@@ -1882,6 +1800,15 @@ ul{margin:0;padding:0;list-style:none;}
 
 var SUPABASE_URL   = 'https://pmpwkunsyuanrazrmomb.supabase.co';
 var SUPABASE_CHAVE = 'sb_publishable_eSh0TNQPFfJEb15Oxl6ZIQ_1TA0w-Ko';
+
+/* Limpeza automática: tira espaços, barra no fim e pedaços como /rest/v1
+   que o painel do Supabase às vezes mostra grudados no endereço.
+   Isso evita o erro "Invalid path specified in request URL". */
+SUPABASE_URL = String(SUPABASE_URL).trim()
+  .replace(/\/+$/, '')
+  .replace(/\/(rest|auth|storage|realtime|functions)\/v[0-9]+$/i, '')
+  .replace(/\/+$/, '');
+SUPABASE_CHAVE = String(SUPABASE_CHAVE).trim();
 
 /* ================================================================
    ⬆⬆⬆  DAQUI PARA BAIXO NÃO PRECISA MEXER  ⬆⬆⬆
@@ -1913,6 +1840,10 @@ function go(view){
   document.getElementById('nav').classList.remove('open');
   window.scrollTo({top:0,behavior:'instant'});
   if(history.replaceState) history.replaceState(null,'','#'+view);
+
+  if(view === 'aprender')    carregarOfertas();
+  if(view === 'ensinar')     { atualizarPortaoEnsinar(); atualizarPrevia(); }
+  if(view === 'painel-prof') carregarMinhasOfertas();
 }
 function pick(el){
   var p = el.parentElement;
@@ -2073,6 +2004,9 @@ function atualizarInterface(){
   var primeiro = String(nome).split(' ')[0];
   document.getElementById('nome-aluno').textContent = primeiro;
   document.getElementById('nome-prof').textContent  = primeiro;
+
+  atualizarPortaoEnsinar();
+  atualizarPrevia();
 }
 
 function abrirMeuPainel(){
@@ -2085,6 +2019,365 @@ async function sair(){
   usuario = null; perfil = null;
   atualizarInterface();
   go('home');
+}
+
+
+/* ================================================================
+   ETAPA 2 — OFERTAS
+   Publicar na tela "Ensinar" e listar na tela "Aprender".
+   ================================================================ */
+
+var ofertas = [];            // tudo que veio do banco
+var ofertasCarregadas = false;
+var idParaExcluir = null;    // confirmação em duas etapas
+
+/* --- ajudantes --- */
+function esc(t){
+  return String(t == null ? '' : t)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function iniciais(nome){
+  var partes = String(nome || '?').trim().split(/\s+/);
+  var a = (partes[0] || '?')[0] || '?';
+  var b = partes.length > 1 ? (partes[partes.length-1][0] || '') : '';
+  return (a + b).toUpperCase();
+}
+function corAvatar(texto){
+  var soma = 0, t = String(texto || '');
+  for(var i = 0; i < t.length; i++) soma += t.charCodeAt(i);
+  return 'a' + ((soma % 5) + 1);
+}
+function moeda(v){
+  var n = Number(v) || 0;
+  return 'R$ ' + n.toLocaleString('pt-BR', {minimumFractionDigits: (n % 1 ? 2 : 0), maximumFractionDigits: 2});
+}
+function textoDoPillLigado(idContainer, padrao){
+  var el = document.querySelector('#' + idContainer + ' .pill.on');
+  return el ? el.textContent.trim() : padrao;
+}
+function mostrarMsgOferta(texto, tipo){
+  var cores = { erro:['#FEE2E2','#991B1B'], ok:['#DCFCE7','#166534'], aviso:['#FEF3C7','#92400E'] };
+  var c = cores[tipo] || cores.aviso;
+  var el = document.getElementById('msg-oferta');
+  el.style.background = c[0]; el.style.color = c[1];
+  el.innerHTML = texto; el.style.display = 'block';
+}
+
+/* --- portão da tela Ensinar: quem pode publicar --- */
+function atualizarPortaoEnsinar(){
+  var portao = document.getElementById('portao-ensinar');
+  var form   = document.getElementById('form-oferta');
+  if(!portao || !form) return;
+
+  if(!usuario){
+    portao.style.display = 'block';
+    portao.style.background = '#DBEAFE'; portao.style.color = '#1E3A8A';
+    portao.innerHTML = '<b>Entre na sua conta para publicar.</b><br>' +
+      '<span style="font-size:.9rem;">Leva um minuto e é grátis.</span><br>' +
+      '<button class="btn btn-primary btn-sm" style="margin-top:12px;" onclick="irParaEntrar(\'criar\')">Criar conta ou entrar</button>';
+    form.style.display = 'none';
+    return;
+  }
+
+  var papel = perfil && perfil.papel;
+  if(papel !== 'professor'){
+    portao.style.display = 'block';
+    portao.style.background = '#FEF3C7'; portao.style.color = '#92400E';
+    portao.innerHTML = '<b>Só professores publicam ofertas.</b><br>' +
+      '<span style="font-size:.9rem;">Sua conta está como <b>' + esc(papel || 'aluno') + '</b>. ' +
+      'Você pode virar professor agora — continua podendo aprender do mesmo jeito, com a mesma conta.</span><br>' +
+      '<button class="btn btn-accent btn-sm" style="margin-top:12px;" id="btn-virar-prof" onclick="virarProfessor()">Quero me tornar professor</button>';
+    form.style.display = 'none';
+    return;
+  }
+
+  portao.style.display = 'none';
+  form.style.display = '';
+}
+
+async function virarProfessor(){
+  if(!sb || !usuario) return;
+  var btn = document.getElementById('btn-virar-prof');
+  if(btn){ btn.disabled = true; btn.textContent = 'Aguarde…'; }
+  var r = await sb.from('perfis').update({ papel: 'professor' }).eq('id', usuario.id);
+  if(r.error){
+    if(btn){ btn.disabled = false; btn.textContent = 'Quero me tornar professor'; }
+    alertaSimples('portao-ensinar', 'Não consegui atualizar seu perfil: ' + esc(r.error.message));
+    return;
+  }
+  await carregarSessao();
+  atualizarPortaoEnsinar();
+  atualizarPrevia();
+}
+function alertaSimples(id, html){
+  var el = document.getElementById(id);
+  if(el) el.innerHTML += '<div style="margin-top:10px;font-size:.85rem;">' + html + '</div>';
+}
+
+/* --- prévia ao vivo --- */
+function atualizarPrevia(){
+  if(!document.getElementById('pv-titulo')) return;
+  var nome     = (perfil && perfil.nome) || 'Seu nome';
+  var titulo   = (document.getElementById('of-titulo') || {}).value || '';
+  var desc     = (document.getElementById('of-desc')   || {}).value || '';
+  var area     = (document.getElementById('of-area')   || {}).value || '';
+  var valor    = (document.getElementById('of-valor')  || {}).value || 0;
+  var cobranca = (document.getElementById('of-cobranca') || {}).value || 'Hora';
+  var formato  = textoDoPillLigado('of-formato', 'Aula individual');
+  var modo     = textoDoPillLigado('of-modalidade', 'Online');
+
+  document.getElementById('pv-ini').textContent    = iniciais(nome);
+  document.getElementById('pv-ini').className      = 'ava ' + corAvatar(nome);
+  document.getElementById('pv-nome').textContent   = nome;
+  document.getElementById('pv-area').textContent   = area;
+  document.getElementById('pv-titulo').textContent = titulo || 'Título da sua oferta';
+  document.getElementById('pv-desc').textContent   = desc || 'A descrição aparece aqui conforme você digita.';
+  document.getElementById('pv-tags').innerHTML     =
+    '<span class="tag tag-b">' + esc(formato) + '</span><span class="tag">' + esc(modo) + '</span>';
+  document.getElementById('pv-preco').innerHTML    =
+    moeda(valor) + ' <small>/' + esc(String(cobranca).toLowerCase()) + '</small>';
+
+  var liq = document.getElementById('of-liquido');
+  if(liq){
+    var n = Number(valor) || 0;
+    liq.textContent = n > 0
+      ? 'Você recebe ' + moeda(n * 0.9) + ' por ' + String(cobranca).toLowerCase() + ' (comissão de 10%).'
+      : 'A plataforma fica com 10% de comissão.';
+  }
+}
+
+function limparOferta(){
+  ['of-titulo','of-desc','of-valor'].forEach(function(id){
+    var el = document.getElementById(id); if(el) el.value = '';
+  });
+  document.getElementById('msg-oferta').style.display = 'none';
+  atualizarPrevia();
+}
+
+/* --- publicar --- */
+async function publicarOferta(){
+  if(!sb) return;
+  if(!usuario){ irParaEntrar('criar'); return; }
+
+  var titulo = (document.getElementById('of-titulo').value || '').trim();
+  var desc   = (document.getElementById('of-desc').value || '').trim();
+  var valor  = Number(document.getElementById('of-valor').value);
+
+  if(titulo.length < 5){ mostrarMsgOferta('Escreva um título com pelo menos 5 letras.', 'erro'); return; }
+  if(!(valor >= 0))    { mostrarMsgOferta('Informe um valor. Use 0 se a oferta for gratuita.', 'erro'); return; }
+
+  var btn = document.getElementById('btn-publicar');
+  btn.disabled = true; btn.textContent = 'Publicando…';
+
+  var r = await sb.from('ofertas').insert({
+    professor_id: usuario.id,
+    titulo:     titulo,
+    area:       document.getElementById('of-area').value,
+    nivel:      document.getElementById('of-nivel').value,
+    formato:    textoDoPillLigado('of-formato', 'Aula individual'),
+    descricao:  desc,
+    valor:      valor,
+    cobranca:   document.getElementById('of-cobranca').value,
+    modalidade: textoDoPillLigado('of-modalidade', 'Online')
+  });
+
+  btn.disabled = false; btn.textContent = 'Publicar oferta';
+
+  if(r.error){
+    var m = r.error.message || '';
+    if(/row-level security|violates row-level/i.test(m)){
+      mostrarMsgOferta('O banco recusou: sua conta não está como <b>professor</b>. Recarregue a página e tente de novo.', 'erro');
+    } else if(/titulo_minimo/i.test(m)){
+      mostrarMsgOferta('O título precisa ter pelo menos 5 letras.', 'erro');
+    } else {
+      mostrarMsgOferta('Não deu certo: ' + esc(m), 'erro');
+    }
+    return;
+  }
+
+  mostrarMsgOferta('Oferta publicada! Ela já aparece na tela <b>Aprender</b> e no seu painel. ' +
+    '<button class="btn btn-ghost btn-sm" style="margin-top:10px;" onclick="go(\'aprender\')">Ver na lista</button>', 'ok');
+  limparOfertaSemMensagem();
+  await carregarOfertas(true);
+  await carregarMinhasOfertas();
+}
+function limparOfertaSemMensagem(){
+  ['of-titulo','of-desc','of-valor'].forEach(function(id){
+    var el = document.getElementById(id); if(el) el.value = '';
+  });
+  atualizarPrevia();
+}
+
+/* --- carregar e mostrar a lista da tela Aprender --- */
+async function carregarOfertas(forcar){
+  if(!sb) return;
+  if(ofertasCarregadas && !forcar) { filtrarOfertas(); return; }
+
+  var r = await sb.from('ofertas')
+    .select('id, titulo, area, nivel, formato, descricao, valor, cobranca, modalidade, criado_em, professor_id, perfis(nome, cidade)')
+    .eq('ativa', true)
+    .order('criado_em', { ascending: false })
+    .limit(200);
+
+  if(r.error){
+    var lista = document.getElementById('lista-ofertas');
+    if(lista) lista.innerHTML = '<p class="muted">Não consegui carregar as ofertas: ' + esc(r.error.message) + '</p>';
+    return;
+  }
+  ofertas = r.data || [];
+  ofertasCarregadas = true;
+  atualizarContagensPorArea();
+  filtrarOfertas();
+}
+
+function atualizarContagensPorArea(){
+  document.querySelectorAll('#filtros-area [data-conta]').forEach(function(el){
+    var area = el.getAttribute('data-conta');
+    var n = ofertas.filter(function(o){ return o.area === area; }).length;
+    el.textContent = '(' + n + ')';
+  });
+}
+
+function filtrarOfertas(){
+  var lista = document.getElementById('lista-ofertas');
+  var vazio = document.getElementById('vazio-ofertas');
+  var contador = document.getElementById('contador-ofertas');
+  if(!lista) return;
+
+  var busca = ((document.getElementById('busca-aprender') || {}).value || '').trim().toLowerCase();
+
+  var areas = [];
+  document.querySelectorAll('#filtros-area input:checked').forEach(function(c){ areas.push(c.getAttribute('data-area')); });
+
+  var formatos = [];
+  document.querySelectorAll('#filtros-formato input:checked').forEach(function(c){ formatos.push(c.getAttribute('data-formato')); });
+
+  var atalho = document.querySelector('#atalhos-formato .pill.on');
+  var grupo = atalho ? (atalho.getAttribute('data-grupo') || '') : '';
+  if(grupo) formatos = [grupo];
+
+  var precoEl = document.getElementById('filtro-preco');
+  var precoMax = precoEl ? Number(precoEl.value) : 99999;
+  var rotulo = document.getElementById('rotulo-preco');
+  if(rotulo) rotulo.textContent = (precoMax >= 500) ? 'qualquer valor' : 'até ' + moeda(precoMax);
+
+  var res = ofertas.filter(function(o){
+    if(areas.length && areas.indexOf(o.area) === -1) return false;
+    if(formatos.length && formatos.indexOf(o.formato) === -1) return false;
+    if(precoMax < 500 && Number(o.valor) > precoMax) return false;
+    if(busca){
+      var alvo = [o.titulo, o.descricao, o.area, o.nivel, o.formato, (o.perfis && o.perfis.nome)].join(' ').toLowerCase();
+      if(alvo.indexOf(busca) === -1) return false;
+    }
+    return true;
+  });
+
+  var ordem = (document.getElementById('ordenar-ofertas') || {}).value || 'recentes';
+  res.sort(function(a, b){
+    if(ordem === 'barato') return Number(a.valor) - Number(b.valor);
+    if(ordem === 'caro')   return Number(b.valor) - Number(a.valor);
+    if(ordem === 'az')     return String(a.titulo).localeCompare(String(b.titulo), 'pt-BR');
+    return String(b.criado_em).localeCompare(String(a.criado_em));
+  });
+
+  if(ofertas.length === 0){
+    lista.innerHTML = '';
+    if(vazio) vazio.style.display = 'block';
+    if(contador) contador.textContent = 'Nenhuma oferta publicada ainda';
+    return;
+  }
+  if(vazio) vazio.style.display = 'none';
+
+  if(contador){
+    contador.innerHTML = res.length === 1
+      ? '<b>1</b> oferta encontrada'
+      : '<b>' + res.length + '</b> ofertas encontradas' + (res.length !== ofertas.length ? ' de ' + ofertas.length : '');
+  }
+
+  if(res.length === 0){
+    lista.innerHTML = '<p class="muted" style="grid-column:1/-1;padding:30px 0;text-align:center;">' +
+      'Nenhuma oferta bate com esses filtros. ' +
+      '<b class="link-auth" onclick="limparFiltros()">Limpar filtros</b></p>';
+    return;
+  }
+  lista.innerHTML = res.map(cardOferta).join('');
+}
+
+function limparFiltros(){
+  var b = document.getElementById('busca-aprender'); if(b) b.value = '';
+  document.querySelectorAll('#filtros-area input, #filtros-formato input').forEach(function(c){ c.checked = false; });
+  var pr = document.getElementById('filtro-preco'); if(pr) pr.value = 500;
+  document.querySelectorAll('#atalhos-formato .pill').forEach(function(b2, i){ b2.classList.toggle('on', i === 0); });
+  filtrarOfertas();
+}
+
+function cardOferta(o){
+  var nome = (o.perfis && o.perfis.nome) || 'Professor';
+  var cidade = (o.perfis && o.perfis.cidade) || '';
+  var etiquetas = '<span class="tag tag-b">' + esc(o.formato) + '</span>' +
+                  '<span class="tag">' + esc(o.modalidade) + (cidade ? ' · ' + esc(cidade) : '') + '</span>' +
+                  (o.nivel ? '<span class="tag">' + esc(o.nivel) + '</span>' : '');
+  return '' +
+  '<article class="card card-h offer">' +
+    '<div class="offer-top">' +
+      '<div class="ava ' + corAvatar(nome) + '">' + esc(iniciais(nome)) + '</div>' +
+      '<div class="offer-who"><b>' + esc(nome) + '</b><small>' + esc(o.area) + '</small></div>' +
+    '</div>' +
+    '<div class="offer-body">' +
+      '<h4>' + esc(o.titulo) + '</h4>' +
+      '<p>' + esc(o.descricao || 'Sem descrição.') + '</p>' +
+      '<div class="tags">' + etiquetas + '</div>' +
+    '</div>' +
+    '<div class="offer-foot">' +
+      '<span class="price">' + moeda(o.valor) + ' <small>/' + esc(String(o.cobranca).toLowerCase()) + '</small></span>' +
+      '<button class="btn btn-primary btn-sm" onclick="go(\'perfil\')">Ver perfil</button>' +
+    '</div>' +
+  '</article>';
+}
+
+/* --- minhas ofertas, no painel profissional --- */
+async function carregarMinhasOfertas(){
+  var caixa = document.getElementById('minhas-ofertas');
+  if(!caixa) return;
+  if(!sb || !usuario){ caixa.innerHTML = '<p class="muted" style="font-size:.88rem;">Entre na sua conta para ver suas ofertas.</p>'; return; }
+
+  var r = await sb.from('ofertas')
+    .select('id, titulo, formato, valor, cobranca, ativa, criado_em')
+    .eq('professor_id', usuario.id)
+    .order('criado_em', { ascending: false });
+
+  if(r.error){ caixa.innerHTML = '<p class="muted" style="font-size:.88rem;">Erro ao carregar: ' + esc(r.error.message) + '</p>'; return; }
+
+  var minhas = r.data || [];
+  if(minhas.length === 0){
+    caixa.innerHTML = '<p class="muted" style="font-size:.88rem;">Você ainda não publicou nenhuma oferta.</p>';
+    return;
+  }
+  caixa.innerHTML = minhas.map(function(o){
+    var confirmando = (idParaExcluir === o.id);
+    return '<div class="list-item">' +
+      '<div class="g"><b>' + esc(o.titulo) + '</b><small>' + esc(o.formato) + ' · ' + moeda(o.valor) + '/' + esc(String(o.cobranca).toLowerCase()) + '</small></div>' +
+      (confirmando
+        ? '<span style="display:flex;gap:6px;"><button class="btn btn-sm" style="background:#DC2626;color:#fff;" onclick="excluirOferta(\'' + o.id + '\', true)">Confirmar</button>' +
+          '<button class="btn btn-ghost btn-sm" onclick="idParaExcluir=null;carregarMinhasOfertas()">Cancelar</button></span>'
+        : '<span style="display:flex;gap:6px;align-items:center;"><span class="badge-st st-ok">Ativa</span>' +
+          '<button class="btn btn-ghost btn-sm" onclick="excluirOferta(\'' + o.id + '\')">Excluir</button></span>') +
+    '</div>';
+  }).join('');
+}
+
+async function excluirOferta(id, confirmado){
+  if(!confirmado){ idParaExcluir = id; carregarMinhasOfertas(); return; }
+  idParaExcluir = null;
+  var r = await sb.from('ofertas').delete().eq('id', id);
+  if(r.error){
+    var caixa = document.getElementById('minhas-ofertas');
+    if(caixa) caixa.innerHTML = '<p style="color:#991B1B;font-size:.88rem;">Não consegui excluir: ' + esc(r.error.message) + '</p>';
+    return;
+  }
+  await carregarMinhasOfertas();
+  await carregarOfertas(true);
 }
 
 
