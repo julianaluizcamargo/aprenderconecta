@@ -482,7 +482,7 @@ ul{margin:0;padding:0;list-style:none;}
 
   <div class="hero">
     <div class="wrap hero-in">
-      <div class="hero-badge">✨ A plataforma brasileira do conhecimento</div>
+      <div class="hero-badge">🌱 Plataforma nova, feita no Brasil</div>
       <h1>Aprenda com quem sabe.<br>Ensine o que você <em>domina</em>.</h1>
       <p class="hero-sub">Uma única plataforma para encontrar professores, contratar serviços educacionais, vender seus materiais e transformar conhecimento em oportunidade.</p>
 
@@ -506,10 +506,10 @@ ul{margin:0;padding:0;list-style:none;}
       </div>
 
       <div class="hero-stats">
-        <div><b>12.400+</b><span>Profissionais</span></div>
-        <div><b>38.900+</b><span>Alunos ativos</span></div>
-        <div><b>4.9★</b><span>Avaliação média</span></div>
-        <div><b>96%</b><span>Serviços no prazo</span></div>
+        <div><b id="hs-professores">–</b><span>Professores</span></div>
+        <div><b id="hs-ofertas">–</b><span>Ofertas publicadas</span></div>
+        <div><b id="hs-areas">–</b><span>Áreas de conhecimento</span></div>
+        <div><b>R$ 0</b><span>Para criar sua conta</span></div>
       </div>
     </div>
   </div>
@@ -553,91 +553,27 @@ ul{margin:0;padding:0;list-style:none;}
         <p>Do reforço escolar à revisão de tese — conhecimento e serviços educacionais em uma só busca.</p>
       </div>
       <div class="cats">
-        <a href="#" class="cat" onclick="go('servicos');return false;"><i>📑</i><span>TCC e orientação<small>1.240 profissionais</small></span></a>
-        <a href="#" class="cat" onclick="go('aprender');return false;"><i>📚</i><span>Reforço escolar<small>3.870 professores</small></span></a>
-        <a href="#" class="cat" onclick="go('servicos');return false;"><i>📝</i><span>Revisão de textos<small>920 revisores</small></span></a>
-        <a href="#" class="cat" onclick="go('aprender');return false;"><i>🗣️</i><span>Idiomas<small>2.150 professores</small></span></a>
-        <a href="#" class="cat" onclick="go('aprender');return false;"><i>💻</i><span>Tecnologia e Excel<small>1.480 professores</small></span></a>
-        <a href="#" class="cat" onclick="go('aprender');return false;"><i>🎵</i><span>Música<small>640 professores</small></span></a>
-        <a href="#" class="cat" onclick="go('servicos');return false;"><i>📊</i><span>Projetos e pesquisa<small>710 especialistas</small></span></a>
-        <a href="#" class="cat" onclick="go('loja');return false;"><i>🧑‍🏫</i><span>Materiais pedagógicos<small>8.300 materiais</small></span></a>
+        <a href="#" class="cat" onclick="buscarArea('Educação e Pedagogia');return false;"><i>📚</i><span>Educação e Pedagogia<small data-cat="Educação e Pedagogia">ver ofertas</small></span></a>
+        <a href="#" class="cat" onclick="buscarArea('Matemática');return false;"><i>📐</i><span>Matemática<small data-cat="Matemática">ver ofertas</small></span></a>
+        <a href="#" class="cat" onclick="buscarArea('Idiomas');return false;"><i>🗣️</i><span>Idiomas<small data-cat="Idiomas">ver ofertas</small></span></a>
+        <a href="#" class="cat" onclick="buscarArea('Tecnologia');return false;"><i>💻</i><span>Tecnologia<small data-cat="Tecnologia">ver ofertas</small></span></a>
+        <a href="#" class="cat" onclick="buscarArea('Ciências');return false;"><i>🔬</i><span>Ciências<small data-cat="Ciências">ver ofertas</small></span></a>
+        <a href="#" class="cat" onclick="buscarArea('Música');return false;"><i>🎵</i><span>Música<small data-cat="Música">ver ofertas</small></span></a>
       </div>
     </div>
   </div>
 
-  <!-- DESTAQUES -->
-  <div class="section" style="padding-top:0;">
+  <!-- ÚLTIMAS OFERTAS -->
+  <div class="section" id="sec-destaques" style="padding-top:0;display:none;">
     <div class="wrap">
       <div class="toolbar" style="justify-content:space-between;">
         <div class="sec-head" style="margin-bottom:0;">
-          <div class="eyebrow">Em destaque</div>
-          <h2 class="h2">Profissionais bem avaliados</h2>
+          <div class="eyebrow">Publicadas recentemente</div>
+          <h2 class="h2">Quem já está ensinando aqui</h2>
         </div>
-        <button class="btn btn-ghost btn-sm" onclick="go('aprender')">Ver todos →</button>
+        <button class="btn btn-ghost btn-sm" onclick="go('aprender')">Ver todas →</button>
       </div>
-      <div class="grid g3" style="margin-top:28px;">
-
-        <article class="card card-h offer">
-          <div class="offer-top">
-            <div class="ava a1">MS</div>
-            <div class="offer-who">
-              <b>Maria Silva</b>
-              <small>Pedagoga · Especialista em Educação</small>
-              <div class="rate"><i>★</i>4,9 <span>(214 avaliações)</span></div>
-            </div>
-          </div>
-          <div class="offer-body">
-            <h4>Alfabetização e reforço para Ensino Fundamental I</h4>
-            <p>Acompanhamento individual com plano de estudos, atividades semanais e relatório para os pais.</p>
-            <div class="tags"><span class="tag tag-b">Aula individual</span><span class="tag tag-g">🏅 Verificada</span><span class="tag">Online</span></div>
-          </div>
-          <div class="offer-foot">
-            <span class="price">R$ 55 <small>/hora</small></span>
-            <button class="btn btn-primary btn-sm" onclick="go('perfil')">Ver perfil</button>
-          </div>
-        </article>
-
-        <article class="card card-h offer">
-          <div class="offer-top">
-            <div class="ava a2">CR</div>
-            <div class="offer-who">
-              <b>Carlos Ribeiro</b>
-              <small>Licenciado em Matemática · UFMT</small>
-              <div class="rate"><i>★</i>4,9 <span>(387 avaliações)</span></div>
-            </div>
-          </div>
-          <div class="offer-body">
-            <h4>Matemática: álgebra, geometria e preparação para provas</h4>
-            <p>Da matemática básica ao ENEM. Aulas ao vivo com resolução de exercícios e simulados comentados.</p>
-            <div class="tags"><span class="tag tag-b">Aula ao vivo</span><span class="tag tag-a">🔥 Mais contratado</span><span class="tag">Turma ou individual</span></div>
-          </div>
-          <div class="offer-foot">
-            <span class="price">R$ 40 <small>/hora</small></span>
-            <button class="btn btn-primary btn-sm" onclick="go('perfil')">Ver perfil</button>
-          </div>
-        </article>
-
-        <article class="card card-h offer">
-          <div class="offer-top">
-            <div class="ava a4">AL</div>
-            <div class="offer-who">
-              <b>Ana Lúcia Ferraz</b>
-              <small>Mestra em Letras · Revisora ABNT</small>
-              <div class="rate"><i>★</i>5,0 <span>(158 avaliações)</span></div>
-            </div>
-          </div>
-          <div class="offer-body">
-            <h4>Revisão textual, formatação ABNT e orientação de TCC</h4>
-            <p>Revisão gramatical e de coesão, normalização completa e devolutiva comentada. Prazo médio de 5 dias.</p>
-            <div class="tags"><span class="tag tag-b">Serviço</span><span class="tag tag-g">🏆 Especialista</span><span class="tag">Entrega em 5 dias</span></div>
-          </div>
-          <div class="offer-foot">
-            <span class="price">A partir de R$ 180</span>
-            <button class="btn btn-primary btn-sm" onclick="go('perfil')">Ver perfil</button>
-          </div>
-        </article>
-
-      </div>
+      <div class="grid g3" id="home-ofertas" style="margin-top:28px;"></div>
     </div>
   </div>
 
@@ -646,25 +582,25 @@ ul{margin:0;padding:0;list-style:none;}
     <div class="wrap">
       <div class="sec-head center">
         <div class="eyebrow">Como funciona</div>
-        <h2 class="h2">Do pedido à entrega, com pagamento protegido</h2>
-        <p>Você contrata com segurança e o profissional recebe com garantia. A plataforma cuida do meio do caminho.</p>
+        <h2 class="h2">Do cadastro à primeira aula</h2>
+        <p>Estamos começando, e por isso o caminho é curto e direto: a plataforma apresenta as pessoas, e vocês combinam o resto.</p>
       </div>
       <div class="steps">
         <div class="step">
-          <h4>Publique o que precisa</h4>
-          <p>Descreva o serviço ou a aula, informe prazo, área e orçamento estimado. Leva menos de 2 minutos.</p>
+          <h4>Crie sua conta</h4>
+          <p>Grátis, com e-mail e senha. Você escolhe se quer aprender, ensinar, ou os dois — é a mesma conta.</p>
         </div>
         <div class="step">
-          <h4>Receba propostas</h4>
-          <p>Profissionais qualificados enviam propostas com valor, prazo e o que está incluso. Você compara.</p>
+          <h4>Publique ou procure</h4>
+          <p>Professor publica a oferta com formato, valor e modalidade. Quem procura filtra por área, formato e preço.</p>
         </div>
         <div class="step">
-          <h4>Contrate com segurança</h4>
-          <p>O pagamento fica retido na plataforma. O profissional só recebe depois que você aprova a entrega.</p>
+          <h4>Fale direto com a pessoa</h4>
+          <p>O perfil traz o contato do professor. Sem intermediário, sem espera — você chama e conversa.</p>
         </div>
         <div class="step">
-          <h4>Avalie e construa reputação</h4>
-          <p>Você avalia qualidade, comunicação, prazo e custo-benefício. Boas avaliações viram selos.</p>
+          <h4>Combinem entre vocês</h4>
+          <p>Horário e pagamento são acertados diretamente entre aluno e professor. O pagamento pela plataforma vem numa próxima fase.</p>
         </div>
       </div>
     </div>
@@ -676,57 +612,34 @@ ul{margin:0;padding:0;list-style:none;}
       <div class="band">
         <div class="band-grid">
           <div>
-            <div class="eyebrow" style="background:rgba(255,255,255,.14);color:#FFC178;">Confiança</div>
-            <h2>Segurança de verdade, do cadastro ao pagamento</h2>
-            <p>Um marketplace educacional só funciona se as duas pontas se sentirem seguras. Por isso a plataforma verifica, intermedia e protege cada etapa.</p>
+            <div class="eyebrow" style="background:rgba(255,255,255,.14);color:#FFC178;">Transparência</div>
+            <h2>O que já funciona, e o que ainda estamos construindo</h2>
+            <p>Somos uma plataforma nova. Preferimos dizer com todas as letras onde estamos do que prometer o que ainda não entregamos.</p>
             <div class="cta-btns" style="justify-content:flex-start;margin-top:26px;">
               <button class="btn btn-accent" onclick="go('entrar')">Criar minha conta</button>
               <button class="btn btn-line" onclick="go('servicos')">Ver como contratar</button>
             </div>
           </div>
           <ul>
-            <li><i>✓</i><span><b>Perfis verificados</b> — documento, formação e experiência conferidos antes do selo.</span></li>
-            <li><i>✓</i><span><b>Pagamento retido</b> — o valor só é liberado ao profissional após a sua aprovação.</span></li>
-            <li><i>✓</i><span><b>Contratos e prazos claros</b> — escopo, entregas e prazo registrados na plataforma.</span></li>
-            <li><i>✓</i><span><b>Mediação de conflitos</b> — se algo der errado, a equipe analisa e decide.</span></li>
+            <li><i>✓</i><span><b>Conta com e-mail confirmado</b> — ninguém se cadastra com um endereço que não é seu.</span></li>
+            <li><i>✓</i><span><b>Seus dados são só seus</b> — ninguém consegue alterar o perfil ou as ofertas de outra pessoa.</span></li>
+            <li><i>✓</i><span><b>Só professores publicam</b> — a regra é aplicada no banco de dados, não apenas na tela.</span></li>
             <li><i>✓</i><span><b>Ética acadêmica</b> — orientação, revisão e tutoria sim; venda de trabalhos prontos, não.</span></li>
+            <li><i>🔧</i><span><b>Ainda vem por aí</b> — pagamento pela plataforma, avaliações, verificação de formação e mediação.</span></li>
           </ul>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- LOJA PREVIEW -->
+  <!-- LOJA — EM BREVE -->
   <div class="section" style="padding-top:0;">
     <div class="wrap">
-      <div class="toolbar" style="justify-content:space-between;">
-        <div class="sec-head" style="margin-bottom:0;">
-          <div class="eyebrow">Loja de conhecimento</div>
-          <h2 class="h2">Materiais prontos para usar amanhã</h2>
-        </div>
-        <button class="btn btn-ghost btn-sm" onclick="go('loja')">Ver a loja →</button>
-      </div>
-      <div class="grid g4" style="margin-top:28px;">
-        <article class="card card-h prod">
-          <div class="prod-img p1">📘<span class="prod-badge">Mais vendido</span></div>
-          <div class="prod-body"><h4>Caderno de Alfabetização — 120 atividades</h4><small>por Maria Silva</small><div class="rate"><i>★</i>4,9 <span>(312)</span></div></div>
-          <div class="prod-foot"><span class="price">R$ 39,90</span><button class="btn btn-ghost btn-sm" onclick="go('loja')">Ver</button></div>
-        </article>
-        <article class="card card-h prod">
-          <div class="prod-img p2">🧩</div>
-          <div class="prod-body"><h4>50 Jogos pedagógicos para Educação Infantil</h4><small>por Renata Alves</small><div class="rate"><i>★</i>4,8 <span>(187)</span></div></div>
-          <div class="prod-foot"><span class="price">R$ 29,90</span><button class="btn btn-ghost btn-sm" onclick="go('loja')">Ver</button></div>
-        </article>
-        <article class="card card-h prod">
-          <div class="prod-img p3">📄<span class="prod-badge">Novo</span></div>
-          <div class="prod-body"><h4>Modelo de TCC formatado nas normas ABNT 2026</h4><small>por Ana Lúcia Ferraz</small><div class="rate"><i>★</i>5,0 <span>(96)</span></div></div>
-          <div class="prod-foot"><span class="price">R$ 24,90</span><button class="btn btn-ghost btn-sm" onclick="go('loja')">Ver</button></div>
-        </article>
-        <article class="card card-h prod">
-          <div class="prod-img p4">🗂️</div>
-          <div class="prod-body"><h4>Planos de aula anuais — Fundamental I completo</h4><small>por Juliana Camargo</small><div class="rate"><i>★</i>4,9 <span>(241)</span></div></div>
-          <div class="prod-foot"><span class="price">R$ 79,90</span><button class="btn btn-ghost btn-sm" onclick="go('loja')">Ver</button></div>
-        </article>
+      <div class="panel" style="padding:38px;text-align:center;">
+        <div style="font-size:2.2rem;margin-bottom:10px;">📚</div>
+        <div class="eyebrow" style="display:inline-block;">Em breve</div>
+        <h2 class="h2" style="margin:12px 0 10px;">Loja de materiais</h2>
+        <p class="muted" style="font-size:.95rem;max-width:520px;margin:0 auto;">Apostilas, planos de aula, atividades e e-books, vendidos pelos próprios professores. Esta parte ainda está sendo construída — por enquanto, o que já funciona são as aulas e ofertas.</p>
       </div>
     </div>
   </div>
@@ -972,11 +885,12 @@ ul{margin:0;padding:0;list-style:none;}
 
 <!-- ========================= SERVIÇOS ========================= -->
 <section class="view" id="v-servicos">
+  <div style="background:#FEF3C7;color:#92400E;padding:12px 16px;text-align:center;font-size:.9rem;line-height:1.5;">🚧 <b>Em construção.</b> Esta área ainda é uma demonstração — os itens mostrados são exemplos e nada é gravado. Por enquanto o que funciona de verdade é <b onclick="go('aprender')" class="link-auth">Aprender</b> e <b onclick="go('ensinar')" class="link-auth">Ensinar</b>.</div>
   <div class="page-head">
     <div class="wrap">
       <div class="crumb">Início › Contratar serviços</div>
       <h1>Publique sua necessidade. Receba propostas.</h1>
-      <p>Orientação de TCC, revisão, formatação ABNT, projetos, diagramação de livros e materiais didáticos — tudo com pagamento protegido.</p>
+      <p>Orientação de TCC, revisão, formatação ABNT, projetos, diagramação de livros e materiais didáticos. Esta área ainda está em construção.</p>
       <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:22px;">
         <button class="btn btn-accent" onclick="document.getElementById('novo-pedido').scrollIntoView({behavior:'smooth'})">＋ Publicar um pedido</button>
         <button class="btn btn-ghost">Sou profissional, quero propor</button>
@@ -1151,6 +1065,7 @@ ul{margin:0;padding:0;list-style:none;}
 </section>
 <!-- ========================= LOJA ========================= -->
 <section class="view" id="v-loja">
+  <div style="background:#FEF3C7;color:#92400E;padding:12px 16px;text-align:center;font-size:.9rem;line-height:1.5;">🚧 <b>Em construção.</b> Esta área ainda é uma demonstração — os itens mostrados são exemplos e nada é gravado. Por enquanto o que funciona de verdade é <b onclick="go('aprender')" class="link-auth">Aprender</b> e <b onclick="go('ensinar')" class="link-auth">Ensinar</b>.</div>
   <div class="page-head">
     <div class="wrap">
       <div class="crumb">Início › Loja de conhecimento</div>
@@ -1314,23 +1229,13 @@ ul{margin:0;padding:0;list-style:none;}
 <section class="view" id="v-perfil">
   <div class="profile-hero">
     <div class="wrap profile-in">
-      <div class="ava ava-lg a1" style="border:4px solid rgba(255,255,255,.25);">MS</div>
+      <div class="ava ava-lg a1" id="pf-ini" style="border:4px solid rgba(255,255,255,.25);">–</div>
       <div style="flex:1;min-width:260px;">
-        <h1>Maria Silva</h1>
-        <p style="color:rgba(255,255,255,.82);margin-top:6px;">👩‍🏫 Pedagoga · 🎓 Especialista em Educação · 📍 Cuiabá, MT · Atende online e presencial</p>
-        <div class="seals">
-          <span class="seal">🏅 Profissional verificada</span>
-          <span class="seal">⭐ Excelente avaliação</span>
-          <span class="seal">🏆 Especialista</span>
-          <span class="seal">🎓 Professora destaque</span>
-        </div>
+        <h1 id="pf-nome">Carregando…</h1>
+        <p id="pf-linha" style="color:rgba(255,255,255,.82);margin-top:6px;"></p>
+        <div class="seals" id="pf-selos"></div>
       </div>
-      <div style="text-align:center;">
-        <div style="font-size:3rem;font-weight:800;line-height:1;">4,9</div>
-        <div style="color:var(--star);font-size:1.05rem;">★★★★★</div>
-        <div style="font-size:.84rem;color:rgba(255,255,255,.7);margin-top:4px;">214 avaliações</div>
-        <button class="btn btn-accent" style="margin-top:16px;">Entrar em contato</button>
-      </div>
+      <div style="text-align:center;min-width:200px;" id="pf-acao"></div>
     </div>
   </div>
 
@@ -1338,111 +1243,34 @@ ul{margin:0;padding:0;list-style:none;}
     <div class="wrap split" style="grid-template-columns:1fr 340px;">
 
       <div>
-        <div class="panel" style="padding:26px;">
+        <div class="panel" id="pf-sobre" style="padding:26px;display:none;">
           <h3 class="h3" style="margin-bottom:12px;">Sobre</h3>
-          <p style="color:var(--ink-2);font-size:.96rem;">Pedagoga formada pela UFMT, com especialização em Educação Infantil e 14 anos de experiência em alfabetização. Trabalho com plano de estudos individualizado, material próprio e relatórios periódicos para a família. Atendo crianças do Fundamental I, incluindo casos de dificuldade de aprendizagem.</p>
+          <p id="pf-bio" style="color:var(--ink-2);font-size:.96rem;white-space:pre-line;"></p>
         </div>
 
         <div class="panel" style="padding:26px;">
-          <h3 class="h3" style="margin-bottom:16px;">Ensina</h3>
-          <div class="tags" style="margin:0;">
-            <span class="tag tag-b">Alfabetização</span><span class="tag tag-b">Matemática básica</span><span class="tag tag-b">Educação infantil</span>
-            <span class="tag tag-b">Produção textual</span><span class="tag tag-b">Leitura e interpretação</span>
-          </div>
-          <h3 class="h3" style="margin:24px 0 16px;">Oferece</h3>
-          <div class="tags" style="margin:0;">
-            <span class="tag tag-g">Tutoria</span><span class="tag tag-g">Orientação pedagógica</span><span class="tag tag-g">Materiais didáticos</span>
-            <span class="tag tag-g">Sequências didáticas</span><span class="tag tag-g">Relatórios de desenvolvimento</span>
-          </div>
+          <h3 class="h3" style="margin-bottom:18px;">Ofertas</h3>
+          <div id="pf-ofertas"><p class="muted" style="font-size:.9rem;">Carregando…</p></div>
         </div>
 
         <div class="panel" style="padding:26px;">
-          <h3 class="h3" style="margin-bottom:18px;">Ofertas ativas</h3>
-          <div class="list-item">
-            <div class="path-ico i-blue" style="width:42px;height:42px;margin:0;font-size:1.1rem;border-radius:12px;">🎓</div>
-            <div class="g"><b>Alfabetização e reforço — Fundamental I</b><small>Aula individual · Online ou presencial · 50 min</small></div>
-            <span class="price">R$ 55<small>/h</small></span>
-          </div>
-          <div class="list-item">
-            <div class="path-ico i-green" style="width:42px;height:42px;margin:0;font-size:1.1rem;border-radius:12px;">👥</div>
-            <div class="g"><b>Grupo de leitura — turma de até 6 alunos</b><small>Grupo de estudos · Online · 2 encontros/semana</small></div>
-            <span class="price">R$ 180<small>/mês</small></span>
-          </div>
-          <div class="list-item">
-            <div class="path-ico i-amber" style="width:42px;height:42px;margin:0;font-size:1.1rem;border-radius:12px;">💼</div>
-            <div class="g"><b>Sequências didáticas sob medida (BNCC)</b><small>Serviço · Entrega em até 10 dias</small></div>
-            <span class="price">a partir de R$ 400</span>
-          </div>
-          <div class="list-item">
-            <div class="path-ico i-purple" style="width:42px;height:42px;margin:0;font-size:1.1rem;border-radius:12px;">📚</div>
-            <div class="g"><b>Caderno de Alfabetização — 120 atividades</b><small>Material digital · PDF, 134 páginas</small></div>
-            <span class="price">R$ 39,90</span>
-          </div>
-        </div>
-
-        <div class="panel" style="padding:26px;">
-          <h3 class="h3" style="margin-bottom:20px;">Avaliações</h3>
-          <div class="rating-row" style="margin-bottom:22px;">
-            <div style="flex:1;min-width:240px;">
-              <div class="rbar-label"><span>Qualidade</span><span>5,0</span></div><div class="rbar"><span style="width:100%"></span></div>
-              <div class="rbar-label"><span>Comunicação</span><span>4,9</span></div><div class="rbar"><span style="width:98%"></span></div>
-              <div class="rbar-label"><span>Cumprimento do prazo</span><span>4,9</span></div><div class="rbar"><span style="width:98%"></span></div>
-              <div class="rbar-label"><span>Conhecimento</span><span>5,0</span></div><div class="rbar"><span style="width:100%"></span></div>
-              <div class="rbar-label"><span>Custo-benefício</span><span>4,8</span></div><div class="rbar"><span style="width:96%"></span></div>
-            </div>
-          </div>
-
-          <div class="review">
-            <div class="review-head"><span class="ava ava-sm a3">PC</span><div><b>Patrícia C.</b><div class="rate"><i>★★★★★</i> <span>há 1 semana</span></div></div></div>
-            <p>Minha filha estava travada na leitura e em dois meses mudou completamente. A Maria manda relatório toda semana e adapta o material conforme a evolução. Recomendo demais.</p>
-          </div>
-          <div class="review">
-            <div class="review-head"><span class="ava ava-sm a6">EM</span><div><b>Escola Mundo Novo</b><div class="rate"><i>★★★★★</i> <span>há 3 semanas</span></div></div></div>
-            <p>Contratamos a sequência didática de Língua Portuguesa para o 3º ano. Entrega antes do prazo, alinhada à BNCC e com material de apoio para as professoras.</p>
-          </div>
-          <div class="review">
-            <div class="review-head"><span class="ava ava-sm a2">RS</span><div><b>Rodrigo S.</b><div class="rate"><i>★★★★★</i> <span>há 1 mês</span></div></div></div>
-            <p>Comprei o caderno de atividades e uso toda semana na minha turma. Vale cada centavo.</p>
-          </div>
-          <button class="btn btn-ghost btn-block" style="margin-top:20px;">Ver todas as 214 avaliações</button>
+          <h3 class="h3" style="margin-bottom:10px;">Avaliações</h3>
+          <p class="muted" style="font-size:.92rem;line-height:1.6;">Ainda não há avaliações por aqui. Elas vão aparecer nesta área quando o sistema de avaliação entrar no ar.</p>
         </div>
       </div>
 
       <aside>
+        <div class="panel" id="pf-contato"></div>
         <div class="panel">
-          <h4>Contratar</h4>
-          <div class="field"><label>O que você precisa?</label>
-            <select><option>Aula individual</option><option>Grupo de estudos</option><option>Serviço sob medida</option><option>Material digital</option></select></div>
-          <div class="field"><label>Quando?</label><input type="text" value="Segunda-feira, 14h"></div>
-          <div style="display:flex;justify-content:space-between;padding:14px 0;border-top:1px solid var(--line-2);font-size:.9rem;">
-            <span class="muted">Valor da aula</span><b>R$ 55,00</b>
-          </div>
-          <div style="display:flex;justify-content:space-between;padding-bottom:14px;font-size:.9rem;">
-            <span class="muted">Taxa da plataforma</span><b>Grátis para você</b>
-          </div>
-          <button class="btn btn-primary btn-block">Solicitar aula</button>
-          <button class="btn btn-ghost btn-block" style="margin-top:10px;">💬 Enviar mensagem</button>
-          <p class="muted" style="font-size:.8rem;margin-top:14px;text-align:center;">Pagamento protegido. O valor só é liberado após a aula acontecer.</p>
-        </div>
-
-        <div class="panel">
-          <h4>Números</h4>
-          <div class="list-item"><div class="g"><b>1.847</b><small>aulas realizadas</small></div></div>
-          <div class="list-item"><div class="g"><b>98%</b><small>taxa de resposta</small></div></div>
-          <div class="list-item"><div class="g"><b>~2 horas</b><small>tempo médio de resposta</small></div></div>
-          <div class="list-item"><div class="g"><b>Desde 2023</b><small>na plataforma</small></div></div>
-        </div>
-
-        <div class="panel">
-          <h4>Formação verificada</h4>
-          <div class="list-item"><div class="g"><b>Pedagogia — UFMT</b><small>Licenciatura · 2011</small></div><span class="badge-st st-ok">✓</span></div>
-          <div class="list-item"><div class="g"><b>Especialização em Educação Infantil</b><small>Pós-graduação · 2014</small></div><span class="badge-st st-ok">✓</span></div>
-          <div class="list-item"><div class="g"><b>Psicopedagogia Institucional</b><small>Pós-graduação · 2019</small></div><span class="badge-st st-ok">✓</span></div>
+          <h4>Na plataforma</h4>
+          <div id="pf-numeros"></div>
         </div>
       </aside>
+
     </div>
   </div>
 </section>
+
 <!-- ========================= PAINEL DO ALUNO ========================= -->
 <section class="view" id="v-painel">
   <div class="page-head">
@@ -1452,7 +1280,10 @@ ul{margin:0;padding:0;list-style:none;}
         <h1>Olá, <span id="nome-aluno">visitante</span> 👋</h1>
         <p>Você tem <b>2 aulas</b> esta semana e <b>1 atividade</b> aguardando entrega.</p>
       </div>
-      <button class="btn btn-primary" onclick="go('aprender')">＋ Buscar novo professor</button>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn btn-ghost" onclick="go('editar-perfil')">Editar meu perfil</button>
+        <button class="btn btn-primary" onclick="go('aprender')">＋ Buscar novo professor</button>
+      </div>
     </div>
   </div>
 
@@ -1566,7 +1397,10 @@ ul{margin:0;padding:0;list-style:none;}
         <h1>Painel de <span id="nome-prof">visitante</span></h1>
         <p>Você recebeu <b>4 novas solicitações</b> e tem <b>R$ 1.284,00</b> a receber este mês.</p>
       </div>
-      <button class="btn btn-accent" onclick="go('ensinar')">＋ Criar nova oferta</button>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn btn-ghost" onclick="go('editar-perfil')">Editar meu perfil</button>
+        <button class="btn btn-accent" onclick="go('ensinar')">＋ Criar nova oferta</button>
+      </div>
     </div>
   </div>
 
@@ -1660,6 +1494,101 @@ ul{margin:0;padding:0;list-style:none;}
 
         </div>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================= EDITAR MEU PERFIL ========================= -->
+<section class="view" id="v-editar-perfil">
+  <div class="page-head">
+    <div class="wrap">
+      <div class="crumb">Minha conta › Meu perfil</div>
+      <h1>Meu perfil</h1>
+      <p>É isto que as pessoas veem quando abrem seu perfil na plataforma.</p>
+    </div>
+  </div>
+
+  <div class="section-sm">
+    <div class="wrap split" style="grid-template-columns:1fr 340px;">
+
+      <div class="panel" style="padding:30px;">
+        <div id="ep-portao" style="display:none;padding:18px 20px;border-radius:12px;margin-bottom:22px;"></div>
+
+        <div id="ep-form">
+          <div class="field">
+            <label>Nome completo</label>
+            <input type="text" id="ep-nome" placeholder="Seu nome" oninput="previaPerfil()">
+          </div>
+
+          <div class="field">
+            <label>O que você faz aqui</label>
+            <select id="ep-papel" onchange="previaPerfil()">
+              <option value="aluno">Quero aprender</option>
+              <option value="professor">Quero ensinar</option>
+              <option value="contratante">Quero contratar serviços</option>
+              <option value="vendedor">Quero vender material</option>
+            </select>
+            <small>Só quem escolhe <b>Quero ensinar</b> pode publicar ofertas. Dá para mudar quando quiser.</small>
+          </div>
+
+          <div class="field">
+            <label>Título profissional</label>
+            <input type="text" id="ep-titulo" placeholder="Ex.: Pedagoga · Especialista em Alfabetização" oninput="previaPerfil()">
+            <small>Aparece logo abaixo do seu nome. Diga sua formação ou especialidade.</small>
+          </div>
+
+          <div class="field">
+            <label>Cidade</label>
+            <input type="text" id="ep-cidade" placeholder="Ex.: Cuiabá, MT" oninput="previaPerfil()">
+          </div>
+
+          <div class="field">
+            <label>Sobre você</label>
+            <textarea id="ep-bio" rows="6" placeholder="Conte sua formação, sua experiência e como você trabalha. Quem lê isso está decidindo se vai te procurar." oninput="previaPerfil()"></textarea>
+            <small id="ep-conta-bio">0 caracteres</small>
+          </div>
+
+          <div class="field" id="ep-bloco-zap">
+            <label>WhatsApp para contato</label>
+            <input type="text" id="ep-tel" placeholder="(65) 99999-9999" oninput="previaPerfil()">
+            <small style="color:#92400E;">⚠️ Este número fica <b>visível para qualquer pessoa</b> que abrir seu perfil — é assim que o aluno fala com você hoje. Se preferir não mostrar, deixe em branco.</small>
+          </div>
+
+          <div id="ep-msg" style="display:none;padding:12px 14px;border-radius:10px;font-size:.88rem;line-height:1.45;margin-top:18px;"></div>
+
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:26px;">
+            <button class="btn btn-primary" id="ep-salvar" onclick="salvarPerfil()">Salvar perfil</button>
+            <button class="btn btn-ghost" onclick="verMeuPerfil()">Ver meu perfil público</button>
+          </div>
+        </div>
+      </div>
+
+      <aside>
+        <div class="panel">
+          <h4>Como vai aparecer</h4>
+          <article class="card offer" style="box-shadow:none;">
+            <div class="offer-top">
+              <div class="ava a2" id="ep-pv-ini">–</div>
+              <div class="offer-who"><b id="ep-pv-nome">Seu nome</b><small id="ep-pv-titulo">Título profissional</small></div>
+            </div>
+            <div class="offer-body">
+              <p id="ep-pv-bio" style="font-size:.88rem;">Seu texto de apresentação aparece aqui.</p>
+              <div class="tags" id="ep-pv-tags"></div>
+            </div>
+          </article>
+        </div>
+
+        <div class="panel">
+          <h4>Por que preencher</h4>
+          <p style="font-size:.88rem;color:var(--ink-2);line-height:1.6;">Um perfil com foto, formação e um texto de apresentação bem escrito é o que faz alguém escolher você em vez de outro professor. É o seu currículo dentro da plataforma.</p>
+        </div>
+
+        <div class="panel">
+          <h4>Foto de perfil</h4>
+          <p style="font-size:.88rem;color:var(--ink-2);line-height:1.6;">Por enquanto o perfil usa as iniciais do seu nome. O envio de foto entra numa próxima etapa.</p>
+        </div>
+      </aside>
+
     </div>
   </div>
 </section>
@@ -1823,7 +1752,8 @@ var usuario   = null;   // quem está logado (e-mail, id)
 var perfil    = null;   // nome e papel, vindos da tabela "perfis"
 var modoAtual = 'criar';
 
-var TELAS_PROTEGIDAS = ['painel', 'painel-prof'];
+var TELAS_PROTEGIDAS = ['painel', 'painel-prof', 'editar-perfil'];
+var perfilVisto = null;   // id do professor aberto na tela de perfil
 
 
 /* ---------- navegação entre as telas ---------- */
@@ -1841,9 +1771,12 @@ function go(view){
   window.scrollTo({top:0,behavior:'instant'});
   if(history.replaceState) history.replaceState(null,'','#'+view);
 
-  if(view === 'aprender')    carregarOfertas();
-  if(view === 'ensinar')     { atualizarPortaoEnsinar(); atualizarPrevia(); }
-  if(view === 'painel-prof') carregarMinhasOfertas();
+  if(view === 'aprender')      carregarOfertas();
+  if(view === 'ensinar')       { atualizarPortaoEnsinar(); atualizarPrevia(); }
+  if(view === 'painel-prof')   carregarMinhasOfertas();
+  if(view === 'home')          carregarHome();
+  if(view === 'perfil')        carregarPerfilPublico(perfilVisto);
+  if(view === 'editar-perfil') carregarFormPerfil();
 }
 function pick(el){
   var p = el.parentElement;
@@ -1851,7 +1784,10 @@ function pick(el){
   el.classList.add('on');
 }
 function fromHash(){
-  var h = (location.hash || '#home').slice(1);
+  var bruto = (location.hash || '#home').slice(1);
+  var partes = bruto.split('/');
+  var h = partes[0];
+  if(h === 'perfil' && partes[1]){ verPerfil(partes[1]); return; }
   if(!document.getElementById('v-'+h)) h = 'home';
   go(h);
 }
@@ -2007,6 +1943,7 @@ function atualizarInterface(){
 
   atualizarPortaoEnsinar();
   atualizarPrevia();
+  carregarFormPerfil();
 }
 
 function abrirMeuPainel(){
@@ -2331,7 +2268,7 @@ function cardOferta(o){
     '</div>' +
     '<div class="offer-foot">' +
       '<span class="price">' + moeda(o.valor) + ' <small>/' + esc(String(o.cobranca).toLowerCase()) + '</small></span>' +
-      '<button class="btn btn-primary btn-sm" onclick="go(\'perfil\')">Ver perfil</button>' +
+      '<button class="btn btn-primary btn-sm" onclick="verPerfil(\'' + o.professor_id + '\')">Ver perfil</button>' +
     '</div>' +
   '</article>';
 }
@@ -2378,6 +2315,300 @@ async function excluirOferta(id, confirmado){
   }
   await carregarMinhasOfertas();
   await carregarOfertas(true);
+}
+
+
+/* ================================================================
+   ETAPA 3 — PERFIL PÚBLICO, MEU PERFIL E NÚMEROS REAIS
+   ================================================================ */
+
+/* --- WhatsApp --- */
+function soDigitos(t){ return String(t == null ? '' : t).replace(/\D/g, ''); }
+
+function linkWhatsapp(tel, nomeDono, tituloOferta){
+  var d = soDigitos(tel);
+  if(d.length < 10) return null;          // número incompleto
+  if(d.length <= 11) d = '55' + d;        // sem código do país: assume Brasil
+  var primeiro = String(nomeDono || '').trim().split(/\s+/)[0];
+  var msg = 'Olá' + (primeiro ? ', ' + primeiro : '') + '! Encontrei seu perfil no AprenderConecta';
+  if(tituloOferta) msg += ' e me interessei por "' + tituloOferta + '"';
+  msg += '. Podemos conversar?';
+  return 'https://wa.me/' + d + '?text=' + encodeURIComponent(msg);
+}
+
+function mesAno(iso){
+  if(!iso) return '—';
+  var meses = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+  var d = new Date(iso);
+  if(isNaN(d)) return '—';
+  return meses[d.getMonth()] + '/' + d.getFullYear();
+}
+
+
+/* --- abrir o perfil de alguém --- */
+function verPerfil(id){
+  perfilVisto = id;
+  go('perfil');
+  if(history.replaceState) history.replaceState(null, '', '#perfil/' + id);
+}
+function verMeuPerfil(){
+  if(usuario) verPerfil(usuario.id);
+}
+
+async function carregarPerfilPublico(id){
+  var elNome = document.getElementById('pf-nome');
+  if(!elNome || !sb) return;
+
+  var ini     = document.getElementById('pf-ini');
+  var linha   = document.getElementById('pf-linha');
+  var selos   = document.getElementById('pf-selos');
+  var acao    = document.getElementById('pf-acao');
+  var sobre   = document.getElementById('pf-sobre');
+  var caixaOf = document.getElementById('pf-ofertas');
+  var contato = document.getElementById('pf-contato');
+  var numeros = document.getElementById('pf-numeros');
+
+  if(!id){
+    elNome.textContent = 'Nenhum perfil escolhido';
+    linha.textContent = 'Abra a tela Aprender e clique em "Ver perfil" em alguma oferta.';
+    ini.textContent = '–'; selos.innerHTML = '';
+    acao.innerHTML = '<button class="btn btn-accent" onclick="go(\'aprender\')">Ver ofertas</button>';
+    sobre.style.display = 'none';
+    caixaOf.innerHTML = ''; contato.innerHTML = ''; numeros.innerHTML = '';
+    return;
+  }
+
+  elNome.textContent = 'Carregando…';
+  caixaOf.innerHTML = '<p class="muted" style="font-size:.9rem;">Carregando…</p>';
+
+  var r = await sb.from('perfis')
+    .select('id, nome, papel, cidade, bio, telefone, titulo_profissional, criado_em')
+    .eq('id', id).maybeSingle();
+
+  if(r.error || !r.data){
+    elNome.textContent = 'Perfil não encontrado';
+    linha.textContent = r.error ? r.error.message : 'Esse perfil não existe mais.';
+    ini.textContent = '?'; selos.innerHTML = ''; acao.innerHTML = '';
+    sobre.style.display = 'none'; caixaOf.innerHTML = ''; contato.innerHTML = ''; numeros.innerHTML = '';
+    return;
+  }
+
+  var pe = r.data;
+  var souEu = usuario && usuario.id === pe.id;
+
+  ini.textContent = iniciais(pe.nome);
+  ini.className   = 'ava ava-lg ' + corAvatar(pe.nome);
+  elNome.textContent = pe.nome;
+
+  var partes = [];
+  if(pe.titulo_profissional) partes.push(pe.titulo_profissional);
+  if(pe.cidade)             partes.push('📍 ' + pe.cidade);
+  linha.textContent = partes.join(' · ');
+
+  var papeis = { professor:'👨‍🏫 Professor', aluno:'🎓 Aluno', contratante:'💼 Contratante', vendedor:'📚 Vende materiais' };
+  selos.innerHTML = '<span class="seal">' + esc(papeis[pe.papel] || pe.papel) + '</span>' +
+                    '<span class="seal">Na plataforma desde ' + esc(mesAno(pe.criado_em)) + '</span>';
+
+  /* ofertas da pessoa */
+  var o = await sb.from('ofertas')
+    .select('id, titulo, area, nivel, formato, descricao, valor, cobranca, modalidade, criado_em')
+    .eq('professor_id', id).eq('ativa', true)
+    .order('criado_em', { ascending: false });
+
+  var lista = (o.error ? [] : (o.data || []));
+  var icones = { 'Aula individual':'🎓', 'Turma':'👥', 'Aula ao vivo':'🎥', 'Curso gravado':'📀', 'Mentoria':'🧭', 'Grupo de estudos':'📖' };
+  var cores  = { 'Aula individual':'i-blue', 'Turma':'i-green', 'Aula ao vivo':'i-amber', 'Curso gravado':'i-purple', 'Mentoria':'i-blue', 'Grupo de estudos':'i-green' };
+
+  if(lista.length === 0){
+    caixaOf.innerHTML = '<p class="muted" style="font-size:.92rem;">' +
+      (souEu ? 'Você ainda não publicou nenhuma oferta. <b class="link-auth" onclick="go(\'ensinar\')">Publicar agora</b>'
+             : 'Esta pessoa ainda não tem ofertas publicadas.') + '</p>';
+  } else {
+    caixaOf.innerHTML = lista.map(function(of){
+      return '<div class="list-item">' +
+        '<div class="path-ico ' + (cores[of.formato] || 'i-blue') + '" style="width:42px;height:42px;margin:0;font-size:1.1rem;border-radius:12px;">' + (icones[of.formato] || '🎓') + '</div>' +
+        '<div class="g"><b>' + esc(of.titulo) + '</b><small>' + esc(of.formato) + ' · ' + esc(of.modalidade) +
+          (of.nivel ? ' · ' + esc(of.nivel) : '') + '</small></div>' +
+        '<span class="price">' + moeda(of.valor) + '<small>/' + esc(String(of.cobranca).toLowerCase()) + '</small></span>' +
+      '</div>';
+    }).join('');
+  }
+
+  /* sobre */
+  if(pe.bio && pe.bio.trim()){
+    document.getElementById('pf-bio').textContent = pe.bio;
+    sobre.style.display = '';
+  } else if(souEu){
+    document.getElementById('pf-bio').innerHTML = 'Você ainda não escreveu sua apresentação. <b class="link-auth" onclick="go(\'editar-perfil\')">Escrever agora</b>';
+    sobre.style.display = '';
+  } else {
+    sobre.style.display = 'none';
+  }
+
+  /* contato */
+  var zap = linkWhatsapp(pe.telefone, pe.nome, lista.length ? lista[0].titulo : '');
+  if(souEu){
+    acao.innerHTML = '<button class="btn btn-accent" onclick="go(\'editar-perfil\')">Editar meu perfil</button>' +
+      '<p style="font-size:.78rem;color:rgba(255,255,255,.7);margin-top:10px;">Este é o seu perfil, como os outros veem.</p>';
+    contato.innerHTML = '<h4>Seu contato</h4>' + (zap
+      ? '<p style="font-size:.9rem;color:var(--ink-2);line-height:1.6;">Quem abrir seu perfil vê um botão para te chamar no WhatsApp.</p>'
+      : '<p style="font-size:.9rem;color:var(--ink-2);line-height:1.6;">Você ainda não informou um WhatsApp, então ninguém consegue te procurar. <b class="link-auth" onclick="go(\'editar-perfil\')">Adicionar agora</b></p>');
+  } else if(zap){
+    acao.innerHTML = '<a class="btn btn-accent" href="' + zap + '" target="_blank" rel="noopener">💬 Chamar no WhatsApp</a>';
+    contato.innerHTML = '<h4>Falar com ' + esc(String(pe.nome).split(' ')[0]) + '</h4>' +
+      '<a class="btn btn-primary btn-block" href="' + zap + '" target="_blank" rel="noopener">💬 Chamar no WhatsApp</a>' +
+      '<p class="muted" style="font-size:.8rem;margin-top:14px;line-height:1.55;">Horário e pagamento são combinados diretamente entre vocês. A plataforma ainda não intermedia pagamentos.</p>';
+  } else {
+    acao.innerHTML = '<p style="font-size:.85rem;color:rgba(255,255,255,.75);">Esta pessoa ainda não informou um contato.</p>';
+    contato.innerHTML = '<h4>Contato</h4><p class="muted" style="font-size:.88rem;line-height:1.55;">Esta pessoa ainda não informou um WhatsApp no perfil.</p>';
+  }
+
+  numeros.innerHTML =
+    '<div class="list-item"><div class="g"><b>' + lista.length + '</b><small>' + (lista.length === 1 ? 'oferta publicada' : 'ofertas publicadas') + '</small></div></div>' +
+    '<div class="list-item"><div class="g"><b>' + esc(mesAno(pe.criado_em)) + '</b><small>entrou na plataforma</small></div></div>' +
+    (pe.cidade ? '<div class="list-item"><div class="g"><b>' + esc(pe.cidade) + '</b><small>onde atua</small></div></div>' : '');
+}
+
+
+/* --- editar o meu perfil --- */
+function carregarFormPerfil(){
+  var portao = document.getElementById('ep-portao');
+  var form   = document.getElementById('ep-form');
+  if(!portao || !form) return;
+
+  if(!usuario){
+    portao.style.display = 'block';
+    portao.style.background = '#DBEAFE'; portao.style.color = '#1E3A8A';
+    portao.innerHTML = '<b>Entre na sua conta para editar o perfil.</b><br>' +
+      '<button class="btn btn-primary btn-sm" style="margin-top:12px;" onclick="irParaEntrar(\'entrar\')">Entrar</button>';
+    form.style.display = 'none';
+    return;
+  }
+  portao.style.display = 'none';
+  form.style.display = '';
+
+  document.getElementById('ep-nome').value   = (perfil && perfil.nome)   || '';
+  document.getElementById('ep-papel').value  = (perfil && perfil.papel)  || 'aluno';
+  document.getElementById('ep-titulo').value = (perfil && perfil.titulo_profissional) || '';
+  document.getElementById('ep-cidade').value = (perfil && perfil.cidade) || '';
+  document.getElementById('ep-bio').value    = (perfil && perfil.bio)    || '';
+  document.getElementById('ep-tel').value    = (perfil && perfil.telefone) || '';
+  document.getElementById('ep-msg').style.display = 'none';
+  previaPerfil();
+}
+
+function previaPerfil(){
+  if(!document.getElementById('ep-pv-nome')) return;
+  var nome   = (document.getElementById('ep-nome').value || '').trim();
+  var titulo = (document.getElementById('ep-titulo').value || '').trim();
+  var cidade = (document.getElementById('ep-cidade').value || '').trim();
+  var bio    = (document.getElementById('ep-bio').value || '').trim();
+  var papel  = document.getElementById('ep-papel').value;
+  var tel    = (document.getElementById('ep-tel').value || '').trim();
+
+  document.getElementById('ep-pv-ini').textContent = iniciais(nome || '?');
+  document.getElementById('ep-pv-ini').className   = 'ava ' + corAvatar(nome);
+  document.getElementById('ep-pv-nome').textContent   = nome || 'Seu nome';
+  document.getElementById('ep-pv-titulo').textContent = titulo || 'Título profissional';
+  document.getElementById('ep-pv-bio').textContent    = bio || 'Seu texto de apresentação aparece aqui.';
+
+  var etiquetas = '';
+  var papeis = { professor:'👨‍🏫 Professor', aluno:'🎓 Aluno', contratante:'💼 Contratante', vendedor:'📚 Vende materiais' };
+  etiquetas += '<span class="tag tag-b">' + esc(papeis[papel] || papel) + '</span>';
+  if(cidade) etiquetas += '<span class="tag">📍 ' + esc(cidade) + '</span>';
+  if(linkWhatsapp(tel)) etiquetas += '<span class="tag tag-g">💬 WhatsApp</span>';
+  document.getElementById('ep-pv-tags').innerHTML = etiquetas;
+
+  document.getElementById('ep-conta-bio').textContent = bio.length + ' caracteres';
+  document.getElementById('ep-bloco-zap').style.display = (papel === 'professor' || papel === 'vendedor') ? '' : 'none';
+}
+
+function mostrarMsgPerfil(texto, tipo){
+  var cores = { erro:['#FEE2E2','#991B1B'], ok:['#DCFCE7','#166534'], aviso:['#FEF3C7','#92400E'] };
+  var c = cores[tipo] || cores.aviso;
+  var el = document.getElementById('ep-msg');
+  el.style.background = c[0]; el.style.color = c[1];
+  el.innerHTML = texto; el.style.display = 'block';
+}
+
+async function salvarPerfil(){
+  if(!sb || !usuario) return;
+  var nome = (document.getElementById('ep-nome').value || '').trim();
+  if(nome.length < 2){ mostrarMsgPerfil('Escreva seu nome.', 'erro'); return; }
+
+  var tel = (document.getElementById('ep-tel').value || '').trim();
+  if(tel && !linkWhatsapp(tel)){
+    mostrarMsgPerfil('Esse WhatsApp parece incompleto. Escreva com DDD, por exemplo <b>(65) 99999-9999</b>.', 'erro');
+    return;
+  }
+
+  var btn = document.getElementById('ep-salvar');
+  btn.disabled = true; btn.textContent = 'Salvando…';
+
+  var r = await sb.from('perfis').update({
+    nome:                nome,
+    papel:               document.getElementById('ep-papel').value,
+    titulo_profissional: (document.getElementById('ep-titulo').value || '').trim() || null,
+    cidade:              (document.getElementById('ep-cidade').value || '').trim() || null,
+    bio:                 (document.getElementById('ep-bio').value || '').trim() || null,
+    telefone:            tel || null
+  }).eq('id', usuario.id);
+
+  btn.disabled = false; btn.textContent = 'Salvar perfil';
+
+  if(r.error){
+    var m = r.error.message || '';
+    if(/titulo_profissional|column .* does not exist/i.test(m)){
+      mostrarMsgPerfil('Falta rodar o <b>banco-etapa3.sql</b> no Supabase — a coluna do título profissional ainda não existe.', 'erro');
+    } else {
+      mostrarMsgPerfil('Não deu certo: ' + esc(m), 'erro');
+    }
+    return;
+  }
+
+  await carregarSessao();
+  ofertasCarregadas = false;   // o nome do professor aparece nos cards
+  mostrarMsgPerfil('Perfil salvo! <button class="btn btn-ghost btn-sm" style="margin-top:10px;" onclick="verMeuPerfil()">Ver como ficou</button>', 'ok');
+}
+
+
+/* --- página inicial com números de verdade --- */
+async function carregarHome(){
+  if(!sb || !document.getElementById('hs-ofertas')) return;
+  await carregarOfertas();
+
+  var c = await sb.from('perfis').select('id', { count: 'exact', head: true }).eq('papel', 'professor');
+  var nProf = (c && typeof c.count === 'number') ? c.count : 0;
+
+  var areas = {};
+  ofertas.forEach(function(o){ if(o.area) areas[o.area] = (areas[o.area] || 0) + 1; });
+
+  document.getElementById('hs-professores').textContent = nProf;
+  document.getElementById('hs-ofertas').textContent     = ofertas.length;
+  document.getElementById('hs-areas').textContent       = Object.keys(areas).length;
+
+  document.querySelectorAll('.cats [data-cat]').forEach(function(sm){
+    var n = areas[sm.getAttribute('data-cat')] || 0;
+    sm.textContent = n === 0 ? 'nenhuma ainda' : (n === 1 ? '1 oferta' : n + ' ofertas');
+  });
+
+  var sec   = document.getElementById('sec-destaques');
+  var caixa = document.getElementById('home-ofertas');
+  if(ofertas.length){
+    sec.style.display = '';
+    caixa.innerHTML = ofertas.slice(0, 3).map(cardOferta).join('');
+  } else {
+    sec.style.display = 'none';
+  }
+}
+
+function buscarArea(area){
+  go('aprender');
+  document.querySelectorAll('#filtros-area input').forEach(function(c){
+    c.checked = (c.getAttribute('data-area') === area);
+  });
+  var b = document.getElementById('busca-aprender'); if(b) b.value = '';
+  filtrarOfertas();
 }
 
 
