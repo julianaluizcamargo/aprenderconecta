@@ -1297,124 +1297,70 @@ ul{margin:0;padding:0;list-style:none;}
       <div>
         <div class="crumb">Minha conta › Área do aluno</div>
         <h1>Olá, <span id="nome-aluno">visitante</span> 👋</h1>
-        <p>Você tem <b>2 aulas</b> esta semana e <b>1 atividade</b> aguardando entrega.</p>
+        <p id="sub-painel-aluno">Encontre um professor e fale direto com ele.</p>
       </div>
       <div style="display:flex;gap:10px;flex-wrap:wrap;">
         <button class="btn btn-ghost" onclick="go('editar-perfil')">Editar meu perfil</button>
-        <button class="btn btn-primary" onclick="go('aprender')">＋ Buscar novo professor</button>
+        <button class="btn btn-primary" onclick="go('aprender')">＋ Buscar professor</button>
       </div>
     </div>
   </div>
 
   <div class="section-sm">
-    <div class="wrap dash">
-
-      <nav class="sidenav">
-        <a href="#" class="on"><i>🏠</i>Visão geral</a>
-        <a href="#"><i>📚</i>Meus cursos</a>
-        <a href="#"><i>🎥</i>Minhas aulas</a>
-        <a href="#"><i>📋</i>Minhas atividades</a>
-        <a href="#"><i>💼</i>Meus pedidos</a>
-        <a href="#"><i>🏆</i>Meus certificados</a>
-        <a href="#"><i>⭐</i>Favoritos</a>
-        <a href="#"><i>💬</i>Mensagens <span class="badge-st st-new" style="margin-left:auto;">3</span></a>
-        <a href="#"><i>💰</i>Minha carteira</a>
-        <a href="#" onclick="go('painel-prof');return false;"><i>🔄</i>Mudar para professor</a>
-      </nav>
+    <div class="wrap split" style="grid-template-columns:1fr 340px;">
 
       <div>
-        <div class="grid g4" style="margin-bottom:22px;">
-          <div class="card stat"><small>Cursos em andamento</small><b>3</b><span class="delta">+1 este mês</span></div>
-          <div class="card stat"><small>Horas estudadas</small><b>48h</b><span class="delta">+6h esta semana</span></div>
-          <div class="card stat"><small>Certificados</small><b>2</b><span class="muted" style="font-size:.8rem;font-weight:600;">concluídos</span></div>
-          <div class="card stat"><small>Saldo na carteira</small><b>R$ 120</b><span class="muted" style="font-size:.8rem;font-weight:600;">disponível</span></div>
+        <div class="panel" style="padding:28px;">
+          <h3 class="h3" style="margin-bottom:8px;">Como funciona por aqui</h3>
+          <p class="muted" style="font-size:.93rem;line-height:1.65;margin-bottom:22px;">A plataforma apresenta você a professores. A conversa, o horário e o pagamento são combinados diretamente entre vocês.</p>
+
+          <div class="list-item">
+            <div class="path-ico i-blue" style="width:42px;height:42px;margin:0;font-size:1.1rem;border-radius:12px;">1</div>
+            <div class="g"><b>Procure o que você quer aprender</b><small>Filtre por área, formato e faixa de preço</small></div>
+          </div>
+          <div class="list-item">
+            <div class="path-ico i-green" style="width:42px;height:42px;margin:0;font-size:1.1rem;border-radius:12px;">2</div>
+            <div class="g"><b>Abra o perfil do professor</b><small>Veja formação, apresentação e todas as ofertas dele</small></div>
+          </div>
+          <div class="list-item">
+            <div class="path-ico i-amber" style="width:42px;height:42px;margin:0;font-size:1.1rem;border-radius:12px;">3</div>
+            <div class="g"><b>Chame no WhatsApp</b><small>Combine horário e valor direto com a pessoa</small></div>
+          </div>
+
+          <button class="btn btn-primary btn-block" style="margin-top:22px;" onclick="go('aprender')">Ver professores disponíveis</button>
         </div>
 
-        <div class="grid g2" style="align-items:start;">
-
-          <div class="panel">
-            <h4>Próximas aulas</h4>
-            <div class="list-item">
-              <span class="ava ava-sm a2">CR</span>
-              <div class="g"><b>Matemática — Álgebra II</b><small>Carlos Ribeiro · Hoje, 19h · Online</small></div>
-              <button class="btn btn-primary btn-sm">Entrar</button>
-            </div>
-            <div class="list-item">
-              <span class="ava ava-sm a1">MS</span>
-              <div class="g"><b>Leitura e interpretação</b><small>Maria Silva · Quinta, 14h · Online</small></div>
-              <span class="badge-st st-wait">Agendada</span>
-            </div>
-            <div class="list-item">
-              <span class="ava ava-sm a5">BM</span>
-              <div class="g"><b>Grupo de estudos — Concursos</b><small>Beatriz Moura · Sábado, 9h</small></div>
-              <span class="badge-st st-wait">Agendada</span>
-            </div>
-          </div>
-
-          <div class="panel">
-            <h4>Meu aprendizado</h4>
-            <div class="list-item">
-              <div class="g"><b>Matemática do zero ao ENEM</b><small>32 de 48 aulas concluídas</small>
-                <div class="progress"><span style="width:67%"></span></div></div>
-              <b style="font-size:.9rem;">67%</b>
-            </div>
-            <div class="list-item">
-              <div class="g"><b>Práticas de leitura na alfabetização</b><small>14 de 18 aulas concluídas</small>
-                <div class="progress"><span style="width:78%"></span></div></div>
-              <b style="font-size:.9rem;">78%</b>
-            </div>
-            <div class="list-item">
-              <div class="g"><b>Estatística aplicada à pesquisa</b><small>3 de 20 aulas concluídas</small>
-                <div class="progress"><span style="width:15%"></span></div></div>
-              <b style="font-size:.9rem;">15%</b>
-            </div>
-            <button class="btn btn-ghost btn-block btn-sm" style="margin-top:16px;">Ver todos os cursos</button>
-          </div>
-
-          <div class="panel">
-            <h4>Meus pedidos de serviço</h4>
-            <div class="list-item">
-              <div class="g"><b>Revisão e formatação ABNT do TCC</b><small>7 propostas recebidas · orçamento R$ 350–500</small></div>
-              <span class="badge-st st-new">Aberto</span>
-            </div>
-            <div class="list-item">
-              <div class="g"><b>Sequência didática de Ciências — 5º ano</b><small>Ana Lúcia Ferraz · entrega em 15/09</small></div>
-              <span class="badge-st st-wait">Em andamento</span>
-            </div>
-            <div class="list-item">
-              <div class="g"><b>Diagramação de e-book infantil</b><small>Concluído · aguardando sua avaliação</small></div>
-              <span class="badge-st st-ok">Entregue</span>
-            </div>
-            <button class="btn btn-ghost btn-block btn-sm" style="margin-top:16px;" onclick="go('servicos')">Publicar novo pedido</button>
-          </div>
-
-          <div class="panel">
-            <h4>Minha carteira</h4>
-            <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:6px;">
-              <b style="font-size:2rem;letter-spacing:-.03em;">R$ 120,00</b>
-              <span class="badge-st st-ok">disponível</span>
-            </div>
-            <p class="muted" style="font-size:.85rem;margin-bottom:16px;">R$ 350,00 estão retidos até a aprovação do serviço de revisão do TCC.</p>
-            <div class="list-item"><div class="g"><b>Aula — Carlos Ribeiro</b><small>12/08 · PIX</small></div><b style="color:#C0326E;">− R$ 40,00</b></div>
-            <div class="list-item"><div class="g"><b>Caderno de Alfabetização</b><small>08/08 · Cartão</small></div><b style="color:#C0326E;">− R$ 39,90</b></div>
-            <div class="list-item"><div class="g"><b>Recarga de créditos</b><small>05/08 · PIX</small></div><b style="color:var(--green-600);">+ R$ 200,00</b></div>
-            <button class="btn btn-accent btn-block btn-sm" style="margin-top:16px;">Adicionar créditos</button>
-          </div>
-
+        <div class="panel" style="padding:28px;">
+          <h3 class="h3" style="margin-bottom:8px;">Em construção</h3>
+          <p class="muted" style="font-size:.93rem;line-height:1.65;">Histórico de aulas, certificados, carteira e avaliações vão aparecer nesta área conforme a plataforma crescer. Por enquanto, o que já funciona é encontrar um professor e falar com ele.</p>
         </div>
       </div>
+
+      <aside>
+        <div class="panel">
+          <h4>Meu cadastro</h4>
+          <div id="resumo-aluno"></div>
+          <button class="btn btn-ghost btn-block btn-sm" style="margin-top:14px;" onclick="go('editar-perfil')">Editar meu perfil</button>
+        </div>
+
+        <div class="panel">
+          <h4>Quer ensinar também?</h4>
+          <p style="font-size:.88rem;color:var(--ink-2);line-height:1.6;">A mesma conta serve para os dois lados. Se você tem algo para ensinar, é só mudar seu papel no perfil e publicar uma oferta.</p>
+          <button class="btn btn-accent btn-block btn-sm" style="margin-top:14px;" onclick="go('ensinar')">Quero ensinar</button>
+        </div>
+      </aside>
+
     </div>
   </div>
 </section>
 
-<!-- ========================= PAINEL DO PROFESSOR ========================= -->
 <section class="view" id="v-painel-prof">
   <div class="page-head">
     <div class="wrap" style="display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;">
       <div>
         <div class="crumb">Minha conta › Painel profissional</div>
         <h1>Painel de <span id="nome-prof">visitante</span></h1>
-        <p>Você recebeu <b>4 novas solicitações</b> e tem <b>R$ 1.284,00</b> a receber este mês.</p>
+        <p id="sub-painel-prof">Publique suas ofertas e receba contatos de alunos.</p>
       </div>
       <div style="display:flex;gap:10px;flex-wrap:wrap;">
         <button class="btn btn-ghost" onclick="go('editar-perfil')">Editar meu perfil</button>
@@ -1424,97 +1370,52 @@ ul{margin:0;padding:0;list-style:none;}
   </div>
 
   <div class="section-sm">
-    <div class="wrap dash">
+    <div class="wrap">
 
-      <nav class="sidenav">
-        <a href="#" class="on"><i>📊</i>Visão geral</a>
-        <a href="#"><i>👨‍🏫</i>Minhas aulas</a>
-        <a href="#"><i>📚</i>Meus cursos</a>
-        <a href="#"><i>💼</i>Meus serviços</a>
-        <a href="#"><i>📦</i>Meus materiais</a>
-        <a href="#"><i>📝</i>Minhas propostas</a>
-        <a href="#"><i>💰</i>Meus ganhos</a>
-        <a href="#"><i>⭐</i>Avaliações</a>
-        <a href="#"><i>💬</i>Mensagens <span class="badge-st st-new" style="margin-left:auto;">5</span></a>
-        <a href="#" onclick="go('painel');return false;"><i>🔄</i>Mudar para aluno</a>
-      </nav>
+      <div class="grid g4" style="margin-bottom:28px;" id="stats-prof"></div>
 
-      <div>
-        <div class="grid g4" style="margin-bottom:22px;">
-          <div class="card stat"><small>Ganhos em agosto</small><b>R$ 3.240</b><span class="delta">▲ 18% vs. julho</span></div>
-          <div class="card stat"><small>A receber</small><b>R$ 1.284</b><span class="muted" style="font-size:.8rem;font-weight:600;">liberação em D+2</span></div>
-          <div class="card stat"><small>Avaliação média</small><b>4,9 ★</b><span class="muted" style="font-size:.8rem;font-weight:600;">214 avaliações</span></div>
-          <div class="card stat"><small>Taxa de resposta</small><b>98%</b><span class="delta">acima da média</span></div>
-        </div>
-
-        <div class="grid g2" style="align-items:start;">
-
-          <div class="panel">
-            <h4>Solicitações recebidas</h4>
-            <div class="list-item">
-              <span class="ava ava-sm a3">PC</span>
-              <div class="g"><b>Patrícia C. — aula de alfabetização</b><small>Segunda, 14h · R$ 55/hora</small></div>
-              <div style="display:flex;gap:6px;">
-                <button class="btn btn-primary btn-sm">Aceitar</button>
-              </div>
-            </div>
-            <div class="list-item">
-              <span class="ava ava-sm a6">EM</span>
-              <div class="g"><b>Escola Mundo Novo — sequência didática</b><small>Orçamento R$ 400 · prazo 15 dias</small></div>
-              <button class="btn btn-primary btn-sm">Responder</button>
-            </div>
-            <div class="list-item">
-              <span class="ava ava-sm a4">RS</span>
-              <div class="g"><b>Rodrigo S. — grupo de leitura</b><small>Turma de 6 · R$ 180/mês</small></div>
-              <button class="btn btn-primary btn-sm">Responder</button>
-            </div>
-            <div class="list-item">
-              <span class="ava ava-sm a2">LF</span>
-              <div class="g"><b>Luana F. — dúvida sobre material</b><small>Caderno de Alfabetização</small></div>
-              <button class="btn btn-ghost btn-sm">Ver</button>
-            </div>
-          </div>
-
-          <div class="panel">
-            <h4>Desempenho dos últimos 6 meses</h4>
-            <div style="display:flex;align-items:flex-end;gap:12px;height:170px;padding:10px 0 0;">
-              <div style="flex:1;text-align:center;"><div style="height:78px;background:var(--brand-100);border-radius:8px 8px 0 0;"></div><small class="muted" style="font-size:.75rem;">Mar</small></div>
-              <div style="flex:1;text-align:center;"><div style="height:92px;background:var(--brand-100);border-radius:8px 8px 0 0;"></div><small class="muted" style="font-size:.75rem;">Abr</small></div>
-              <div style="flex:1;text-align:center;"><div style="height:76px;background:var(--brand-100);border-radius:8px 8px 0 0;"></div><small class="muted" style="font-size:.75rem;">Mai</small></div>
-              <div style="flex:1;text-align:center;"><div style="height:110px;background:var(--brand-500);border-radius:8px 8px 0 0;"></div><small class="muted" style="font-size:.75rem;">Jun</small></div>
-              <div style="flex:1;text-align:center;"><div style="height:98px;background:var(--brand-500);border-radius:8px 8px 0 0;"></div><small class="muted" style="font-size:.75rem;">Jul</small></div>
-              <div style="flex:1;text-align:center;"><div style="height:130px;background:var(--brand-700);border-radius:8px 8px 0 0;"></div><small class="muted" style="font-size:.75rem;">Ago</small></div>
-            </div>
-            <p class="muted" style="font-size:.85rem;margin-top:14px;">Agosto é o seu melhor mês até aqui: <b style="color:var(--green-600);">R$ 3.240</b> em ganhos, 18% acima de julho.</p>
-          </div>
-
-          <div class="panel" id="painel-assinatura"></div>
-
-          <div class="panel">
-            <h4>Minhas ofertas <span class="tag tag-g" style="margin-left:6px;">dados reais</span></h4>
+      <div class="split" style="grid-template-columns:1fr 340px;">
+        <div>
+          <div class="panel" style="padding:28px;">
+            <h4 style="margin-bottom:14px;">Minhas ofertas <span class="tag tag-g" style="margin-left:6px;">dados reais</span></h4>
             <div id="minhas-ofertas"><p class="muted" style="font-size:.88rem;">Carregando…</p></div>
             <button class="btn btn-accent btn-block btn-sm" style="margin-top:16px;" onclick="go('ensinar')">＋ Criar nova oferta</button>
           </div>
 
-          <div class="panel">
-            <h4>Meus materiais na loja</h4>
+          <div class="panel" style="padding:28px;">
+            <h3 class="h3" style="margin-bottom:8px;">Como aparecer para mais alunos</h3>
             <div class="list-item">
-              <div class="g"><b>Caderno de Alfabetização — 120 atividades</b><small>312 vendas · R$ 39,90</small></div>
-              <b style="font-size:.9rem;color:var(--green-600);">R$ 11.180</b>
+              <div class="path-ico i-blue" style="width:42px;height:42px;margin:0;font-size:1.1rem;border-radius:12px;">📝</div>
+              <div class="g"><b>Complete seu perfil</b><small>Formação, cidade e uma boa apresentação. É o que faz o aluno escolher você.</small></div>
             </div>
             <div class="list-item">
-              <div class="g"><b>Relatório de desenvolvimento (gratuito)</b><small>1.204 downloads</small></div>
-              <b style="font-size:.9rem;" class="muted">—</b>
+              <div class="path-ico i-green" style="width:42px;height:42px;margin:0;font-size:1.1rem;border-radius:12px;">💬</div>
+              <div class="g"><b>Deixe seu WhatsApp no perfil</b><small>Sem ele, ninguém consegue te procurar.</small></div>
             </div>
             <div class="list-item">
-              <div class="g"><b>Atividades de coordenação motora</b><small>87 vendas · R$ 19,90</small></div>
-              <b style="font-size:.9rem;color:var(--green-600);">R$ 1.559</b>
+              <div class="path-ico i-amber" style="width:42px;height:42px;margin:0;font-size:1.1rem;border-radius:12px;">🔗</div>
+              <div class="g"><b>Divulgue o link do seu perfil</b><small>Ele funciona sozinho — mande no Instagram, no grupo da escola, onde quiser.</small></div>
             </div>
-            <button class="btn btn-accent btn-block btn-sm" style="margin-top:16px;" onclick="go('loja')">＋ Publicar novo material</button>
+            <button class="btn btn-ghost btn-block btn-sm" style="margin-top:16px;" onclick="verMeuPerfil()">Ver meu perfil público</button>
           </div>
 
+          <div class="panel" style="padding:28px;">
+            <h3 class="h3" style="margin-bottom:8px;">Em construção</h3>
+            <p class="muted" style="font-size:.93rem;line-height:1.65;">Ganhos, solicitações, avaliações e venda de materiais vão aparecer nesta área conforme a plataforma crescer. Hoje o contato acontece direto entre você e o aluno, pelo WhatsApp.</p>
+          </div>
         </div>
+
+        <aside>
+          <div class="panel" id="painel-assinatura"></div>
+
+          <div class="panel">
+            <h4>Meu cadastro</h4>
+            <div id="resumo-prof"></div>
+            <button class="btn btn-ghost btn-block btn-sm" style="margin-top:14px;" onclick="go('editar-perfil')">Editar meu perfil</button>
+          </div>
+        </aside>
       </div>
+
     </div>
   </div>
 </section>
@@ -1618,7 +1519,7 @@ ul{margin:0;padding:0;list-style:none;}
         <p>Podemos atualizar estes Termos. Mudanças relevantes serão comunicadas pelo e-mail cadastrado ou por aviso no site, com antecedência razoável. O uso continuado após a mudança significa concordância.</p>
 
         <h2>13. Lei aplicável e foro</h2>
-        <p>Estes Termos são regidos pelas leis brasileiras. Fica eleito o foro da comarca de Cuiabá/MT, sem prejuízo do direito do consumidor de demandar no foro do seu próprio domicílio.</p>
+        <p>Estes Termos são regidos pelas leis brasileiras. Fica eleito o foro da comarca de Ji-Paraná/RO, sem prejuízo do direito do consumidor de demandar no foro do seu próprio domicílio.</p>
 
         <h2>14. Contato</h2>
         <p>Dúvidas sobre estes Termos: <a href="mailto:julianaluizcamargo@gmail.com">julianaluizcamargo@gmail.com</a></p>
@@ -2037,7 +1938,8 @@ function go(view){
 
   if(view === 'aprender')      carregarOfertas();
   if(view === 'ensinar')       { atualizarPortaoEnsinar(); avisoAssinaturaEnsinar(); atualizarPrevia(); }
-  if(view === 'painel-prof')   { carregarMinhasOfertas(); pintarPainelAssinatura(); }
+  if(view === 'painel')        { pintarResumoCadastro(); }
+  if(view === 'painel-prof')   { carregarMinhasOfertas(); pintarPainelAssinatura(); pintarResumoCadastro(); pintarStatsProf(); }
   if(view === 'home')          carregarHome();
   if(view === 'perfil')        carregarPerfilPublico(perfilVisto);
   if(view === 'editar-perfil') carregarFormPerfil();
@@ -2211,6 +2113,7 @@ function atualizarInterface(){
   atualizarPrevia();
   carregarFormPerfil();
   pintarPainelAssinatura();
+  pintarResumoCadastro();
 }
 
 function abrirMeuPainel(){
@@ -2990,6 +2893,65 @@ function avisoAssinaturaEnsinar(){
   portao.innerHTML = '<b>Sua assinatura está vencida.</b><br>' +
     '<span style="font-size:.9rem;">Você pode publicar normalmente, mas suas ofertas só voltam a aparecer na busca depois da renovação.</span><br>' +
     '<button class="btn btn-ghost btn-sm" style="margin-top:12px;" onclick="go(\'painel-prof\')">Ver como renovar</button>';
+}
+
+
+/* --- painéis com dados de verdade --- */
+function itemResumo(rotulo, valor, ok){
+  return '<div class="list-item"><div class="g"><b>' + esc(valor) + '</b><small>' + esc(rotulo) + '</small></div>' +
+         (ok === true  ? '<span class="badge-st st-ok">✓</span>' : '') +
+         (ok === false ? '<span class="badge-st st-wait">falta</span>' : '') + '</div>';
+}
+
+function pintarResumoCadastro(){
+  if(!perfil) return;
+  var papeis = { professor:'Professor', aluno:'Aluno', contratante:'Contratante', vendedor:'Vende materiais' };
+  var html =
+    itemResumo('seu papel na plataforma', papeis[perfil.papel] || perfil.papel) +
+    itemResumo('cidade', perfil.cidade || 'não informada', !!perfil.cidade) +
+    itemResumo('WhatsApp no perfil', perfil.telefone ? 'informado' : 'não informado', !!perfil.telefone) +
+    itemResumo('apresentação', (perfil.bio && perfil.bio.trim()) ? 'escrita' : 'não escrita', !!(perfil.bio && perfil.bio.trim())) +
+    itemResumo('na plataforma desde', mesAno(perfil.criado_em));
+
+  ['resumo-aluno','resumo-prof'].forEach(function(id){
+    var el = document.getElementById(id); if(el) el.innerHTML = html;
+  });
+}
+
+async function pintarStatsProf(){
+  var caixa = document.getElementById('stats-prof');
+  if(!caixa || !sb || !usuario) return;
+
+  var r = await sb.from('ofertas').select('id, ativa').eq('professor_id', usuario.id);
+  var minhas = (r.error ? [] : (r.data || []));
+
+  var completo = 0, total = 4;
+  if(perfil){
+    if(perfil.cidade) completo++;
+    if(perfil.telefone) completo++;
+    if(perfil.bio && perfil.bio.trim()) completo++;
+    if(perfil.titulo_profissional) completo++;
+  }
+
+  var plano = !cobrancaLigada() ? 'Gratuito' : (euEstouEmDia() ? 'Ativo' : 'Vencido');
+
+  caixa.innerHTML =
+    '<div class="card stat"><small>Ofertas publicadas</small><b>' + minhas.length + '</b>' +
+      '<span class="muted" style="font-size:.8rem;font-weight:600;">' + (minhas.length ? 'visíveis na busca' : 'publique a primeira') + '</span></div>' +
+    '<div class="card stat"><small>Perfil completo</small><b>' + completo + '/' + total + '</b>' +
+      '<span class="' + (completo === total ? 'delta' : 'muted') + '" style="font-size:.8rem;font-weight:600;">' +
+      (completo === total ? 'tudo preenchido' : 'faltam ' + (total - completo) + ' campos') + '</span></div>' +
+    '<div class="card stat"><small>Na plataforma desde</small><b style="font-size:1.5rem;">' + esc(mesAno(perfil && perfil.criado_em)) + '</b>' +
+      '<span class="muted" style="font-size:.8rem;font-weight:600;">membro fundador</span></div>' +
+    '<div class="card stat"><small>Seu plano</small><b style="font-size:1.5rem;">' + plano + '</b>' +
+      '<span class="muted" style="font-size:.8rem;font-weight:600;">' + (cobrancaLigada() ? moeda(config.preco_mensal) + '/mês' : 'sem custo') + '</span></div>';
+
+  var sub = document.getElementById('sub-painel-prof');
+  if(sub){
+    sub.textContent = minhas.length === 0
+      ? 'Você ainda não publicou nenhuma oferta. Comece por aí.'
+      : (minhas.length === 1 ? 'Você tem 1 oferta publicada.' : 'Você tem ' + minhas.length + ' ofertas publicadas.');
+  }
 }
 
 
