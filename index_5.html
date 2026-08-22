@@ -1,0 +1,2993 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AprenderConecta — Conhecimento que conecta pessoas</title>
+<meta name="description" content="Plataforma que conecta quem quer aprender com quem tem conhecimento para ensinar. Aulas, cursos, serviços educacionais e materiais didáticos em um só lugar.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   APRENDERCONECTA — DESIGN SYSTEM
+   ============================================================ */
+:root{
+  --brand-900:#0B2545;
+  --brand-800:#123262;
+  --brand-700:#17417F;
+  --brand-600:#1D53A3;
+  --brand-500:#2A6FD1;
+  --brand-100:#DCE8FA;
+  --brand-50:#F0F5FD;
+
+  --accent-600:#D9660A;
+  --accent-500:#F5820B;
+  --accent-100:#FDECD6;
+
+  --green-600:#0E8A63;
+  --green-100:#D8F3E8;
+  --purple-600:#6D3FC4;
+  --purple-100:#EAE1FB;
+  --pink-600:#C0326E;
+  --pink-100:#FBE1EC;
+
+  --ink:#0D1524;
+  --ink-2:#3D4A61;
+  --muted:#6B7A93;
+  --line:#E3E8F0;
+  --line-2:#EEF2F7;
+  --bg:#F7F9FC;
+  --surface:#FFFFFF;
+
+  --star:#F2A50C;
+
+  --r-sm:8px; --r:14px; --r-lg:20px; --r-xl:28px;
+  --sh-1:0 1px 2px rgba(13,21,36,.06), 0 1px 3px rgba(13,21,36,.05);
+  --sh-2:0 4px 12px rgba(13,21,36,.07), 0 2px 4px rgba(13,21,36,.04);
+  --sh-3:0 14px 40px rgba(13,21,36,.12), 0 4px 10px rgba(13,21,36,.06);
+  --maxw:1180px;
+}
+*,*::before,*::after{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%;display:block;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;font-size:inherit;cursor:pointer;border:0;background:none;color:inherit;}
+input,select,textarea{font-family:inherit;font-size:inherit;color:inherit;}
+h1,h2,h3,h4{margin:0;line-height:1.2;letter-spacing:-.02em;font-weight:800;}
+p{margin:0;}
+ul{margin:0;padding:0;list-style:none;}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px;}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);}
+
+/* ---------- BOTÕES ---------- */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:12px 22px;border-radius:999px;font-weight:700;font-size:.95rem;
+  transition:.18s ease;white-space:nowrap;border:1.5px solid transparent;
+}
+.btn-primary{background:var(--brand-600);color:#fff;box-shadow:var(--sh-2);}
+.btn-primary:hover{background:var(--brand-700);transform:translateY(-1px);box-shadow:var(--sh-3);}
+.btn-accent{background:var(--accent-500);color:#fff;box-shadow:var(--sh-2);}
+.btn-accent:hover{background:var(--accent-600);transform:translateY(-1px);}
+.btn-ghost{background:var(--surface);color:var(--brand-700);border-color:var(--line);}
+.btn-ghost:hover{border-color:var(--brand-500);color:var(--brand-600);background:var(--brand-50);}
+.btn-line{background:transparent;color:#fff;border-color:rgba(255,255,255,.45);}
+.btn-line:hover{background:rgba(255,255,255,.12);border-color:#fff;}
+.btn-sm{padding:8px 16px;font-size:.85rem;}
+.btn-block{width:100%;}
+
+/* ---------- HEADER ---------- */
+.topbar{
+  position:sticky;top:0;z-index:60;background:rgba(255,255,255,.92);
+  backdrop-filter:blur(12px);border-bottom:1px solid var(--line);
+}
+.topbar-in{display:flex;align-items:center;gap:28px;height:72px;}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.18rem;letter-spacing:-.03em;}
+.logo-mark{
+  width:38px;height:38px;border-radius:11px;flex:0 0 auto;
+  background:linear-gradient(135deg,var(--brand-600),var(--brand-500) 55%,var(--accent-500));
+  display:grid;place-items:center;color:#fff;font-size:1.05rem;font-weight:800;
+  box-shadow:0 4px 12px rgba(29,83,163,.28);
+}
+.logo b{color:var(--brand-700);}
+.logo span{color:var(--accent-500);}
+.mainnav{display:flex;gap:4px;margin-left:8px;}
+.mainnav a{
+  padding:9px 14px;border-radius:10px;font-size:.92rem;font-weight:600;color:var(--ink-2);transition:.15s;
+}
+.mainnav a:hover{background:var(--brand-50);color:var(--brand-700);}
+.mainnav a.on{background:var(--brand-50);color:var(--brand-700);}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px;}
+.burger{display:none;font-size:1.5rem;padding:6px 10px;border-radius:10px;color:var(--brand-700);}
+
+/* ---------- SEÇÕES ---------- */
+.section{padding:76px 0;}
+.section-sm{padding:52px 0;}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:7px;font-size:.78rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:.1em;color:var(--brand-600);
+  background:var(--brand-100);padding:6px 14px;border-radius:999px;margin-bottom:16px;
+}
+.h1{font-size:clamp(2.1rem,5vw,3.5rem);}
+.h2{font-size:clamp(1.6rem,3.4vw,2.35rem);}
+.h3{font-size:1.18rem;font-weight:700;}
+.lead{font-size:1.08rem;color:var(--ink-2);}
+.muted{color:var(--muted);}
+.sec-head{max-width:640px;margin-bottom:38px;}
+.sec-head.center{margin-left:auto;margin-right:auto;text-align:center;}
+.sec-head p{margin-top:12px;color:var(--ink-2);font-size:1.02rem;}
+
+/* ---------- CARDS ---------- */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--sh-1);transition:.2s ease;}
+.card-h:hover{transform:translateY(-4px);box-shadow:var(--sh-3);border-color:var(--brand-100);}
+.grid{display:grid;gap:20px;}
+.g2{grid-template-columns:repeat(2,1fr);}
+.g3{grid-template-columns:repeat(3,1fr);}
+.g4{grid-template-columns:repeat(4,1fr);}
+
+/* ---------- HERO ---------- */
+.hero{
+  position:relative;overflow:hidden;color:#fff;
+  background:radial-gradient(1100px 520px at 15% -10%,#2A6FD1 0%,transparent 60%),
+             radial-gradient(900px 500px at 95% 15%,#6D3FC4 0%,transparent 58%),
+             linear-gradient(160deg,var(--brand-900),var(--brand-800) 60%,#13284D);
+  padding:84px 0 96px;
+}
+.hero::after{
+  content:"";position:absolute;inset:auto 0 -1px 0;height:110px;
+  background:linear-gradient(to bottom,transparent,var(--bg));
+}
+.hero-in{position:relative;z-index:2;text-align:center;max-width:820px;margin:0 auto;}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.2);padding:7px 16px;border-radius:999px;
+  font-size:.83rem;font-weight:600;margin-bottom:22px;
+}
+.hero h1{font-size:clamp(2.2rem,5.4vw,3.7rem);letter-spacing:-.035em;}
+.hero h1 em{font-style:normal;color:#FFC178;}
+.hero-sub{margin-top:18px;font-size:clamp(1rem,2vw,1.18rem);color:rgba(255,255,255,.82);max-width:600px;margin-left:auto;margin-right:auto;}
+.hero-verbs{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:22px;}
+.hero-verbs span{
+  font-weight:700;font-size:.9rem;padding:7px 16px;border-radius:999px;
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.16);
+}
+.searchbar{
+  display:flex;align-items:center;gap:10px;background:#fff;border-radius:999px;
+  padding:8px 8px 8px 22px;margin:34px auto 0;max-width:680px;box-shadow:var(--sh-3);
+}
+.searchbar i{font-style:normal;font-size:1.15rem;color:var(--muted);}
+.searchbar input{flex:1;border:0;outline:0;padding:12px 4px;font-size:1rem;min-width:0;}
+.searchbar input::placeholder{color:var(--muted);}
+.chips{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin-top:20px;}
+.chip{
+  font-size:.85rem;font-weight:600;padding:7px 15px;border-radius:999px;
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);color:rgba(255,255,255,.9);transition:.15s;
+}
+.chip:hover{background:rgba(255,255,255,.2);}
+.hero-stats{display:flex;flex-wrap:wrap;gap:44px;justify-content:center;margin-top:52px;}
+.hero-stats div{text-align:center;}
+.hero-stats b{display:block;font-size:1.9rem;font-weight:800;letter-spacing:-.03em;}
+.hero-stats span{font-size:.84rem;color:rgba(255,255,255,.65);font-weight:600;}
+
+/* ---------- CAMINHOS ---------- */
+.paths{margin-top:-56px;position:relative;z-index:5;}
+.path{
+  padding:26px 22px;border-radius:var(--r-lg);background:var(--surface);
+  border:1px solid var(--line);box-shadow:var(--sh-2);text-align:left;transition:.2s;
+}
+.path:hover{transform:translateY(-5px);box-shadow:var(--sh-3);}
+.path-ico{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;font-size:1.35rem;margin-bottom:14px;}
+.path h3{font-size:1.06rem;margin-bottom:6px;}
+.path p{font-size:.9rem;color:var(--muted);line-height:1.5;}
+.path-go{margin-top:14px;font-size:.85rem;font-weight:700;color:var(--brand-600);}
+.i-blue{background:var(--brand-100);color:var(--brand-600);}
+.i-green{background:var(--green-100);color:var(--green-600);}
+.i-amber{background:var(--accent-100);color:var(--accent-600);}
+.i-purple{background:var(--purple-100);color:var(--purple-600);}
+.i-pink{background:var(--pink-100);color:var(--pink-600);}
+
+/* ---------- CATEGORIAS ---------- */
+.cats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+.cat{
+  display:flex;align-items:center;gap:13px;padding:16px 18px;background:var(--surface);
+  border:1px solid var(--line);border-radius:var(--r);transition:.16s;font-weight:600;font-size:.94rem;
+}
+.cat:hover{border-color:var(--brand-500);background:var(--brand-50);transform:translateX(3px);}
+.cat i{font-style:normal;font-size:1.3rem;}
+.cat small{display:block;font-weight:500;font-size:.78rem;color:var(--muted);}
+
+/* ---------- CARD DE OFERTA ---------- */
+.offer{overflow:hidden;display:flex;flex-direction:column;}
+.offer-top{padding:18px 18px 0;display:flex;gap:13px;align-items:flex-start;}
+.ava{
+  width:52px;height:52px;border-radius:50%;flex:0 0 auto;display:grid;place-items:center;
+  font-weight:800;color:#fff;font-size:1.05rem;letter-spacing:-.02em;
+}
+.ava-sm{width:38px;height:38px;font-size:.82rem;}
+.ava-lg{width:96px;height:96px;font-size:2rem;}
+.a1{background:linear-gradient(135deg,#2A6FD1,#17417F);}
+.a2{background:linear-gradient(135deg,#0E8A63,#0A6B4D);}
+.a3{background:linear-gradient(135deg,#F5820B,#D9660A);}
+.a4{background:linear-gradient(135deg,#6D3FC4,#4B2A8A);}
+.a5{background:linear-gradient(135deg,#C0326E,#8E2352);}
+.a6{background:linear-gradient(135deg,#1D53A3,#6D3FC4);}
+.offer-who b{display:block;font-size:.96rem;font-weight:700;}
+.offer-who small{color:var(--muted);font-size:.8rem;}
+.rate{display:inline-flex;align-items:center;gap:4px;font-size:.83rem;font-weight:700;color:var(--ink-2);margin-top:3px;}
+.rate i{font-style:normal;color:var(--star);}
+.rate span{color:var(--muted);font-weight:500;}
+.offer-body{padding:14px 18px 0;flex:1;}
+.offer-body h4{font-size:1.02rem;font-weight:700;line-height:1.35;margin-bottom:8px;}
+.offer-body p{font-size:.88rem;color:var(--muted);line-height:1.5;}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;}
+.tag{font-size:.74rem;font-weight:600;padding:4px 10px;border-radius:999px;background:var(--line-2);color:var(--ink-2);}
+.tag-b{background:var(--brand-100);color:var(--brand-700);}
+.tag-g{background:var(--green-100);color:var(--green-600);}
+.tag-a{background:var(--accent-100);color:var(--accent-600);}
+.offer-foot{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:14px 18px;margin-top:16px;border-top:1px solid var(--line-2);
+}
+.price{font-weight:800;font-size:1.1rem;color:var(--brand-800);letter-spacing:-.02em;}
+.price small{font-weight:600;font-size:.78rem;color:var(--muted);}
+
+/* ---------- COMO FUNCIONA ---------- */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;counter-reset:s;}
+.step{position:relative;padding-top:8px;}
+.step::before{
+  counter-increment:s;content:counter(s);
+  width:40px;height:40px;border-radius:12px;background:var(--brand-800);color:#fff;
+  display:grid;place-items:center;font-weight:800;font-size:1rem;margin-bottom:14px;
+}
+.step h4{font-size:1rem;font-weight:700;margin-bottom:6px;}
+.step p{font-size:.88rem;color:var(--muted);line-height:1.55;}
+
+/* ---------- FAIXA SEGURANÇA ---------- */
+.band{
+  background:linear-gradient(135deg,var(--brand-900),var(--brand-700));color:#fff;
+  border-radius:var(--r-xl);padding:48px;position:relative;overflow:hidden;
+}
+.band::before{
+  content:"";position:absolute;right:-70px;top:-70px;width:300px;height:300px;border-radius:50%;
+  background:radial-gradient(circle,rgba(245,130,11,.28),transparent 70%);
+}
+.band-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:44px;align-items:center;position:relative;z-index:2;}
+.band h2{font-size:clamp(1.5rem,3vw,2.1rem);}
+.band p{margin-top:14px;color:rgba(255,255,255,.8);}
+.band ul{display:grid;gap:14px;}
+.band li{display:flex;gap:12px;align-items:flex-start;font-size:.94rem;}
+.band li i{
+  font-style:normal;flex:0 0 auto;width:26px;height:26px;border-radius:8px;
+  background:rgba(255,255,255,.15);display:grid;place-items:center;font-size:.85rem;
+}
+
+/* ---------- CTA ---------- */
+.cta{text-align:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-xl);padding:60px 32px;box-shadow:var(--sh-2);}
+.cta h2{font-size:clamp(1.6rem,3.4vw,2.3rem);}
+.cta p{margin:14px auto 26px;max-width:520px;color:var(--ink-2);}
+.cta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+
+/* ---------- FOOTER ---------- */
+.foot{background:var(--brand-900);color:rgba(255,255,255,.72);padding:60px 0 28px;margin-top:20px;}
+.foot-grid{display:grid;grid-template-columns:1.6fr repeat(4,1fr);gap:36px;}
+.foot h5{color:#fff;font-size:.84rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin:0 0 16px;}
+.foot li{margin-bottom:10px;font-size:.9rem;}
+.foot li a:hover{color:#fff;}
+.foot .logo{color:#fff;margin-bottom:14px;}
+.foot .logo b,.foot .logo span{color:#fff;}
+.foot-about{font-size:.9rem;line-height:1.65;max-width:300px;}
+.foot-bot{
+  margin-top:44px;padding-top:24px;border-top:1px solid rgba(255,255,255,.12);
+  display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:.84rem;
+}
+
+/* ---------- LAYOUT DE APP (telas internas) ---------- */
+.page-head{background:var(--surface);border-bottom:1px solid var(--line);padding:34px 0 30px;}
+.page-head h1{font-size:clamp(1.5rem,3vw,2.1rem);}
+.page-head p{margin-top:10px;color:var(--ink-2);}
+.crumb{font-size:.83rem;color:var(--muted);margin-bottom:10px;font-weight:600;}
+.split{display:grid;grid-template-columns:262px 1fr;gap:28px;align-items:start;}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:20px;box-shadow:var(--sh-1);}
+.panel + .panel{margin-top:18px;}
+.panel h4{font-size:.8rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);font-weight:700;margin-bottom:14px;}
+.filter{display:block;font-size:.9rem;padding:6px 0;color:var(--ink-2);cursor:pointer;}
+.filter input{margin-right:9px;accent-color:var(--brand-600);}
+.field{margin-bottom:16px;}
+.field label{display:block;font-size:.85rem;font-weight:700;margin-bottom:7px;}
+.field input,.field select,.field textarea{
+  width:100%;padding:11px 14px;border:1.5px solid var(--line);border-radius:10px;outline:0;transition:.15s;background:#fff;
+}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--brand-500);box-shadow:0 0 0 3px var(--brand-100);}
+.field small{display:block;margin-top:6px;font-size:.78rem;color:var(--muted);}
+.toolbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:20px;}
+.toolbar .count{font-size:.9rem;color:var(--muted);font-weight:600;}
+.toolbar select{padding:9px 13px;border:1.5px solid var(--line);border-radius:10px;background:#fff;font-size:.88rem;font-weight:600;}
+.pill-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px;}
+.pill{padding:8px 16px;border-radius:999px;border:1.5px solid var(--line);background:#fff;font-size:.87rem;font-weight:600;color:var(--ink-2);transition:.15s;}
+.pill:hover{border-color:var(--brand-500);color:var(--brand-600);}
+.pill.on{background:var(--brand-600);border-color:var(--brand-600);color:#fff;}
+
+/* ---------- MURAL DE PEDIDOS ---------- */
+.job{padding:22px;display:grid;gap:12px;}
+.job-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;}
+.job-head h4{font-size:1.06rem;font-weight:700;}
+.budget{text-align:right;flex:0 0 auto;}
+.budget b{display:block;font-size:1.08rem;color:var(--green-600);font-weight:800;}
+.budget small{font-size:.76rem;color:var(--muted);}
+.job-meta{display:flex;flex-wrap:wrap;gap:18px;font-size:.83rem;color:var(--muted);font-weight:600;}
+.job-foot{display:flex;justify-content:space-between;align-items:center;gap:12px;border-top:1px solid var(--line-2);padding-top:14px;flex-wrap:wrap;}
+.props{display:flex;align-items:center;gap:-8px;}
+.props .ava-sm{margin-right:-10px;border:2px solid #fff;}
+
+/* ---------- PRODUTO / LOJA ---------- */
+.prod{overflow:hidden;display:flex;flex-direction:column;}
+.prod-img{height:150px;display:grid;place-items:center;font-size:2.6rem;position:relative;}
+.p1{background:linear-gradient(135deg,#DCE8FA,#B9D2F5);}
+.p2{background:linear-gradient(135deg,#D8F3E8,#AEE5D0);}
+.p3{background:linear-gradient(135deg,#FDECD6,#FBD5A6);}
+.p4{background:linear-gradient(135deg,#EAE1FB,#D2BFF5);}
+.p5{background:linear-gradient(135deg,#FBE1EC,#F5BFD5);}
+.p6{background:linear-gradient(135deg,#E3E8F0,#C9D3E2);}
+.prod-badge{position:absolute;top:10px;left:10px;background:rgba(13,21,36,.78);color:#fff;font-size:.7rem;font-weight:700;padding:4px 10px;border-radius:999px;}
+.prod-body{padding:16px 16px 0;flex:1;}
+.prod-body h4{font-size:.98rem;font-weight:700;line-height:1.35;margin-bottom:6px;}
+.prod-body small{color:var(--muted);font-size:.82rem;}
+.prod-foot{padding:14px 16px;display:flex;justify-content:space-between;align-items:center;margin-top:12px;border-top:1px solid var(--line-2);}
+
+/* ---------- PERFIL ---------- */
+.profile-hero{background:linear-gradient(135deg,var(--brand-800),var(--brand-600));color:#fff;padding:44px 0;}
+.profile-in{display:flex;gap:26px;align-items:center;flex-wrap:wrap;}
+.profile-in h1{font-size:2rem;}
+.seals{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}
+.seal{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);padding:6px 13px;border-radius:999px;font-size:.8rem;font-weight:700;}
+.rating-row{display:flex;flex-wrap:wrap;gap:26px;}
+.rbar-label{display:flex;justify-content:space-between;font-size:.87rem;font-weight:600;margin-bottom:5px;}
+.rbar{height:7px;border-radius:99px;background:var(--line-2);overflow:hidden;margin-bottom:14px;}
+.rbar span{display:block;height:100%;border-radius:99px;background:var(--brand-500);}
+.review{padding:18px 0;border-bottom:1px solid var(--line-2);}
+.review:last-child{border-bottom:0;}
+.review-head{display:flex;gap:12px;align-items:center;margin-bottom:8px;}
+.review-head b{font-size:.92rem;}
+.review p{font-size:.92rem;color:var(--ink-2);}
+
+/* ---------- DASHBOARD ---------- */
+.dash{display:grid;grid-template-columns:238px 1fr;gap:26px;align-items:start;}
+.sidenav{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:14px;box-shadow:var(--sh-1);}
+.sidenav a{display:flex;align-items:center;gap:11px;padding:11px 13px;border-radius:11px;font-size:.91rem;font-weight:600;color:var(--ink-2);transition:.14s;}
+.sidenav a:hover{background:var(--brand-50);color:var(--brand-700);}
+.sidenav a.on{background:var(--brand-600);color:#fff;}
+.sidenav a i{font-style:normal;font-size:1.05rem;}
+.stat{padding:20px;}
+.stat small{font-size:.79rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;}
+.stat b{display:block;font-size:1.85rem;font-weight:800;letter-spacing:-.03em;margin-top:8px;}
+.stat .delta{font-size:.8rem;font-weight:700;color:var(--green-600);}
+.list-item{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid var(--line-2);}
+.list-item:last-child{border-bottom:0;}
+.list-item .g{flex:1;min-width:0;}
+.list-item b{display:block;font-size:.94rem;font-weight:700;}
+.list-item small{color:var(--muted);font-size:.82rem;}
+.progress{height:6px;border-radius:99px;background:var(--line-2);overflow:hidden;margin-top:8px;}
+.progress span{display:block;height:100%;background:var(--green-600);border-radius:99px;}
+.badge-st{font-size:.74rem;font-weight:700;padding:4px 11px;border-radius:999px;}
+.st-ok{background:var(--green-100);color:var(--green-600);}
+.st-wait{background:var(--accent-100);color:var(--accent-600);}
+.st-new{background:var(--brand-100);color:var(--brand-700);}
+
+/* ---------- AUTH ---------- */
+.auth{max-width:440px;margin:0 auto;}
+.auth-tabs{display:flex;background:var(--line-2);padding:5px;border-radius:999px;margin-bottom:24px;}
+.auth-tabs button{flex:1;padding:10px;border-radius:999px;font-weight:700;font-size:.9rem;color:var(--muted);transition:.15s;}
+.auth-tabs button.on{background:#fff;color:var(--brand-700);box-shadow:var(--sh-1);}
+.role-pick{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;}
+.role{padding:14px;border:1.5px solid var(--line);border-radius:12px;text-align:center;font-weight:700;font-size:.88rem;transition:.15s;}
+.role:hover{border-color:var(--brand-500);background:var(--brand-50);}
+.role.on{border-color:var(--brand-600);background:var(--brand-50);color:var(--brand-700);}
+.role i{font-style:normal;display:block;font-size:1.5rem;margin-bottom:6px;}
+
+/* ---------- VIEWS ---------- */
+.view{display:none;}
+.view.on{display:block;animation:fade .28s ease;}
+@keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+
+/* ---------- AVISO PROTÓTIPO ---------- */
+.proto{
+  background:var(--accent-100);border-bottom:1px solid #F6D6AE;color:#8A4708;
+  font-size:.82rem;font-weight:600;text-align:center;padding:8px 16px;
+}
+
+/* ---------- RESPONSIVO ---------- */
+@media (max-width:980px){
+  .g4{grid-template-columns:repeat(2,1fr);}
+  .cats{grid-template-columns:repeat(2,1fr);}
+  .steps{grid-template-columns:repeat(2,1fr);}
+  .band-grid{grid-template-columns:1fr;gap:28px;}
+  .band{padding:34px;}
+  .split,.dash{grid-template-columns:1fr;}
+  .foot-grid{grid-template-columns:1fr 1fr;gap:28px;}
+  .mainnav{display:none;}
+  .mainnav.open{
+    display:flex;flex-direction:column;position:absolute;top:72px;left:0;right:0;
+    background:#fff;border-bottom:1px solid var(--line);padding:12px 20px;box-shadow:var(--sh-2);gap:2px;
+  }
+  .burger{display:block;}
+}
+@media (max-width:700px){
+  .section{padding:52px 0;}
+  .g2,.g3,.g4,.cats,.steps{grid-template-columns:1fr;}
+  .hero{padding:56px 0 76px;}
+  .hero-stats{gap:26px;}
+  .hero-stats b{font-size:1.45rem;}
+  .searchbar{flex-direction:column;padding:14px;border-radius:var(--r-lg);align-items:stretch;}
+  .searchbar i{display:none;}
+  .foot-grid{grid-template-columns:1fr;}
+  .topbar-right .btn-ghost{display:none;}
+  .wrap{padding:0 18px;}
+}
+
+/* o card de prévia fica dentro de um .panel, e a regra .panel h4
+   deixava o título em maiúsculas e cinza. aqui a gente devolve o
+   visual normal de card de oferta. */
+.panel .offer-body h4{font-size:1.02rem;text-transform:none;letter-spacing:0;color:var(--ink);font-weight:700;margin-bottom:8px;}
+
+/* páginas legais (termos e privacidade) */
+.legal{max-width:760px;}
+.legal h2{font-size:1.18rem;font-weight:800;color:var(--brand-900);margin:34px 0 12px;}
+.legal h2:first-child{margin-top:0;}
+.legal h3{font-size:1rem;font-weight:700;color:var(--ink);margin:22px 0 8px;}
+.legal p{font-size:.95rem;line-height:1.72;color:var(--ink-2);margin:0 0 14px;}
+.legal ul{margin:0 0 16px;padding-left:22px;}
+.legal li{font-size:.95rem;line-height:1.72;color:var(--ink-2);margin-bottom:8px;}
+.legal b, .legal strong{color:var(--ink);font-weight:700;}
+.legal table{width:100%;border-collapse:collapse;margin:0 0 18px;font-size:.9rem;}
+.legal th{text-align:left;padding:9px 12px;background:var(--surface);color:var(--ink);font-weight:700;border-bottom:1px solid var(--line);}
+.legal td{padding:9px 12px;border-bottom:1px solid var(--line-2);color:var(--ink-2);vertical-align:top;}
+.legal .destaque{background:#FEF3C7;border-radius:12px;padding:18px 20px;margin:0 0 22px;}
+.legal .destaque p{color:#78350F;margin-bottom:8px;}
+.legal .destaque p:last-child{margin-bottom:0;}
+.legal .data{font-size:.85rem;color:var(--muted);margin-bottom:26px;}
+.legal a{color:var(--brand-600);}
+.legal .tabela-rolavel{overflow-x:auto;}
+
+/* links de texto da tela de entrar/criar conta */
+.link-auth{color:var(--brand-600);cursor:pointer;}
+.link-auth:hover{text-decoration:underline;}
+#auth-msg b{font-weight:700;}
+</style>
+</head>
+<body>
+
+<div class="proto">🔎 <b>Contas e ofertas já funcionam de verdade.</b> Serviços, materiais e pagamentos ainda são telas de exemplo.</div>
+
+<!-- ========================= HEADER ========================= -->
+<header class="topbar">
+  <div class="wrap topbar-in">
+    <a href="#" class="logo" onclick="go('home');return false;">
+      <span class="logo-mark">A</span>
+      <span><b>Aprender</b><span>Conecta</span></span>
+    </a>
+    <nav class="mainnav" id="nav">
+      <a href="#" data-v="home" onclick="go('home');return false;">Início</a>
+      <a href="#" data-v="aprender" onclick="go('aprender');return false;">Aprender</a>
+      <a href="#" data-v="ensinar" onclick="go('ensinar');return false;">Ensinar</a>
+      <a href="#" data-v="servicos" onclick="go('servicos');return false;">Serviços</a>
+      <a href="#" data-v="loja" onclick="go('loja');return false;">Materiais</a>
+      <a href="#" data-v="perfil" onclick="go('perfil');return false;">Profissionais</a>
+    </nav>
+    <div class="topbar-right">
+      <!-- aparece quando NINGUÉM está logado -->
+      <span id="area-visitante" style="display:flex;align-items:center;gap:8px;">
+        <button class="btn btn-ghost btn-sm" onclick="irParaEntrar('entrar')">Entrar</button>
+        <button class="btn btn-primary btn-sm" onclick="irParaEntrar('criar')">Criar conta</button>
+      </span>
+      <!-- aparece quando ALGUÉM está logado -->
+      <span id="area-logado" style="display:none;align-items:center;gap:8px;">
+        <button class="btn btn-ghost btn-sm" onclick="abrirMeuPainel()">Meu painel</button>
+        <button class="btn btn-primary btn-sm" onclick="sair()">Sair</button>
+      </span>
+      <button class="burger" onclick="document.getElementById('nav').classList.toggle('open')" aria-label="Menu">☰</button>
+    </div>
+  </div>
+</header>
+
+<main>
+<!-- ========================= HOME ========================= -->
+<section class="view on" id="v-home">
+
+  <div class="hero">
+    <div class="wrap hero-in">
+      <div class="hero-badge">🌱 Plataforma nova, feita no Brasil</div>
+      <h1>Aprenda com quem sabe.<br>Ensine o que você <em>domina</em>.</h1>
+      <p class="hero-sub">Uma única plataforma para encontrar professores, contratar serviços educacionais, vender seus materiais e transformar conhecimento em oportunidade.</p>
+
+      <div class="hero-verbs">
+        <span>Aprender</span><span>Ensinar</span><span>Compartilhar</span><span>Trabalhar</span>
+      </div>
+
+      <div class="searchbar">
+        <i>🔎</i>
+        <input type="text" placeholder="O que você deseja aprender ou contratar?" aria-label="Buscar">
+        <button class="btn btn-accent" onclick="go('aprender')">Buscar</button>
+      </div>
+
+      <div class="chips">
+        <a href="#" class="chip" onclick="go('servicos');return false;">Orientação de TCC</a>
+        <a href="#" class="chip" onclick="go('aprender');return false;">Reforço escolar</a>
+        <a href="#" class="chip" onclick="go('servicos');return false;">Formatação ABNT</a>
+        <a href="#" class="chip" onclick="go('aprender');return false;">Aulas de inglês</a>
+        <a href="#" class="chip" onclick="go('loja');return false;">Planos de aula</a>
+        <a href="#" class="chip" onclick="go('aprender');return false;">Alfabetização</a>
+      </div>
+
+      <div class="hero-stats">
+        <div><b id="hs-professores">–</b><span>Professores</span></div>
+        <div><b id="hs-ofertas">–</b><span>Ofertas publicadas</span></div>
+        <div><b id="hs-areas">–</b><span>Áreas de conhecimento</span></div>
+        <div><b>R$ 0</b><span>Para criar sua conta</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4 CAMINHOS -->
+  <div class="wrap paths">
+    <div class="grid g4">
+      <a href="#" class="path" onclick="go('aprender');return false;">
+        <div class="path-ico i-blue">🎓</div>
+        <h3>Quero aprender</h3>
+        <p>Encontre professores, aulas particulares, cursos e grupos de estudo na área que você precisa.</p>
+        <div class="path-go">Explorar aulas →</div>
+      </a>
+      <a href="#" class="path" onclick="go('ensinar');return false;">
+        <div class="path-ico i-green">👨‍🏫</div>
+        <h3>Quero ensinar</h3>
+        <p>Publique suas aulas, defina seu preço e sua agenda. Aula individual, turma, curso ou mentoria.</p>
+        <div class="path-go">Criar minha oferta →</div>
+      </a>
+      <a href="#" class="path" onclick="go('servicos');return false;">
+        <div class="path-ico i-amber">💼</div>
+        <h3>Quero contratar</h3>
+        <p>Publique sua necessidade e receba propostas de profissionais qualificados e avaliados.</p>
+        <div class="path-go">Publicar pedido →</div>
+      </a>
+      <a href="#" class="path" onclick="go('loja');return false;">
+        <div class="path-ico i-purple">📚</div>
+        <h3>Quero vender material</h3>
+        <p>Apostilas, e-books, planos de aula, atividades e jogos pedagógicos. Você produz, nós vendemos.</p>
+        <div class="path-go">Abrir minha loja →</div>
+      </a>
+    </div>
+  </div>
+
+  <!-- CATEGORIAS -->
+  <div class="section">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">Categorias</div>
+        <h2 class="h2">O que você está procurando hoje?</h2>
+        <p>Do reforço escolar à revisão de tese — conhecimento e serviços educacionais em uma só busca.</p>
+      </div>
+      <div class="cats">
+        <a href="#" class="cat" onclick="buscarArea('Educação e Pedagogia');return false;"><i>📚</i><span>Educação e Pedagogia<small data-cat="Educação e Pedagogia">ver ofertas</small></span></a>
+        <a href="#" class="cat" onclick="buscarArea('Matemática');return false;"><i>📐</i><span>Matemática<small data-cat="Matemática">ver ofertas</small></span></a>
+        <a href="#" class="cat" onclick="buscarArea('Idiomas');return false;"><i>🗣️</i><span>Idiomas<small data-cat="Idiomas">ver ofertas</small></span></a>
+        <a href="#" class="cat" onclick="buscarArea('Tecnologia');return false;"><i>💻</i><span>Tecnologia<small data-cat="Tecnologia">ver ofertas</small></span></a>
+        <a href="#" class="cat" onclick="buscarArea('Ciências');return false;"><i>🔬</i><span>Ciências<small data-cat="Ciências">ver ofertas</small></span></a>
+        <a href="#" class="cat" onclick="buscarArea('Música');return false;"><i>🎵</i><span>Música<small data-cat="Música">ver ofertas</small></span></a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ÚLTIMAS OFERTAS -->
+  <div class="section" id="sec-destaques" style="padding-top:0;display:none;">
+    <div class="wrap">
+      <div class="toolbar" style="justify-content:space-between;">
+        <div class="sec-head" style="margin-bottom:0;">
+          <div class="eyebrow">Publicadas recentemente</div>
+          <h2 class="h2">Quem já está ensinando aqui</h2>
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="go('aprender')">Ver todas →</button>
+      </div>
+      <div class="grid g3" id="home-ofertas" style="margin-top:28px;"></div>
+    </div>
+  </div>
+
+  <!-- COMO FUNCIONA -->
+  <div class="section" style="background:var(--surface);border-block:1px solid var(--line);">
+    <div class="wrap">
+      <div class="sec-head center">
+        <div class="eyebrow">Como funciona</div>
+        <h2 class="h2">Do cadastro à primeira aula</h2>
+        <p>Estamos começando, e por isso o caminho é curto e direto: a plataforma apresenta as pessoas, e vocês combinam o resto.</p>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <h4>Crie sua conta</h4>
+          <p>Grátis, com e-mail e senha. Você escolhe se quer aprender, ensinar, ou os dois — é a mesma conta.</p>
+        </div>
+        <div class="step">
+          <h4>Publique ou procure</h4>
+          <p>Professor publica a oferta com formato, valor e modalidade. Quem procura filtra por área, formato e preço.</p>
+        </div>
+        <div class="step">
+          <h4>Fale direto com a pessoa</h4>
+          <p>O perfil traz o contato do professor. Sem intermediário, sem espera — você chama e conversa.</p>
+        </div>
+        <div class="step">
+          <h4>Combinem entre vocês</h4>
+          <p>Horário e pagamento são acertados diretamente entre aluno e professor. O pagamento pela plataforma vem numa próxima fase.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAIXA SEGURANÇA -->
+  <div class="section">
+    <div class="wrap">
+      <div class="band">
+        <div class="band-grid">
+          <div>
+            <div class="eyebrow" style="background:rgba(255,255,255,.14);color:#FFC178;">Transparência</div>
+            <h2>O que já funciona, e o que ainda estamos construindo</h2>
+            <p>Somos uma plataforma nova. Preferimos dizer com todas as letras onde estamos do que prometer o que ainda não entregamos.</p>
+            <div class="cta-btns" style="justify-content:flex-start;margin-top:26px;">
+              <button class="btn btn-accent" onclick="go('entrar')">Criar minha conta</button>
+              <button class="btn btn-line" onclick="go('servicos')">Ver como contratar</button>
+            </div>
+          </div>
+          <ul>
+            <li><i>✓</i><span><b>Conta com e-mail confirmado</b> — ninguém se cadastra com um endereço que não é seu.</span></li>
+            <li><i>✓</i><span><b>Seus dados são só seus</b> — ninguém consegue alterar o perfil ou as ofertas de outra pessoa.</span></li>
+            <li><i>✓</i><span><b>Só professores publicam</b> — a regra é aplicada no banco de dados, não apenas na tela.</span></li>
+            <li><i>✓</i><span><b>Ética acadêmica</b> — orientação, revisão e tutoria sim; venda de trabalhos prontos, não.</span></li>
+            <li><i>🔧</i><span><b>Ainda vem por aí</b> — pagamento pela plataforma, avaliações, verificação de formação e mediação.</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOJA — EM BREVE -->
+  <div class="section" style="padding-top:0;">
+    <div class="wrap">
+      <div class="panel" style="padding:38px;text-align:center;">
+        <div style="font-size:2.2rem;margin-bottom:10px;">📚</div>
+        <div class="eyebrow" style="display:inline-block;">Em breve</div>
+        <h2 class="h2" style="margin:12px 0 10px;">Loja de materiais</h2>
+        <p class="muted" style="font-size:.95rem;max-width:520px;margin:0 auto;">Apostilas, planos de aula, atividades e e-books, vendidos pelos próprios professores. Esta parte ainda está sendo construída — por enquanto, o que já funciona são as aulas e ofertas.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA FINAL -->
+  <div class="section" style="padding-top:0;">
+    <div class="wrap">
+      <div class="cta">
+        <div class="eyebrow">Comece hoje</div>
+        <h2>Seu conhecimento pode virar renda. E sua dúvida, aprendizado.</h2>
+        <p>Cadastro gratuito. Você escolhe se quer aprender, ensinar, contratar ou vender — ou tudo isso ao mesmo tempo.</p>
+        <div class="cta-btns">
+          <button class="btn btn-primary" onclick="go('entrar')">Criar conta grátis</button>
+          <button class="btn btn-ghost" onclick="go('ensinar')">Quero ensinar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+<!-- ========================= APRENDER ========================= -->
+<section class="view" id="v-aprender">
+  <div class="page-head">
+    <div class="wrap">
+      <div class="crumb">Início › Aprender</div>
+      <h1>O que você quer aprender?</h1>
+      <p>Professores, cursos, mentorias e grupos de estudo — filtre por área, formato e faixa de preço.</p>
+      <div class="searchbar" style="margin:24px 0 0;max-width:640px;box-shadow:var(--sh-1);border:1px solid var(--line);">
+        <i>🔎</i>
+        <input type="text" id="busca-aprender" placeholder="Ex.: matemática, inglês, alfabetização, violão..." aria-label="Buscar aulas" onkeydown="if(event.key==='Enter')filtrarOfertas()" oninput="filtrarOfertas()">
+        <button class="btn btn-primary" onclick="filtrarOfertas()">Buscar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-sm">
+    <div class="wrap split">
+
+      <!-- FILTROS -->
+      <aside>
+        <div class="panel" id="filtros-area">
+          <h4>Área de conhecimento</h4>
+          <label class="filter"><input type="checkbox" data-area="Matemática" onchange="filtrarOfertas()">Matemática <span class="muted" data-conta="Matemática">(0)</span></label>
+          <label class="filter"><input type="checkbox" data-area="Idiomas" onchange="filtrarOfertas()">Idiomas <span class="muted" data-conta="Idiomas">(0)</span></label>
+          <label class="filter"><input type="checkbox" data-area="Tecnologia" onchange="filtrarOfertas()">Tecnologia <span class="muted" data-conta="Tecnologia">(0)</span></label>
+          <label class="filter"><input type="checkbox" data-area="Educação e Pedagogia" onchange="filtrarOfertas()">Educação e Pedagogia <span class="muted" data-conta="Educação e Pedagogia">(0)</span></label>
+          <label class="filter"><input type="checkbox" data-area="Música" onchange="filtrarOfertas()">Música <span class="muted" data-conta="Música">(0)</span></label>
+          <label class="filter"><input type="checkbox" data-area="Ciências" onchange="filtrarOfertas()">Ciências <span class="muted" data-conta="Ciências">(0)</span></label>
+        </div>
+        <div class="panel" id="filtros-formato">
+          <h4>Formato</h4>
+          <label class="filter"><input type="checkbox" data-formato="Aula individual" onchange="filtrarOfertas()">Aula individual</label>
+          <label class="filter"><input type="checkbox" data-formato="Turma" onchange="filtrarOfertas()">Turma</label>
+          <label class="filter"><input type="checkbox" data-formato="Aula ao vivo" onchange="filtrarOfertas()">Aula ao vivo</label>
+          <label class="filter"><input type="checkbox" data-formato="Curso gravado" onchange="filtrarOfertas()">Curso gravado</label>
+          <label class="filter"><input type="checkbox" data-formato="Mentoria" onchange="filtrarOfertas()">Mentoria</label>
+          <label class="filter"><input type="checkbox" data-formato="Grupo de estudos" onchange="filtrarOfertas()">Grupo de estudos</label>
+        </div>
+        <div class="panel">
+          <h4>Preço máximo</h4>
+          <div class="field" style="margin-bottom:8px;"><input type="range" id="filtro-preco" min="0" max="500" step="10" value="500" style="padding:0;border:0;accent-color:var(--brand-600);" oninput="filtrarOfertas()"></div>
+          <div style="display:flex;justify-content:space-between;font-size:.83rem;font-weight:700;color:var(--ink-2);"><span>R$ 0</span><span id="rotulo-preco">qualquer valor</span></div>
+        </div>
+        <div class="panel">
+          <h4>Avaliação mínima <small class="muted" style="font-weight:600;font-size:.72rem;">· em breve</small></h4>
+          <label class="filter"><input type="radio" name="av" checked>★ 4,5 ou mais</label>
+          <label class="filter"><input type="radio" name="av">★ 4,0 ou mais</label>
+          <label class="filter"><input type="radio" name="av">Qualquer</label>
+        </div>
+      </aside>
+
+      <!-- RESULTADOS -->
+      <div>
+        <div class="pill-row" id="atalhos-formato">
+          <button class="pill on" data-grupo="" onclick="pick(this);filtrarOfertas()">Todos</button>
+          <button class="pill" data-grupo="Aula individual" onclick="pick(this);filtrarOfertas()">Aulas particulares</button>
+          <button class="pill" data-grupo="Curso gravado" onclick="pick(this);filtrarOfertas()">Cursos</button>
+          <button class="pill" data-grupo="Mentoria" onclick="pick(this);filtrarOfertas()">Mentorias</button>
+          <button class="pill" data-grupo="Grupo de estudos" onclick="pick(this);filtrarOfertas()">Grupos de estudo</button>
+        </div>
+        <div class="toolbar">
+          <span class="count" id="contador-ofertas">Carregando ofertas…</span>
+          <select style="margin-left:auto;" id="ordenar-ofertas" onchange="filtrarOfertas()">
+            <option value="recentes">Mais recentes</option>
+            <option value="barato">Menor preço</option>
+            <option value="caro">Maior preço</option>
+            <option value="az">Título (A–Z)</option>
+          </select>
+        </div>
+
+        <div class="grid g2" id="lista-ofertas"></div>
+
+        <div id="vazio-ofertas" style="display:none;text-align:center;padding:54px 20px;">
+          <div style="font-size:2.4rem;margin-bottom:10px;">🔍</div>
+          <h3 class="h3" style="margin-bottom:8px;">Nenhuma oferta por aqui ainda</h3>
+          <p class="muted" style="font-size:.92rem;max-width:420px;margin:0 auto 20px;">Assim que um professor publicar uma oferta, ela aparece nesta lista automaticamente.</p>
+          <button class="btn btn-primary" onclick="go('ensinar')">Quero publicar a primeira</button>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================= ENSINAR ========================= -->
+<section class="view" id="v-ensinar">
+  <div class="page-head">
+    <div class="wrap">
+      <div class="crumb">Início › Ensinar</div>
+      <h1>Transforme o que você sabe em renda</h1>
+      <p>Publique sua oferta em minutos. Você define o formato, o preço e a agenda — a plataforma cuida de pagamento, contrato e reputação.</p>
+    </div>
+  </div>
+
+  <div class="section-sm">
+    <div class="wrap">
+      <div class="grid g4" style="margin-bottom:34px;">
+        <div class="card stat"><small>Ganho médio mensal</small><b>R$ 2.480</b><span class="delta">professor ativo</span></div>
+        <div class="card stat"><small>Comissão da plataforma</small><b>10%</b><span class="muted" style="font-size:.8rem;font-weight:600;">sobre cada serviço</span></div>
+        <div class="card stat"><small>Prazo de repasse</small><b>D+2</b><span class="muted" style="font-size:.8rem;font-weight:600;">após aprovação</span></div>
+        <div class="card stat"><small>Custo para começar</small><b>R$ 0</b><span class="delta">plano gratuito</span></div>
+      </div>
+
+      <div class="split" style="grid-template-columns:1fr 380px;">
+
+        <!-- FORMULÁRIO -->
+        <div class="panel" style="padding:30px;">
+          <h3 class="h3" style="margin-bottom:6px;">Criar uma nova oferta</h3>
+          <p class="muted" style="font-size:.9rem;margin-bottom:24px;">Preencha os campos abaixo. Você pode editar tudo depois.</p>
+
+          <!-- avisos: visitante sem conta, ou conta que ainda não é professor -->
+          <div id="portao-ensinar" style="display:none;padding:18px 20px;border-radius:12px;margin-bottom:24px;"></div>
+
+          <div id="form-oferta">
+          <div class="field">
+            <label>Título da oferta</label>
+            <input type="text" id="of-titulo" placeholder="Ex.: Aulas de Matemática para Ensino Fundamental" oninput="atualizarPrevia()">
+            <small>Seja específico: o que você ensina e para quem.</small>
+          </div>
+
+          <div class="grid g2" style="gap:16px;">
+            <div class="field">
+              <label>Área de conhecimento</label>
+              <select id="of-area"><option>Matemática</option><option>Idiomas</option><option>Tecnologia</option><option>Educação e Pedagogia</option><option>Música</option><option>Ciências</option></select>
+            </div>
+            <div class="field">
+              <label>Nível</label>
+              <select id="of-nivel"><option>Ensino Fundamental</option><option>Ensino Médio</option><option>Técnico</option><option>Graduação</option><option>Pós-graduação</option></select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Formato da oferta</label>
+            <div class="pill-row" id="of-formato" style="margin-bottom:0;">
+              <button class="pill on" onclick="pick(this);atualizarPrevia()">Aula individual</button>
+              <button class="pill" onclick="pick(this);atualizarPrevia()">Turma</button>
+              <button class="pill" onclick="pick(this);atualizarPrevia()">Aula ao vivo</button>
+              <button class="pill" onclick="pick(this);atualizarPrevia()">Curso gravado</button>
+              <button class="pill" onclick="pick(this);atualizarPrevia()">Mentoria</button>
+              <button class="pill" onclick="pick(this);atualizarPrevia()">Grupo de estudos</button>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Descrição</label>
+            <textarea rows="4" id="of-desc" placeholder="Conte como são suas aulas, que material você usa e o que o aluno leva de resultado." oninput="atualizarPrevia()"></textarea>
+          </div>
+
+          <div class="grid g2" style="gap:16px;">
+            <div class="field">
+              <label>Valor (R$)</label>
+              <input type="number" id="of-valor" min="0" step="0.01" placeholder="40" oninput="atualizarPrevia()">
+              <small id="of-liquido">A plataforma fica com 10% de comissão.</small>
+            </div>
+            <div class="field">
+              <label>Cobrança por</label>
+              <select id="of-cobranca" onchange="atualizarPrevia()"><option>Hora</option><option>Aula</option><option>Pacote mensal</option><option>Curso completo</option></select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Modalidade</label>
+            <div class="pill-row" id="of-modalidade" style="margin-bottom:0;">
+              <button class="pill on" onclick="pick(this);atualizarPrevia()">Online</button>
+              <button class="pill" onclick="pick(this);atualizarPrevia()">Presencial</button>
+              <button class="pill" onclick="pick(this);atualizarPrevia()">Ambos</button>
+            </div>
+          </div>
+
+          <div id="msg-oferta" style="display:none;padding:12px 14px;border-radius:10px;font-size:.88rem;line-height:1.45;margin-top:20px;"></div>
+
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:26px;">
+            <button class="btn btn-primary" id="btn-publicar" onclick="publicarOferta()">Publicar oferta</button>
+            <button class="btn btn-ghost" onclick="limparOferta()">Limpar formulário</button>
+          </div>
+          </div>
+        </div>
+
+        <!-- PRÉVIA + PLANOS -->
+        <aside>
+          <div class="panel">
+            <h4>Prévia da sua oferta</h4>
+            <article class="card offer" style="box-shadow:none;">
+              <div class="offer-top">
+                <div class="ava a2" id="pv-ini">??</div>
+                <div class="offer-who"><b id="pv-nome">Seu nome</b><small id="pv-area">Área de conhecimento</small></div>
+              </div>
+              <div class="offer-body">
+                <h4 id="pv-titulo">Título da sua oferta</h4>
+                <p id="pv-desc">A descrição aparece aqui conforme você digita.</p>
+                <div class="tags" id="pv-tags"><span class="tag tag-b">Aula individual</span><span class="tag">Online</span></div>
+              </div>
+              <div class="offer-foot"><span class="price" id="pv-preco">R$ 0 <small>/hora</small></span><span class="tag tag-g">Prévia</span></div>
+            </article>
+          </div>
+
+          <div class="panel">
+            <h4>Planos para profissionais</h4>
+            <div class="list-item">
+              <div class="g"><b>Gratuito</b><small>Até 3 ofertas ativas · comissão de 15%</small></div>
+              <span class="badge-st st-ok">Atual</span>
+            </div>
+            <div class="list-item">
+              <div class="g"><b>Profissional — R$ 29,90/mês</b><small>Ofertas ilimitadas · comissão de 10% · destaque na busca</small></div>
+            </div>
+            <div class="list-item">
+              <div class="g"><b>Premium — R$ 59,90/mês</b><small>Comissão de 7% · topo da busca · selo destaque · relatórios</small></div>
+            </div>
+            <button class="btn btn-accent btn-block btn-sm" style="margin-top:16px;">Comparar planos</button>
+          </div>
+
+          <div class="panel">
+            <h4>Dicas para vender mais</h4>
+            <p style="font-size:.88rem;color:var(--ink-2);line-height:1.6;">Perfis com foto, vídeo de apresentação e formação verificada recebem <b>3,4× mais</b> contratações. Complete seu perfil para ganhar o selo 🏅 <b>Profissional verificado</b>.</p>
+            <button class="btn btn-ghost btn-block btn-sm" style="margin-top:14px;" onclick="go('perfil')">Ver perfil de exemplo</button>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================= SERVIÇOS ========================= -->
+<section class="view" id="v-servicos">
+  <div style="background:#FEF3C7;color:#92400E;padding:12px 16px;text-align:center;font-size:.9rem;line-height:1.5;">🚧 <b>Em construção.</b> Esta área ainda é uma demonstração — os itens mostrados são exemplos e nada é gravado. Por enquanto o que funciona de verdade é <b onclick="go('aprender')" class="link-auth">Aprender</b> e <b onclick="go('ensinar')" class="link-auth">Ensinar</b>.</div>
+  <div class="page-head">
+    <div class="wrap">
+      <div class="crumb">Início › Contratar serviços</div>
+      <h1>Publique sua necessidade. Receba propostas.</h1>
+      <p>Orientação de TCC, revisão, formatação ABNT, projetos, diagramação de livros e materiais didáticos. Esta área ainda está em construção.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:22px;">
+        <button class="btn btn-accent" onclick="document.getElementById('novo-pedido').scrollIntoView({behavior:'smooth'})">＋ Publicar um pedido</button>
+        <button class="btn btn-ghost">Sou profissional, quero propor</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-sm">
+    <div class="wrap split">
+
+      <aside>
+        <div class="panel">
+          <h4>Categoria</h4>
+          <label class="filter"><input type="checkbox" checked>📑 Acadêmico</label>
+          <label class="filter"><input type="checkbox" checked>📚 Escolar</label>
+          <label class="filter"><input type="checkbox">📊 Projetos</label>
+          <label class="filter"><input type="checkbox">📖 Livros</label>
+          <label class="filter"><input type="checkbox">🖥️ Design educacional</label>
+        </div>
+        <div class="panel">
+          <h4>Tipo de serviço</h4>
+          <label class="filter"><input type="checkbox">Orientação de TCC</label>
+          <label class="filter"><input type="checkbox">Revisão textual</label>
+          <label class="filter"><input type="checkbox">Formatação ABNT</label>
+          <label class="filter"><input type="checkbox">Revisão bibliográfica</label>
+          <label class="filter"><input type="checkbox">Metodologia</label>
+          <label class="filter"><input type="checkbox">Diagramação</label>
+        </div>
+        <div class="panel">
+          <h4>Orçamento</h4>
+          <label class="filter"><input type="radio" name="orc" checked>Qualquer valor</label>
+          <label class="filter"><input type="radio" name="orc">Até R$ 200</label>
+          <label class="filter"><input type="radio" name="orc">R$ 200 a R$ 500</label>
+          <label class="filter"><input type="radio" name="orc">Acima de R$ 500</label>
+        </div>
+        <div class="panel" style="background:var(--brand-50);border-color:var(--brand-100);">
+          <h4 style="color:var(--brand-700);">⚖️ Ética acadêmica</h4>
+          <p style="font-size:.85rem;color:var(--ink-2);line-height:1.6;">A plataforma <b>não permite</b> a venda de trabalhos acadêmicos para entrega como autoria de terceiros. São permitidos orientação, tutoria, revisão, formatação e consultoria.</p>
+        </div>
+      </aside>
+
+      <div>
+        <div class="toolbar">
+          <span class="count"><b>342</b> pedidos abertos</span>
+          <select style="margin-left:auto;"><option>Mais recentes</option><option>Maior orçamento</option><option>Prazo mais curto</option><option>Menos propostas</option></select>
+        </div>
+
+        <div class="grid" style="gap:16px;">
+
+          <article class="card job">
+            <div class="job-head">
+              <div>
+                <h4>Revisão e formatação ABNT do meu TCC (Pedagogia)</h4>
+                <div class="tags" style="margin-top:8px;"><span class="tag tag-b">📑 Acadêmico</span><span class="tag">Formatação ABNT</span><span class="tag">Revisão textual</span></div>
+              </div>
+              <div class="budget"><b>R$ 350 – 500</b><small>orçamento</small></div>
+            </div>
+            <div class="job-meta"><span>📄 68 páginas</span><span>⏱ Prazo: 12 dias</span><span>📍 Remoto</span><span>🕐 Publicado há 2 horas</span></div>
+            <p class="muted" style="font-size:.9rem;">Preciso de revisão gramatical, ajuste de coesão e normalização completa nas normas ABNT, incluindo sumário automático, citações e referências.</p>
+            <div class="job-foot">
+              <div style="display:flex;align-items:center;gap:14px;">
+                <div class="props"><span class="ava ava-sm a1">MS</span><span class="ava ava-sm a3">JP</span><span class="ava ava-sm a4">AL</span></div>
+                <span class="muted" style="font-size:.85rem;font-weight:600;margin-left:6px;">7 propostas recebidas</span>
+              </div>
+              <button class="btn btn-primary btn-sm">Enviar proposta</button>
+            </div>
+          </article>
+
+          <article class="card job">
+            <div class="job-head">
+              <div>
+                <h4>Diagramação e capa para e-book infantil (32 páginas)</h4>
+                <div class="tags" style="margin-top:8px;"><span class="tag tag-a">📖 Livros</span><span class="tag">Diagramação</span><span class="tag">Design de capa</span></div>
+              </div>
+              <div class="budget"><b>R$ 800 – 1.200</b><small>orçamento</small></div>
+            </div>
+            <div class="job-meta"><span>📄 32 páginas</span><span>⏱ Prazo: 20 dias</span><span>📍 Remoto</span><span>🕐 Publicado ontem</span></div>
+            <p class="muted" style="font-size:.9rem;">Livro já escrito e ilustrado. Preciso de diagramação para impressão e versão e-book, além do design da capa em dois formatos.</p>
+            <div class="job-foot">
+              <div style="display:flex;align-items:center;gap:14px;">
+                <div class="props"><span class="ava ava-sm a5">RC</span><span class="ava ava-sm a6">DF</span></div>
+                <span class="muted" style="font-size:.85rem;font-weight:600;margin-left:6px;">4 propostas recebidas</span>
+              </div>
+              <button class="btn btn-primary btn-sm">Enviar proposta</button>
+            </div>
+          </article>
+
+          <article class="card job">
+            <div class="job-head">
+              <div>
+                <h4>Orientação metodológica para projeto de pesquisa (Mestrado)</h4>
+                <div class="tags" style="margin-top:8px;"><span class="tag tag-b">📑 Acadêmico</span><span class="tag">Metodologia</span><span class="tag">Consultoria</span></div>
+              </div>
+              <div class="budget"><b>R$ 600</b><small>valor fixo</small></div>
+            </div>
+            <div class="job-meta"><span>🎓 Mestrado em Educação</span><span>⏱ Prazo: 30 dias</span><span>📍 Remoto</span><span>🕐 Publicado há 3 dias</span></div>
+            <p class="muted" style="font-size:.9rem;">Preciso de apoio na definição do desenho metodológico, escolha dos instrumentos e estruturação do capítulo de metodologia. 4 encontros online.</p>
+            <div class="job-foot">
+              <div style="display:flex;align-items:center;gap:14px;">
+                <div class="props"><span class="ava ava-sm a2">TG</span><span class="ava ava-sm a4">AL</span><span class="ava ava-sm a1">MS</span><span class="ava ava-sm a3">BM</span></div>
+                <span class="muted" style="font-size:.85rem;font-weight:600;margin-left:6px;">11 propostas recebidas</span>
+              </div>
+              <button class="btn btn-primary btn-sm">Enviar proposta</button>
+            </div>
+          </article>
+
+          <article class="card job">
+            <div class="job-head">
+              <div>
+                <h4>Sequência didática de Ciências para 5º ano (bimestre completo)</h4>
+                <div class="tags" style="margin-top:8px;"><span class="tag tag-g">📚 Escolar</span><span class="tag">Material didático</span><span class="tag">BNCC</span></div>
+              </div>
+              <div class="budget"><b>R$ 400</b><small>valor fixo</small></div>
+            </div>
+            <div class="job-meta"><span>📚 5º ano · Fundamental I</span><span>⏱ Prazo: 15 dias</span><span>📍 Remoto</span><span>🕐 Publicado há 5 horas</span></div>
+            <p class="muted" style="font-size:.9rem;">Escola particular busca sequência didática alinhada à BNCC, com plano de aula, atividades e avaliação para um bimestre.</p>
+            <div class="job-foot">
+              <div style="display:flex;align-items:center;gap:14px;">
+                <div class="props"><span class="ava ava-sm a1">MS</span><span class="ava ava-sm a5">LC</span></div>
+                <span class="muted" style="font-size:.85rem;font-weight:600;margin-left:6px;">3 propostas recebidas</span>
+              </div>
+              <button class="btn btn-primary btn-sm">Enviar proposta</button>
+            </div>
+          </article>
+
+        </div>
+
+        <!-- NOVO PEDIDO -->
+        <div class="panel" id="novo-pedido" style="padding:30px;margin-top:34px;">
+          <div class="eyebrow">Publicar</div>
+          <h3 class="h3" style="margin-bottom:6px;">Descreva o que você precisa</h3>
+          <p class="muted" style="font-size:.9rem;margin-bottom:24px;">Quanto mais detalhes, melhores as propostas que você recebe.</p>
+
+          <div class="field">
+            <label>Título do pedido</label>
+            <input type="text" placeholder="Ex.: Preciso de revisão e formatação do meu TCC">
+          </div>
+          <div class="grid g3" style="gap:16px;">
+            <div class="field"><label>Categoria</label>
+              <select><option>📑 Acadêmico</option><option>📚 Escolar</option><option>📊 Projetos</option><option>📖 Livros</option><option>🖥️ Design educacional</option></select></div>
+            <div class="field"><label>Tipo de serviço</label>
+              <select><option>Revisão textual</option><option>Formatação ABNT</option><option>Orientação de TCC</option><option>Metodologia</option><option>Diagramação</option></select></div>
+            <div class="field"><label>Área do conhecimento</label>
+              <select><option>Educação / Pedagogia</option><option>Saúde</option><option>Direito</option><option>Engenharias</option><option>Ciências Humanas</option></select></div>
+          </div>
+          <div class="field">
+            <label>Detalhes do serviço</label>
+            <textarea rows="4" placeholder="Explique o que precisa, o que já está pronto e o que espera receber ao final."></textarea>
+          </div>
+          <div class="grid g3" style="gap:16px;">
+            <div class="field"><label>Quantidade de páginas</label><input type="text" placeholder="Ex.: 68"></div>
+            <div class="field"><label>Prazo desejado</label><input type="text" placeholder="Ex.: 12 dias"></div>
+            <div class="field"><label>Orçamento estimado</label><input type="text" placeholder="Ex.: R$ 350 a R$ 500"></div>
+          </div>
+          <div class="field">
+            <label>Anexos</label>
+            <div style="border:1.5px dashed var(--line);border-radius:12px;padding:26px;text-align:center;color:var(--muted);font-size:.9rem;">
+              📎 Arraste arquivos aqui ou <b style="color:var(--brand-600);">selecione do computador</b><br>
+              <small style="color:var(--muted);">PDF, DOCX ou imagens · até 20 MB</small>
+            </div>
+          </div>
+          <label class="filter" style="margin:6px 0 18px;"><input type="checkbox" checked>Declaro que o serviço solicitado respeita a política de ética acadêmica da plataforma.</label>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <button class="btn btn-accent" onclick="go('painel')">Publicar pedido</button>
+            <button class="btn btn-ghost">Salvar rascunho</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ========================= LOJA ========================= -->
+<section class="view" id="v-loja">
+  <div style="background:#FEF3C7;color:#92400E;padding:12px 16px;text-align:center;font-size:.9rem;line-height:1.5;">🚧 <b>Em construção.</b> Esta área ainda é uma demonstração — os itens mostrados são exemplos e nada é gravado. Por enquanto o que funciona de verdade é <b onclick="go('aprender')" class="link-auth">Aprender</b> e <b onclick="go('ensinar')" class="link-auth">Ensinar</b>.</div>
+  <div class="page-head">
+    <div class="wrap">
+      <div class="crumb">Início › Loja de conhecimento</div>
+      <h1>Loja de Conhecimento</h1>
+      <p>Apostilas, e-books, planos de aula, atividades, jogos pedagógicos e mapas mentais — produzidos por professores, para professores.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:22px;">
+        <button class="btn btn-primary">Explorar materiais</button>
+        <button class="btn btn-ghost" onclick="go('painel-prof')">Vender meu material</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-sm">
+    <div class="wrap split">
+
+      <aside>
+        <div class="panel">
+          <h4>Tipo de material</h4>
+          <label class="filter"><input type="checkbox" checked>Apostilas e e-books</label>
+          <label class="filter"><input type="checkbox" checked>Planos de aula</label>
+          <label class="filter"><input type="checkbox">Atividades</label>
+          <label class="filter"><input type="checkbox">Jogos pedagógicos</label>
+          <label class="filter"><input type="checkbox">Apresentações e slides</label>
+          <label class="filter"><input type="checkbox">Mapas mentais</label>
+          <label class="filter"><input type="checkbox">Cursos</label>
+        </div>
+        <div class="panel">
+          <h4>Etapa de ensino</h4>
+          <label class="filter"><input type="checkbox">Educação Infantil</label>
+          <label class="filter"><input type="checkbox" checked>Fundamental I</label>
+          <label class="filter"><input type="checkbox">Fundamental II</label>
+          <label class="filter"><input type="checkbox">Ensino Médio</label>
+          <label class="filter"><input type="checkbox">Superior</label>
+        </div>
+        <div class="panel">
+          <h4>Preço</h4>
+          <label class="filter"><input type="radio" name="pr" checked>Todos</label>
+          <label class="filter"><input type="radio" name="pr">Gratuitos</label>
+          <label class="filter"><input type="radio" name="pr">Até R$ 30</label>
+          <label class="filter"><input type="radio" name="pr">R$ 30 a R$ 80</label>
+          <label class="filter"><input type="radio" name="pr">Acima de R$ 80</label>
+        </div>
+      </aside>
+
+      <div>
+        <div class="pill-row">
+          <button class="pill on" onclick="pick(this)">Todos</button>
+          <button class="pill" onclick="pick(this)">Mais vendidos</button>
+          <button class="pill" onclick="pick(this)">Novidades</button>
+          <button class="pill" onclick="pick(this)">Melhor avaliados</button>
+          <button class="pill" onclick="pick(this)">Gratuitos</button>
+        </div>
+        <div class="toolbar">
+          <span class="count"><b>8.312</b> materiais disponíveis</span>
+          <select style="margin-left:auto;"><option>Mais relevantes</option><option>Mais vendidos</option><option>Menor preço</option><option>Lançamentos</option></select>
+        </div>
+
+        <div class="grid g3">
+
+          <article class="card card-h prod">
+            <div class="prod-img p1">📘<span class="prod-badge">Mais vendido</span></div>
+            <div class="prod-body">
+              <h4>Caderno de Alfabetização — 120 atividades prontas</h4>
+              <small>por Maria Silva · PDF, 134 págs.</small>
+              <div class="rate"><i>★</i>4,9 <span>(312 avaliações)</span></div>
+            </div>
+            <div class="prod-foot"><span class="price">R$ 39,90</span><button class="btn btn-primary btn-sm">Comprar</button></div>
+          </article>
+
+          <article class="card card-h prod">
+            <div class="prod-img p2">🧩</div>
+            <div class="prod-body">
+              <h4>50 Jogos pedagógicos para Educação Infantil</h4>
+              <small>por Renata Alves · PDF + moldes</small>
+              <div class="rate"><i>★</i>4,8 <span>(187 avaliações)</span></div>
+            </div>
+            <div class="prod-foot"><span class="price">R$ 29,90</span><button class="btn btn-primary btn-sm">Comprar</button></div>
+          </article>
+
+          <article class="card card-h prod">
+            <div class="prod-img p3">📄<span class="prod-badge">Novo</span></div>
+            <div class="prod-body">
+              <h4>Modelo de TCC formatado nas normas ABNT 2026</h4>
+              <small>por Ana Lúcia Ferraz · DOCX editável</small>
+              <div class="rate"><i>★</i>5,0 <span>(96 avaliações)</span></div>
+            </div>
+            <div class="prod-foot"><span class="price">R$ 24,90</span><button class="btn btn-primary btn-sm">Comprar</button></div>
+          </article>
+
+          <article class="card card-h prod">
+            <div class="prod-img p4">🗂️</div>
+            <div class="prod-body">
+              <h4>Planos de aula anuais — Fundamental I completo (BNCC)</h4>
+              <small>por Juliana Camargo · DOCX + PDF</small>
+              <div class="rate"><i>★</i>4,9 <span>(241 avaliações)</span></div>
+            </div>
+            <div class="prod-foot"><span class="price">R$ 79,90</span><button class="btn btn-primary btn-sm">Comprar</button></div>
+          </article>
+
+          <article class="card card-h prod">
+            <div class="prod-img p5">🧠</div>
+            <div class="prod-body">
+              <h4>Mapas mentais de História do Brasil — ENEM</h4>
+              <small>por Rafael Pinto · PDF colorido</small>
+              <div class="rate"><i>★</i>4,7 <span>(158 avaliações)</span></div>
+            </div>
+            <div class="prod-foot"><span class="price">R$ 19,90</span><button class="btn btn-primary btn-sm">Comprar</button></div>
+          </article>
+
+          <article class="card card-h prod">
+            <div class="prod-img p6">🎬<span class="prod-badge">Curso</span></div>
+            <div class="prod-body">
+              <h4>Curso: Práticas de leitura na alfabetização</h4>
+              <small>por Letícia Campos · 18 videoaulas + certificado</small>
+              <div class="rate"><i>★</i>4,9 <span>(423 avaliações)</span></div>
+            </div>
+            <div class="prod-foot"><span class="price">R$ 149,00</span><button class="btn btn-primary btn-sm">Comprar</button></div>
+          </article>
+
+          <article class="card card-h prod">
+            <div class="prod-img p2">📊<span class="prod-badge">Grátis</span></div>
+            <div class="prod-body">
+              <h4>Modelo de relatório de desenvolvimento do aluno</h4>
+              <small>por Beatriz Moura · DOCX editável</small>
+              <div class="rate"><i>★</i>4,8 <span>(1.204 downloads)</span></div>
+            </div>
+            <div class="prod-foot"><span class="price" style="color:var(--green-600);">Gratuito</span><button class="btn btn-ghost btn-sm">Baixar</button></div>
+          </article>
+
+          <article class="card card-h prod">
+            <div class="prod-img p1">✏️</div>
+            <div class="prod-body">
+              <h4>Atividades de produção textual — 6º ao 9º ano</h4>
+              <small>por Thiago Gomes · PDF, 88 págs.</small>
+              <div class="rate"><i>★</i>4,8 <span>(134 avaliações)</span></div>
+            </div>
+            <div class="prod-foot"><span class="price">R$ 34,90</span><button class="btn btn-primary btn-sm">Comprar</button></div>
+          </article>
+
+          <article class="card card-h prod">
+            <div class="prod-img p3">🎼</div>
+            <div class="prod-body">
+              <h4>Musicalização infantil: 30 planos de aula</h4>
+              <small>por Daniel Freitas · PDF + áudios</small>
+              <div class="rate"><i>★</i>5,0 <span>(72 avaliações)</span></div>
+            </div>
+            <div class="prod-foot"><span class="price">R$ 44,90</span><button class="btn btn-primary btn-sm">Comprar</button></div>
+          </article>
+
+        </div>
+
+        <div style="text-align:center;margin-top:34px;">
+          <button class="btn btn-ghost">Carregar mais materiais</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================= PERFIL ========================= -->
+<section class="view" id="v-perfil">
+  <div class="profile-hero">
+    <div class="wrap profile-in">
+      <div class="ava ava-lg a1" id="pf-ini" style="border:4px solid rgba(255,255,255,.25);">–</div>
+      <div style="flex:1;min-width:260px;">
+        <h1 id="pf-nome">Carregando…</h1>
+        <p id="pf-linha" style="color:rgba(255,255,255,.82);margin-top:6px;"></p>
+        <div class="seals" id="pf-selos"></div>
+      </div>
+      <div style="text-align:center;min-width:200px;" id="pf-acao"></div>
+    </div>
+  </div>
+
+  <div class="section-sm">
+    <div class="wrap split" style="grid-template-columns:1fr 340px;">
+
+      <div>
+        <div class="panel" id="pf-sobre" style="padding:26px;display:none;">
+          <h3 class="h3" style="margin-bottom:12px;">Sobre</h3>
+          <p id="pf-bio" style="color:var(--ink-2);font-size:.96rem;white-space:pre-line;"></p>
+        </div>
+
+        <div class="panel" style="padding:26px;">
+          <h3 class="h3" style="margin-bottom:18px;">Ofertas</h3>
+          <div id="pf-ofertas"><p class="muted" style="font-size:.9rem;">Carregando…</p></div>
+        </div>
+
+        <div class="panel" style="padding:26px;">
+          <h3 class="h3" style="margin-bottom:10px;">Avaliações</h3>
+          <p class="muted" style="font-size:.92rem;line-height:1.6;">Ainda não há avaliações por aqui. Elas vão aparecer nesta área quando o sistema de avaliação entrar no ar.</p>
+        </div>
+      </div>
+
+      <aside>
+        <div class="panel" id="pf-contato"></div>
+        <div class="panel">
+          <h4>Na plataforma</h4>
+          <div id="pf-numeros"></div>
+        </div>
+      </aside>
+
+    </div>
+  </div>
+</section>
+
+<!-- ========================= PAINEL DO ALUNO ========================= -->
+<section class="view" id="v-painel">
+  <div class="page-head">
+    <div class="wrap" style="display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;">
+      <div>
+        <div class="crumb">Minha conta › Área do aluno</div>
+        <h1>Olá, <span id="nome-aluno">visitante</span> 👋</h1>
+        <p id="sub-painel-aluno">Encontre um professor e fale direto com ele.</p>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn btn-ghost" onclick="go('editar-perfil')">Editar meu perfil</button>
+        <button class="btn btn-primary" onclick="go('aprender')">＋ Buscar professor</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-sm">
+    <div class="wrap split" style="grid-template-columns:1fr 340px;">
+
+      <div>
+        <div class="panel" style="padding:28px;">
+          <h3 class="h3" style="margin-bottom:8px;">Como funciona por aqui</h3>
+          <p class="muted" style="font-size:.93rem;line-height:1.65;margin-bottom:22px;">A plataforma apresenta você a professores. A conversa, o horário e o pagamento são combinados diretamente entre vocês.</p>
+
+          <div class="list-item">
+            <div class="path-ico i-blue" style="width:42px;height:42px;margin:0;font-size:1.1rem;border-radius:12px;">1</div>
+            <div class="g"><b>Procure o que você quer aprender</b><small>Filtre por área, formato e faixa de preço</small></div>
+          </div>
+          <div class="list-item">
+            <div class="path-ico i-green" style="width:42px;height:42px;margin:0;font-size:1.1rem;border-radius:12px;">2</div>
+            <div class="g"><b>Abra o perfil do professor</b><small>Veja formação, apresentação e todas as ofertas dele</small></div>
+          </div>
+          <div class="list-item">
+            <div class="path-ico i-amber" style="width:42px;height:42px;margin:0;font-size:1.1rem;border-radius:12px;">3</div>
+            <div class="g"><b>Chame no WhatsApp</b><small>Combine horário e valor direto com a pessoa</small></div>
+          </div>
+
+          <button class="btn btn-primary btn-block" style="margin-top:22px;" onclick="go('aprender')">Ver professores disponíveis</button>
+        </div>
+
+        <div class="panel" style="padding:28px;">
+          <h3 class="h3" style="margin-bottom:8px;">Em construção</h3>
+          <p class="muted" style="font-size:.93rem;line-height:1.65;">Histórico de aulas, certificados, carteira e avaliações vão aparecer nesta área conforme a plataforma crescer. Por enquanto, o que já funciona é encontrar um professor e falar com ele.</p>
+        </div>
+      </div>
+
+      <aside>
+        <div class="panel">
+          <h4>Meu cadastro</h4>
+          <div id="resumo-aluno"></div>
+          <button class="btn btn-ghost btn-block btn-sm" style="margin-top:14px;" onclick="go('editar-perfil')">Editar meu perfil</button>
+        </div>
+
+        <div class="panel">
+          <h4>Quer ensinar também?</h4>
+          <p style="font-size:.88rem;color:var(--ink-2);line-height:1.6;">A mesma conta serve para os dois lados. Se você tem algo para ensinar, é só mudar seu papel no perfil e publicar uma oferta.</p>
+          <button class="btn btn-accent btn-block btn-sm" style="margin-top:14px;" onclick="go('ensinar')">Quero ensinar</button>
+        </div>
+      </aside>
+
+    </div>
+  </div>
+</section>
+
+<section class="view" id="v-painel-prof">
+  <div class="page-head">
+    <div class="wrap" style="display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;">
+      <div>
+        <div class="crumb">Minha conta › Painel profissional</div>
+        <h1>Painel de <span id="nome-prof">visitante</span></h1>
+        <p id="sub-painel-prof">Publique suas ofertas e receba contatos de alunos.</p>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn btn-ghost" onclick="go('editar-perfil')">Editar meu perfil</button>
+        <button class="btn btn-accent" onclick="go('ensinar')">＋ Criar nova oferta</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-sm">
+    <div class="wrap">
+
+      <div class="grid g4" style="margin-bottom:28px;" id="stats-prof"></div>
+
+      <div class="split" style="grid-template-columns:1fr 340px;">
+        <div>
+          <div class="panel" style="padding:28px;">
+            <h4 style="margin-bottom:14px;">Minhas ofertas <span class="tag tag-g" style="margin-left:6px;">dados reais</span></h4>
+            <div id="minhas-ofertas"><p class="muted" style="font-size:.88rem;">Carregando…</p></div>
+            <button class="btn btn-accent btn-block btn-sm" style="margin-top:16px;" onclick="go('ensinar')">＋ Criar nova oferta</button>
+          </div>
+
+          <div class="panel" style="padding:28px;">
+            <h3 class="h3" style="margin-bottom:8px;">Como aparecer para mais alunos</h3>
+            <div class="list-item">
+              <div class="path-ico i-blue" style="width:42px;height:42px;margin:0;font-size:1.1rem;border-radius:12px;">📝</div>
+              <div class="g"><b>Complete seu perfil</b><small>Formação, cidade e uma boa apresentação. É o que faz o aluno escolher você.</small></div>
+            </div>
+            <div class="list-item">
+              <div class="path-ico i-green" style="width:42px;height:42px;margin:0;font-size:1.1rem;border-radius:12px;">💬</div>
+              <div class="g"><b>Deixe seu WhatsApp no perfil</b><small>Sem ele, ninguém consegue te procurar.</small></div>
+            </div>
+            <div class="list-item">
+              <div class="path-ico i-amber" style="width:42px;height:42px;margin:0;font-size:1.1rem;border-radius:12px;">🔗</div>
+              <div class="g"><b>Divulgue o link do seu perfil</b><small>Ele funciona sozinho — mande no Instagram, no grupo da escola, onde quiser.</small></div>
+            </div>
+            <button class="btn btn-ghost btn-block btn-sm" style="margin-top:16px;" onclick="verMeuPerfil()">Ver meu perfil público</button>
+          </div>
+
+          <div class="panel" style="padding:28px;">
+            <h3 class="h3" style="margin-bottom:8px;">Em construção</h3>
+            <p class="muted" style="font-size:.93rem;line-height:1.65;">Ganhos, solicitações, avaliações e venda de materiais vão aparecer nesta área conforme a plataforma crescer. Hoje o contato acontece direto entre você e o aluno, pelo WhatsApp.</p>
+          </div>
+        </div>
+
+        <aside>
+          <div class="panel" id="painel-assinatura"></div>
+
+          <div class="panel">
+            <h4>Meu cadastro</h4>
+            <div id="resumo-prof"></div>
+            <button class="btn btn-ghost btn-block btn-sm" style="margin-top:14px;" onclick="go('editar-perfil')">Editar meu perfil</button>
+          </div>
+        </aside>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ========================= TERMOS DE USO ========================= -->
+<section class="view" id="v-termos">
+  <div class="page-head">
+    <div class="wrap">
+      <div class="crumb">Início › Termos de uso</div>
+      <h1>Termos de Uso</h1>
+      <p>As regras de uso do AprenderConecta, em linguagem direta.</p>
+    </div>
+  </div>
+
+  <div class="section-sm">
+    <div class="wrap">
+      <div class="panel legal" style="padding:34px;">
+        <p class="data">Última atualização: 22 de agosto de 2026</p>
+
+        <h2>1. Quem somos</h2>
+        <p>O AprenderConecta é uma plataforma online operada por <b>Juliana Luiz Camargo</b>, pessoa física, que pode ser contatada pelo e-mail <a href="mailto:julianaluizcamargo@gmail.com">julianaluizcamargo@gmail.com</a>.</p>
+        <p>Ao criar uma conta ou usar o site, você concorda com estes Termos. Se não concordar, não use a plataforma.</p>
+
+        <h2>2. O que a plataforma é — e o que ela não é</h2>
+        <p><b>O AprenderConecta é um espaço de encontro.</b> Professores e profissionais da educação publicam suas ofertas de aulas, cursos e mentorias; quem procura por esses serviços encontra essas ofertas e entra em contato diretamente com quem as publicou.</p>
+        <div class="destaque">
+          <p><b>O AprenderConecta não é parte da relação entre você e a outra pessoa.</b> De forma clara:</p>
+          <p>· <b>Não intermediamos pagamentos.</b> Valores, formas de pagamento e prazos são combinados diretamente entre aluno e professor, fora da plataforma. Não recebemos, retemos nem repassamos dinheiro.</p>
+          <p>· <b>Não somos empregadores dos professores</b> nem prestadores dos serviços anunciados. Cada profissional atua por conta própria.</p>
+          <p>· <b>Não verificamos formação, diplomas ou antecedentes.</b> As informações de perfil são declaradas pelos próprios usuários.</p>
+          <p>· <b>Não garantimos</b> a qualidade, a pontualidade, o resultado ou a realização de nenhuma aula ou serviço contratado.</p>
+          <p>· <b>Não mediamos conflitos</b> entre usuários.</p>
+        </div>
+        <p>Estamos começando, e esses limites são reais. À medida que a plataforma evoluir, estes Termos serão atualizados para refletir novas funcionalidades.</p>
+
+        <h2>3. Quem pode usar</h2>
+        <p>Para criar uma conta você precisa:</p>
+        <ul>
+          <li>ter <b>18 anos completos</b> ou mais;</li>
+          <li>fornecer informações verdadeiras e mantê-las atualizadas;</li>
+          <li>ser responsável por manter sua senha em sigilo.</li>
+        </ul>
+        <p><b>Menores de 18 anos não podem criar conta.</b> Se o serviço se destina a uma criança ou adolescente, quem cria a conta e faz a contratação deve ser o pai, a mãe ou o responsável legal — que assume a responsabilidade pela contratação e pelo acompanhamento.</p>
+        <p>Você é responsável por tudo o que acontece na sua conta. Se suspeitar de acesso não autorizado, avise-nos e troque sua senha.</p>
+
+        <h2>4. Papéis na plataforma</h2>
+        <p>A mesma conta pode assumir papéis diferentes:</p>
+        <ul>
+          <li><b>Quem aprende</b> — busca e contrata aulas e serviços.</li>
+          <li><b>Quem ensina</b> — publica ofertas. Somente contas com este papel podem publicar.</li>
+          <li><b>Quem contrata serviços</b> e <b>quem vende materiais</b> — papéis previstos para funcionalidades ainda em desenvolvimento.</li>
+        </ul>
+        <p>Você pode alterar seu papel a qualquer momento no seu perfil.</p>
+
+        <h2>5. Ofertas publicadas</h2>
+        <p>Quem publica uma oferta é inteiramente responsável por ela: pelo conteúdo, pela veracidade do que descreve, pelo preço informado e pelo cumprimento do que foi combinado com o aluno.</p>
+        <p>Ao publicar, você declara que tem capacidade e conhecimento para prestar o serviço anunciado, que as informações do seu perfil são verdadeiras, e que cumprirá o combinado ou comunicará com antecedência qualquer impedimento.</p>
+        <p>Podemos remover ofertas que violem estes Termos, sem aviso prévio.</p>
+
+        <h2>6. Conduta e conteúdo proibido</h2>
+        <p>Não é permitido usar a plataforma para:</p>
+        <ul>
+          <li><b>Fraude acadêmica.</b> Vender, produzir ou entregar trabalhos acadêmicos prontos para serem apresentados como autoria de outra pessoa — TCC, monografia, dissertação, tese, artigo, redação, prova ou exercício avaliativo. Orientação, revisão, tutoria, correção comentada e ensino são bem-vindos; substituir o aluno na produção do trabalho dele, não.</li>
+          <li>Publicar informação falsa sobre formação, experiência ou identidade.</li>
+          <li>Assediar, ameaçar, discriminar ou constranger qualquer pessoa.</li>
+          <li>Publicar conteúdo ilegal, ofensivo, discriminatório ou que viole direitos de terceiros.</li>
+          <li>Anunciar serviços que não sejam educacionais.</li>
+          <li>Coletar dados de outros usuários para fins não relacionados à contratação, inclusive mensagens não solicitadas em massa.</li>
+          <li>Tentar burlar mecanismos de segurança, acessar contas alheias ou sobrecarregar o sistema.</li>
+        </ul>
+
+        <h2>7. Contato entre usuários</h2>
+        <p>O contato entre aluno e professor acontece hoje por <b>WhatsApp</b>, a partir do número que o professor optou por informar no perfil.</p>
+        <p>Ao preencher esse campo, o professor está ciente de que <b>o número fica visível publicamente</b> para qualquer pessoa que abrir seu perfil. Preencher é opcional.</p>
+        <p>Como a conversa acontece fora da plataforma, <b>não temos acesso ao seu conteúdo</b> e não conseguimos comprovar o que foi combinado entre as partes.</p>
+
+        <h2>8. Propriedade intelectual</h2>
+        <p>O nome AprenderConecta, o logotipo, o layout e o código do site pertencem à operadora da plataforma.</p>
+        <p>O conteúdo que você publica — textos de perfil, descrições de ofertas, materiais — continua sendo seu. Ao publicá-lo, você nos autoriza a exibi-lo no site e a divulgá-lo em materiais da plataforma, sem exclusividade e sem custo, enquanto sua conta existir.</p>
+        <p>Você garante que tem direito sobre o que publica.</p>
+
+        <h2>9. Disponibilidade e custo</h2>
+        <p>A plataforma é oferecida "como está". Não garantimos funcionamento ininterrupto nem ausência de falhas. Podemos alterar, suspender ou encerrar funcionalidades a qualquer momento.</p>
+        <p>O uso é <b>gratuito</b> neste momento. Se e quando houver cobrança de comissão ou mensalidade, avisaremos com antecedência e estes Termos serão atualizados.</p>
+
+        <h2>10. Limitação de responsabilidade</h2>
+        <p>Na medida permitida pela legislação brasileira, não nos responsabilizamos por:</p>
+        <ul>
+          <li>prejuízos decorrentes de serviços contratados entre usuários, incluindo aulas não realizadas, pagamentos não honrados ou qualidade abaixo do esperado;</li>
+          <li>informações falsas ou imprecisas publicadas por usuários;</li>
+          <li>indisponibilidade temporária do site;</li>
+          <li>conteúdo de conversas realizadas fora da plataforma.</li>
+        </ul>
+        <p>Nada nesta cláusula afasta direitos que o Código de Defesa do Consumidor garanta a você de forma inafastável.</p>
+
+        <h2>11. Suspensão e encerramento</h2>
+        <p>Podemos suspender ou encerrar contas que violem estes Termos, especialmente a seção 6.</p>
+        <p>Você pode encerrar sua conta quando quiser, pelo e-mail de contato. O tratamento dos seus dados após o encerramento está descrito na <b class="link-auth" onclick="go('privacidade')">Política de Privacidade</b>.</p>
+
+        <h2>12. Alterações destes Termos</h2>
+        <p>Podemos atualizar estes Termos. Mudanças relevantes serão comunicadas pelo e-mail cadastrado ou por aviso no site, com antecedência razoável. O uso continuado após a mudança significa concordância.</p>
+
+        <h2>13. Lei aplicável e foro</h2>
+        <p>Estes Termos são regidos pelas leis brasileiras. Fica eleito o foro da comarca de Ji-Paraná/RO, sem prejuízo do direito do consumidor de demandar no foro do seu próprio domicílio.</p>
+
+        <h2>14. Contato</h2>
+        <p>Dúvidas sobre estes Termos: <a href="mailto:julianaluizcamargo@gmail.com">julianaluizcamargo@gmail.com</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================= POLÍTICA DE PRIVACIDADE ========================= -->
+<section class="view" id="v-privacidade">
+  <div class="page-head">
+    <div class="wrap">
+      <div class="crumb">Início › Política de privacidade</div>
+      <h1>Política de Privacidade</h1>
+      <p>Quais dados coletamos, por que, com quem compartilhamos e quais são os seus direitos.</p>
+    </div>
+  </div>
+
+  <div class="section-sm">
+    <div class="wrap">
+      <div class="panel legal" style="padding:34px;">
+        <p class="data">Última atualização: 22 de agosto de 2026 · Conforme a Lei Geral de Proteção de Dados (Lei 13.709/2018)</p>
+
+        <h2>1. Quem é responsável pelos seus dados</h2>
+        <p><b>Controladora:</b> Juliana Luiz Camargo, pessoa física.<br>
+        <b>Contato para assuntos de privacidade:</b> <a href="mailto:julianaluizcamargo@gmail.com">julianaluizcamargo@gmail.com</a></p>
+        <p>Este é o canal para exercer seus direitos, tirar dúvidas ou fazer reclamações sobre o tratamento dos seus dados.</p>
+
+        <h2>2. O que fica público — leia primeiro</h2>
+        <div class="destaque">
+          <p><b>Quando você cria um perfil, estes dados ficam visíveis para qualquer pessoa na internet</b>, mesmo quem não tem conta:</p>
+          <p>· Seu <b>nome</b><br>
+             · Seu <b>título profissional</b><br>
+             · Sua <b>cidade</b><br>
+             · Seu <b>texto de apresentação</b><br>
+             · O <b>mês e ano</b> em que entrou na plataforma<br>
+             · Suas <b>ofertas publicadas</b>, com títulos, descrições e preços<br>
+             · Seu <b>WhatsApp</b>, se você preencher esse campo</p>
+          <p>O WhatsApp é o único opcional. <b>Se não quiser que seu número seja visível, deixe o campo em branco.</b></p>
+        </div>
+        <p><b>Seu e-mail e sua senha nunca são públicos.</b> O e-mail é usado apenas para autenticação e para mensagens do sistema.</p>
+        <p>Cada perfil tem um endereço próprio que pode ser compartilhado e que pode ser indexado por buscadores como o Google.</p>
+
+        <h2>3. Dados que coletamos</h2>
+        <h3>Que você nos fornece</h3>
+        <div class="tabela-rolavel">
+        <table>
+          <tr><th>Dado</th><th>Quando</th><th>Obrigatório</th></tr>
+          <tr><td>Nome</td><td>No cadastro</td><td>Sim</td></tr>
+          <tr><td>E-mail</td><td>No cadastro</td><td>Sim</td></tr>
+          <tr><td>Senha</td><td>No cadastro</td><td>Sim</td></tr>
+          <tr><td>Papel (aprender/ensinar)</td><td>No cadastro</td><td>Sim</td></tr>
+          <tr><td>Título profissional</td><td>No perfil</td><td>Não</td></tr>
+          <tr><td>Cidade</td><td>No perfil</td><td>Não</td></tr>
+          <tr><td>Texto de apresentação</td><td>No perfil</td><td>Não</td></tr>
+          <tr><td>WhatsApp</td><td>No perfil</td><td>Não</td></tr>
+          <tr><td>Conteúdo das ofertas</td><td>Ao publicar</td><td>Só se publicar</td></tr>
+        </table>
+        </div>
+        <p>A senha é armazenada de forma criptografada pelo nosso provedor de autenticação. Nem nós conseguimos lê-la.</p>
+
+        <h3>Coletados automaticamente</h3>
+        <ul>
+          <li><b>Data e hora</b> de criação da conta e de confirmação do e-mail.</li>
+          <li><b>Registros técnicos</b> gerados pelos serviços que usamos (endereço IP, tipo de navegador, horário de acesso), mantidos por eles para segurança e funcionamento.</li>
+        </ul>
+        <p><b>Não usamos</b> ferramentas de publicidade, rastreamento entre sites ou análise de comportamento. <b>Não vendemos dados a ninguém.</b></p>
+
+        <h3>Armazenamento no seu navegador</h3>
+        <p>Para manter você conectado, guardamos um <b>token de sessão</b> no armazenamento local do seu navegador. Ele não é usado para rastreamento e desaparece quando você clica em "Sair".</p>
+
+        <h2>4. Para que usamos e com que base legal</h2>
+        <div class="tabela-rolavel">
+        <table>
+          <tr><th>Finalidade</th><th>Base legal (LGPD)</th></tr>
+          <tr><td>Criar e manter sua conta</td><td>Execução de contrato (art. 7º, V)</td></tr>
+          <tr><td>Confirmar seu e-mail e permitir redefinir senha</td><td>Execução de contrato</td></tr>
+          <tr><td>Exibir seu perfil e suas ofertas publicamente</td><td>Execução de contrato — é a própria função da plataforma</td></tr>
+          <tr><td>Permitir que alunos entrem em contato com professores</td><td>Execução de contrato</td></tr>
+          <tr><td>Manter a segurança e prevenir uso indevido</td><td>Legítimo interesse (art. 7º, IX)</td></tr>
+          <tr><td>Cumprir obrigações legais</td><td>Obrigação legal (art. 7º, II)</td></tr>
+        </table>
+        </div>
+        <p>Não usamos seus dados para publicidade nem para tomar decisões automatizadas sobre você.</p>
+
+        <h2>5. Com quem compartilhamos</h2>
+        <p>Não vendemos nem cedemos dados. Compartilhamos apenas com os serviços necessários para o site funcionar:</p>
+        <div class="tabela-rolavel">
+        <table>
+          <tr><th>Serviço</th><th>Para quê</th><th>Onde ficam os dados</th></tr>
+          <tr><td>Supabase</td><td>Banco de dados e autenticação</td><td>São Paulo, Brasil</td></tr>
+          <tr><td>Vercel</td><td>Hospedagem do site</td><td>Servidores internacionais</td></tr>
+          <tr><td>Resend</td><td>Envio dos e-mails do sistema</td><td>São Paulo, Brasil</td></tr>
+        </table>
+        </div>
+        <p>Esses fornecedores atuam como <b>operadores</b>: tratam os dados seguindo nossas instruções e não podem usá-los para finalidades próprias.</p>
+        <p><b>Transferência internacional:</b> a Vercel opera fora do Brasil, o que significa que dados técnicos de acesso podem transitar por servidores em outros países. A LGPD permite isso quando necessário para a execução do contrato.</p>
+        <p>Também podemos compartilhar dados se formos legalmente obrigados — por ordem judicial ou requisição de autoridade competente.</p>
+
+        <h2>6. Contato via WhatsApp</h2>
+        <p>Quando um aluno clica em "Chamar no WhatsApp" no perfil de um professor, ele sai da nossa plataforma e vai para o WhatsApp.</p>
+        <p><b>Não temos acesso a essa conversa.</b> O que acontece a partir dali é regido pela política de privacidade do WhatsApp, não pela nossa.</p>
+
+        <h2>7. Por quanto tempo guardamos</h2>
+        <p>Enquanto sua conta existir, mantemos seus dados.</p>
+        <p>Se você pedir a exclusão, apagamos seu perfil e suas ofertas. Alguns registros podem ser mantidos por prazo maior quando houver obrigação legal ou necessidade de defesa em processo.</p>
+
+        <h2>8. Seus direitos</h2>
+        <p>A LGPD garante a você o direito de:</p>
+        <ul>
+          <li><b>Confirmar</b> se tratamos seus dados e <b>acessar</b> o que temos</li>
+          <li><b>Corrigir</b> dados incompletos ou desatualizados</li>
+          <li>Pedir <b>anonimização, bloqueio ou eliminação</b> de dados desnecessários ou tratados em desconformidade</li>
+          <li>Solicitar a <b>portabilidade</b> dos dados</li>
+          <li>Pedir a <b>eliminação</b> dos dados tratados com base em consentimento</li>
+          <li>Saber <b>com quem compartilhamos</b> seus dados</li>
+          <li><b>Revogar consentimento</b></li>
+          <li><b>Opor-se</b> a um tratamento que considere irregular</li>
+        </ul>
+        <p><b>Boa parte disso você já faz sozinho:</b> nome, título, cidade, apresentação e WhatsApp podem ser alterados ou apagados a qualquer momento em <b class="link-auth" onclick="go('editar-perfil')">Editar meu perfil</b>, e suas ofertas podem ser excluídas no painel.</p>
+        <p>Para os demais pedidos, escreva para <a href="mailto:julianaluizcamargo@gmail.com">julianaluizcamargo@gmail.com</a>. Responderemos no menor prazo possível, e em no máximo 15 dias.</p>
+
+        <h2>9. Segurança</h2>
+        <ul>
+          <li>Senhas armazenadas de forma criptografada, ilegíveis inclusive para nós</li>
+          <li>Conexão criptografada (HTTPS) em todo o site</li>
+          <li><b>Regras de acesso no banco de dados</b> que impedem que um usuário altere o perfil ou as ofertas de outro — a restrição é aplicada no próprio banco, não apenas na tela</li>
+          <li>Confirmação de e-mail obrigatória no cadastro</li>
+        </ul>
+        <p>Nenhum sistema é totalmente imune. Se houver incidente de segurança com risco relevante aos seus dados, comunicaremos você e a ANPD, conforme a LGPD.</p>
+
+        <h2>10. Menores de 18 anos</h2>
+        <p><b>A plataforma é destinada exclusivamente a maiores de 18 anos.</b> Não coletamos intencionalmente dados de crianças ou adolescentes.</p>
+        <p>Quando o serviço se destina a um menor — como aulas de reforço escolar —, quem cria a conta e faz a contratação deve ser o responsável legal, <b>usando os próprios dados</b>. Não peça nem publique dados do menor no perfil ou nas ofertas.</p>
+        <p>Se identificarmos uma conta criada por menor de 18 anos, ela será excluída. Se você é responsável e acredita que um menor sob sua guarda criou conta, avise-nos pelo e-mail de contato.</p>
+
+        <h2>11. Alterações desta política</h2>
+        <p>Podemos atualizar esta política. Mudanças relevantes serão comunicadas por e-mail ou aviso no site. A data no topo indica a última revisão.</p>
+
+        <h2>12. Reclamações</h2>
+        <p>Se você achar que seus dados não estão sendo tratados corretamente, fale conosco primeiro. Você também pode reclamar à <b>Autoridade Nacional de Proteção de Dados (ANPD)</b>, em <a href="https://www.gov.br/anpd" target="_blank" rel="noopener">gov.br/anpd</a>.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================= EDITAR MEU PERFIL ========================= -->
+<section class="view" id="v-editar-perfil">
+  <div class="page-head">
+    <div class="wrap">
+      <div class="crumb">Minha conta › Meu perfil</div>
+      <h1>Meu perfil</h1>
+      <p>É isto que as pessoas veem quando abrem seu perfil na plataforma.</p>
+    </div>
+  </div>
+
+  <div class="section-sm">
+    <div class="wrap split" style="grid-template-columns:1fr 340px;">
+
+      <div class="panel" style="padding:30px;">
+        <div id="ep-portao" style="display:none;padding:18px 20px;border-radius:12px;margin-bottom:22px;"></div>
+
+        <div id="ep-form">
+          <div class="field">
+            <label>Nome completo</label>
+            <input type="text" id="ep-nome" placeholder="Seu nome" oninput="previaPerfil()">
+          </div>
+
+          <div class="field">
+            <label>O que você faz aqui</label>
+            <select id="ep-papel" onchange="previaPerfil()">
+              <option value="aluno">Quero aprender</option>
+              <option value="professor">Quero ensinar</option>
+              <option value="contratante">Quero contratar serviços</option>
+              <option value="vendedor">Quero vender material</option>
+            </select>
+            <small>Só quem escolhe <b>Quero ensinar</b> pode publicar ofertas. Dá para mudar quando quiser.</small>
+          </div>
+
+          <div class="field">
+            <label>Título profissional</label>
+            <input type="text" id="ep-titulo" placeholder="Ex.: Pedagoga · Especialista em Alfabetização" oninput="previaPerfil()">
+            <small>Aparece logo abaixo do seu nome. Diga sua formação ou especialidade.</small>
+          </div>
+
+          <div class="field">
+            <label>Cidade</label>
+            <input type="text" id="ep-cidade" placeholder="Ex.: Cuiabá, MT" oninput="previaPerfil()">
+          </div>
+
+          <div class="field">
+            <label>Sobre você</label>
+            <textarea id="ep-bio" rows="6" placeholder="Conte sua formação, sua experiência e como você trabalha. Quem lê isso está decidindo se vai te procurar." oninput="previaPerfil()"></textarea>
+            <small id="ep-conta-bio">0 caracteres</small>
+          </div>
+
+          <div class="field" id="ep-bloco-zap">
+            <label>WhatsApp para contato</label>
+            <input type="text" id="ep-tel" placeholder="(65) 99999-9999" oninput="previaPerfil()">
+            <small style="color:#92400E;">⚠️ Este número fica <b>visível para qualquer pessoa</b> que abrir seu perfil — é assim que o aluno fala com você hoje. Se preferir não mostrar, deixe em branco.</small>
+          </div>
+
+          <div id="ep-msg" style="display:none;padding:12px 14px;border-radius:10px;font-size:.88rem;line-height:1.45;margin-top:18px;"></div>
+
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:26px;">
+            <button class="btn btn-primary" id="ep-salvar" onclick="salvarPerfil()">Salvar perfil</button>
+            <button class="btn btn-ghost" onclick="verMeuPerfil()">Ver meu perfil público</button>
+          </div>
+        </div>
+      </div>
+
+      <aside>
+        <div class="panel">
+          <h4>Como vai aparecer</h4>
+          <article class="card offer" style="box-shadow:none;">
+            <div class="offer-top">
+              <div class="ava a2" id="ep-pv-ini">–</div>
+              <div class="offer-who"><b id="ep-pv-nome">Seu nome</b><small id="ep-pv-titulo">Título profissional</small></div>
+            </div>
+            <div class="offer-body">
+              <p id="ep-pv-bio" style="font-size:.88rem;">Seu texto de apresentação aparece aqui.</p>
+              <div class="tags" id="ep-pv-tags"></div>
+            </div>
+          </article>
+        </div>
+
+        <div class="panel">
+          <h4>Por que preencher</h4>
+          <p style="font-size:.88rem;color:var(--ink-2);line-height:1.6;">Um perfil com foto, formação e um texto de apresentação bem escrito é o que faz alguém escolher você em vez de outro professor. É o seu currículo dentro da plataforma.</p>
+        </div>
+
+        <div class="panel">
+          <h4>Foto de perfil</h4>
+          <p style="font-size:.88rem;color:var(--ink-2);line-height:1.6;">Por enquanto o perfil usa as iniciais do seu nome. O envio de foto entra numa próxima etapa.</p>
+        </div>
+      </aside>
+
+    </div>
+  </div>
+</section>
+
+<!-- ========================= ENTRAR / CRIAR CONTA ========================= -->
+<section class="view" id="v-entrar">
+  <div class="section">
+    <div class="wrap">
+      <div class="auth">
+        <div style="text-align:center;margin-bottom:26px;">
+          <div class="logo" style="justify-content:center;font-size:1.4rem;margin-bottom:14px;">
+            <span class="logo-mark">A</span><span><b>Aprender</b><span>Conecta</span></span>
+          </div>
+          <p class="muted" style="font-size:.95rem;">Conhecimento que conecta pessoas.</p>
+        </div>
+
+        <div class="panel" style="padding:28px;">
+          <div class="auth-tabs">
+            <button class="on" id="tab-criar" onclick="modoAuth('criar')">Criar conta</button>
+            <button id="tab-entrar" onclick="modoAuth('entrar')">Entrar</button>
+          </div>
+
+          <div class="field" id="bloco-papel">
+            <label>Como você quer começar?</label>
+            <div class="role-pick">
+              <button class="role on" data-papel="aluno" onclick="pick(this)"><i>🎓</i>Quero aprender</button>
+              <button class="role" data-papel="professor" onclick="pick(this)"><i>👨‍🏫</i>Quero ensinar</button>
+              <button class="role" data-papel="contratante" onclick="pick(this)"><i>💼</i>Quero contratar</button>
+              <button class="role" data-papel="vendedor" onclick="pick(this)"><i>📚</i>Quero vender material</button>
+            </div>
+            <small class="muted" style="display:block;font-size:.82rem;">Você pode mudar ou acumular papéis depois — a mesma conta serve para tudo.</small>
+          </div>
+
+          <div class="field" id="bloco-nome"><label>Nome completo</label><input type="text" id="in-nome" placeholder="Seu nome" autocomplete="name"></div>
+          <div class="field"><label>E-mail</label><input type="email" id="in-email" placeholder="voce@email.com" autocomplete="email"></div>
+          <div class="field"><label>Senha</label><input type="password" id="in-senha" placeholder="Mínimo de 8 caracteres" autocomplete="current-password"></div>
+
+          <label class="filter" id="bloco-termos" style="margin:4px 0 18px;font-size:.85rem;">
+            <input type="checkbox" id="in-termos" checked>Li e aceito os <b class="link-auth" onclick="event.preventDefault();go('termos');">Termos de uso</b> e a <b class="link-auth" onclick="event.preventDefault();go('privacidade');">Política de privacidade</b>.
+          </label>
+
+          <!-- avisos de erro e de sucesso aparecem aqui -->
+          <div id="auth-msg" style="display:none;padding:12px 14px;border-radius:10px;font-size:.88rem;line-height:1.45;margin-bottom:14px;"></div>
+
+          <button class="btn btn-primary btn-block" id="btn-auth" onclick="enviarAuth()">Criar minha conta grátis</button>
+
+          <div style="display:flex;align-items:center;gap:12px;margin:22px 0;color:var(--muted);font-size:.83rem;">
+            <span style="flex:1;height:1px;background:var(--line);"></span>ou<span style="flex:1;height:1px;background:var(--line);"></span>
+          </div>
+          <button class="btn btn-ghost btn-block" onclick="entrarComGoogle()">Continuar com Google</button>
+          <p class="muted" style="font-size:.83rem;text-align:center;margin-top:18px;" id="rodape-auth">Já tem conta? <b style="color:var(--brand-600);cursor:pointer;" onclick="modoAuth('entrar')">Entrar</b></p>
+        </div>
+
+        <p class="muted" style="font-size:.82rem;text-align:center;margin-top:20px;">Cadastro gratuito. Sem cartão de crédito.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ========================= FOOTER ========================= -->
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="logo"><span class="logo-mark">A</span><span><b>Aprender</b><span>Conecta</span></span></div>
+        <p class="foot-about">Conhecimento que conecta pessoas. Uma única plataforma para quem quer aprender, ensinar, compartilhar conhecimento ou encontrar alguém que ajude numa necessidade educacional.</p>
+      </div>
+      <div>
+        <h5>Plataforma</h5>
+        <ul>
+          <li><a href="#" onclick="go('aprender');return false;">Aprender</a></li>
+          <li><a href="#" onclick="go('ensinar');return false;">Ensinar</a></li>
+          <li><a href="#" onclick="go('servicos');return false;">Contratar serviços</a></li>
+          <li><a href="#" onclick="go('loja');return false;">Loja de materiais</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Para profissionais</h5>
+        <ul>
+          <li><a href="#" onclick="go('ensinar');return false;">Criar uma oferta</a></li>
+          <li><a href="#" onclick="go('painel-prof');return false;">Painel profissional</a></li>
+          <li><a href="#">Planos e comissões</a></li>
+          <li><a href="#">Selo de verificação</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Institucional</h5>
+        <ul>
+          <li><a href="#" onclick="go('home');return false;">Como funciona</a></li>
+          <li><a href="mailto:julianaluizcamargo@gmail.com">Falar conosco</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Legal</h5>
+        <ul>
+          <li><a href="#" onclick="go('termos');return false;">Termos de uso</a></li>
+          <li><a href="#" onclick="go('privacidade');return false;">Política de privacidade</a></li>
+          <li><a href="#" onclick="go('termos');return false;">Política acadêmica</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bot">
+      <span>© 2026 AprenderConecta. Todos os direitos reservados.</span>
+      <span>Feito no Brasil 🇧🇷</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ============================================================
+     BIBLIOTECA DO SUPABASE (o banco de dados)
+     Não precisa mexer nesta linha.
+     ============================================================ -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+/* ================================================================
+   ⬇⬇⬇  A CONEXÃO COM O SEU BANCO  ⬇⬇⬇
+
+   JÁ DEIXEI PREENCHIDO com os dados do seu projeto — em condições
+   normais você não precisa mexer aqui.
+
+   ⚠️ CONFIRA A CHAVE ABAIXO uma vez: eu a copiei de um print seu,
+   então uma letra pode ter saído trocada. Compare com a linha
+   SUPABASE_CHAVE do seu index.html anterior, ou pegue de novo em
+   Supabase → engrenagem (Settings) → API Keys → Publishable key.
+
+   Se aparecer erro de login depois de tudo pronto, é aqui que se olha.
+
+   Pode deixar essa chave no site: ela é pública de propósito.
+   Quem protege os dados são as regras de segurança do banco.
+   NUNCA cole aqui a chave chamada "secret" ou "service_role".
+   ================================================================ */
+
+var SUPABASE_URL   = 'https://pmpwkunsyuanrazrmomb.supabase.co';
+var SUPABASE_CHAVE = 'sb_publishable_eSh0TNQPFfJEb15Oxl6ZIQ_1TA0w-Ko';
+
+/* Limpeza automática: tira espaços, barra no fim e pedaços como /rest/v1
+   que o painel do Supabase às vezes mostra grudados no endereço.
+   Isso evita o erro "Invalid path specified in request URL". */
+SUPABASE_URL = String(SUPABASE_URL).trim()
+  .replace(/\/+$/, '')
+  .replace(/\/(rest|auth|storage|realtime|functions)\/v[0-9]+$/i, '')
+  .replace(/\/+$/, '');
+SUPABASE_CHAVE = String(SUPABASE_CHAVE).trim();
+
+/* ================================================================
+   ⬆⬆⬆  DAQUI PARA BAIXO NÃO PRECISA MEXER  ⬆⬆⬆
+   ================================================================ */
+
+
+/* ---------- ligação com o banco ---------- */
+var bancoConfigurado = SUPABASE_URL.indexOf('https://') === 0 && SUPABASE_CHAVE.length > 20;
+var sb = bancoConfigurado ? window.supabase.createClient(SUPABASE_URL, SUPABASE_CHAVE) : null;
+
+var usuario   = null;   // quem está logado (e-mail, id)
+var perfil    = null;   // nome e papel, vindos da tabela "perfis"
+var modoAtual = 'criar';
+
+var TELAS_PROTEGIDAS = ['painel', 'painel-prof', 'editar-perfil'];
+var perfilVisto = null;   // id do professor aberto na tela de perfil
+
+
+/* ---------- navegação entre as telas ---------- */
+function go(view){
+  if(TELAS_PROTEGIDAS.indexOf(view) !== -1 && !usuario){
+    view = 'entrar';
+    setTimeout(function(){
+      modoAuth('entrar');
+      mostrarMsg('Entre na sua conta para acessar o painel.', 'aviso');
+    }, 0);
+  }
+  document.querySelectorAll('.view').forEach(function(v){ v.classList.toggle('on', v.id === 'v-' + view); });
+  document.querySelectorAll('.mainnav a').forEach(function(a){ a.classList.toggle('on', a.dataset.v === view); });
+  document.getElementById('nav').classList.remove('open');
+  window.scrollTo({top:0,behavior:'instant'});
+  if(history.replaceState) history.replaceState(null,'','#'+view);
+
+  if(view === 'aprender')      carregarOfertas();
+  if(view === 'ensinar')       { atualizarPortaoEnsinar(); avisoAssinaturaEnsinar(); atualizarPrevia(); }
+  if(view === 'painel')        { pintarResumoCadastro(); }
+  if(view === 'painel-prof')   { carregarMinhasOfertas(); pintarPainelAssinatura(); pintarResumoCadastro(); pintarStatsProf(); }
+  if(view === 'home')          carregarHome();
+  if(view === 'perfil')        carregarPerfilPublico(perfilVisto);
+  if(view === 'editar-perfil') carregarFormPerfil();
+}
+function pick(el){
+  var p = el.parentElement;
+  p.querySelectorAll('.pill, .role, .auth-tabs button').forEach(function(b){ b.classList.remove('on'); });
+  el.classList.add('on');
+}
+function fromHash(){
+  var bruto = (location.hash || '#home').slice(1);
+  var partes = bruto.split('/');
+  var h = partes[0];
+  if(h === 'perfil' && partes[1]){ verPerfil(partes[1]); return; }
+  if(!document.getElementById('v-'+h)) h = 'home';
+  go(h);
+}
+
+
+/* ---------- tela de entrar / criar conta ---------- */
+function irParaEntrar(modo){ go('entrar'); modoAuth(modo || 'criar'); }
+
+function modoAuth(modo){
+  modoAtual = (modo === 'entrar') ? 'entrar' : 'criar';
+  var criando = (modoAtual === 'criar');
+
+  document.getElementById('tab-criar').classList.toggle('on', criando);
+  document.getElementById('tab-entrar').classList.toggle('on', !criando);
+
+  document.getElementById('bloco-papel').style.display  = criando ? '' : 'none';
+  document.getElementById('bloco-nome').style.display   = criando ? '' : 'none';
+  document.getElementById('bloco-termos').style.display = criando ? '' : 'none';
+
+  document.getElementById('in-senha').setAttribute('autocomplete', criando ? 'new-password' : 'current-password');
+  document.getElementById('btn-auth').textContent = criando ? 'Criar minha conta grátis' : 'Entrar';
+
+  document.getElementById('rodape-auth').innerHTML = criando
+    ? 'Já tem conta? <b class="link-auth" onclick="modoAuth(\'entrar\')">Entrar</b>'
+    : 'Ainda não tem conta? <b class="link-auth" onclick="modoAuth(\'criar\')">Criar conta</b> &nbsp;·&nbsp; <b class="link-auth" onclick="recuperarSenha()">Esqueci a senha</b>';
+
+  esconderMsg();
+}
+
+function valor(id){ return (document.getElementById(id).value || '').trim(); }
+
+function mostrarMsg(texto, tipo){
+  var cores = {
+    erro:  ['#FEE2E2', '#991B1B'],
+    ok:    ['#DCFCE7', '#166534'],
+    aviso: ['#FEF3C7', '#92400E']
+  };
+  var c = cores[tipo] || cores.aviso;
+  var el = document.getElementById('auth-msg');
+  el.style.background = c[0];
+  el.style.color = c[1];
+  el.innerHTML = texto;
+  el.style.display = 'block';
+}
+function esconderMsg(){ document.getElementById('auth-msg').style.display = 'none'; }
+
+function traduzErro(m){
+  m = String(m || '');
+  if(/Invalid login credentials/i.test(m))          return 'E-mail ou senha incorretos.';
+  if(/already registered|already been registered/i.test(m)) return 'Esse e-mail já tem conta. Clique na aba <b>Entrar</b>.';
+  if(/Password should be at least/i.test(m))        return 'A senha é muito curta. Use pelo menos 6 caracteres.';
+  if(/Email not confirmed/i.test(m))                return 'Você ainda não confirmou o e-mail. Procure a mensagem do Supabase na sua caixa de entrada (e no spam).';
+  if(/Unable to validate email|invalid format/i.test(m)) return 'Esse e-mail não parece válido.';
+  if(/For security purposes|rate limit|Too many/i.test(m)) return 'Muitas tentativas seguidas. Espere um minuto e tente de novo.';
+  if(/Failed to fetch|NetworkError/i.test(m))       return 'Não consegui falar com o banco de dados. Confira se a URL e a chave no topo do arquivo estão corretas.';
+  return 'Não deu certo: ' + m;
+}
+
+async function enviarAuth(){
+  if(!sb){ mostrarMsg(textoSemConfig(), 'erro'); return; }
+  esconderMsg();
+
+  var email = valor('in-email');
+  var senha = valor('in-senha');
+  if(!email || !senha){ mostrarMsg('Preencha o e-mail e a senha.', 'erro'); return; }
+
+  var btn = document.getElementById('btn-auth');
+  var rotulo = btn.textContent;
+  btn.disabled = true; btn.textContent = 'Aguarde…';
+
+  try{
+    if(modoAtual === 'criar'){
+      var nome = valor('in-nome');
+      if(!nome){ mostrarMsg('Escreva seu nome completo.', 'erro'); return; }
+      if(!document.getElementById('in-termos').checked){
+        mostrarMsg('É preciso aceitar os termos de uso para criar a conta.', 'erro'); return;
+      }
+      var botaoPapel = document.querySelector('#bloco-papel .role.on');
+      var papel = botaoPapel ? botaoPapel.dataset.papel : 'aluno';
+
+      var r = await sb.auth.signUp({
+        email: email,
+        password: senha,
+        options: { data: { nome: nome, papel: papel } }
+      });
+      if(r.error) throw r.error;
+
+      if(!r.data.session){
+        mostrarMsg('Conta criada! Enviamos um e-mail de confirmação para <b>' + email +
+                   '</b>. Abra a mensagem, clique no link e depois volte aqui para entrar.', 'ok');
+        return;
+      }
+    } else {
+      var e = await sb.auth.signInWithPassword({ email: email, password: senha });
+      if(e.error) throw e.error;
+    }
+
+    await carregarSessao();
+    document.getElementById('in-senha').value = '';
+    document.getElementById('in-nome').value  = '';
+    abrirMeuPainel();
+
+  } catch(err){
+    mostrarMsg(traduzErro(err && err.message), 'erro');
+  } finally {
+    btn.disabled = false; btn.textContent = rotulo;
+  }
+}
+
+async function entrarComGoogle(){
+  if(!sb){ mostrarMsg(textoSemConfig(), 'erro'); return; }
+  var r = await sb.auth.signInWithOAuth({
+    provider: 'google',
+    options: { redirectTo: location.origin + location.pathname + '#painel' }
+  });
+  if(r.error){
+    mostrarMsg('O login com Google ainda não foi ativado. No Supabase, vá em <b>Authentication → Sign In / Providers → Google</b> para ligar. Por enquanto, use e-mail e senha.', 'aviso');
+  }
+}
+
+async function recuperarSenha(){
+  if(!sb){ mostrarMsg(textoSemConfig(), 'erro'); return; }
+  var email = valor('in-email');
+  if(!email){ mostrarMsg('Escreva seu e-mail no campo acima e clique de novo em "Esqueci a senha".', 'aviso'); return; }
+  var r = await sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin + location.pathname });
+  if(r.error) mostrarMsg(traduzErro(r.error.message), 'erro');
+  else mostrarMsg('Enviamos um link de redefinição para <b>' + email + '</b>.', 'ok');
+}
+
+
+/* ---------- sessão: quem está logado ---------- */
+async function carregarSessao(){
+  if(!sb){ atualizarInterface(); return; }
+  var s = await sb.auth.getSession();
+  usuario = (s.data && s.data.session) ? s.data.session.user : null;
+  perfil = null;
+  if(usuario){
+    var p = await sb.from('perfis')
+      .select('nome, papel, cidade, bio, telefone, titulo_profissional, assinatura_ate, criado_em')
+      .eq('id', usuario.id).maybeSingle();
+    perfil = p.data || null;
+  }
+  atualizarInterface();
+}
+
+function atualizarInterface(){
+  var logado = !!usuario;
+  document.getElementById('area-visitante').style.display = logado ? 'none' : 'flex';
+  document.getElementById('area-logado').style.display    = logado ? 'flex' : 'none';
+
+  var nome = (perfil && perfil.nome) || (usuario && usuario.email) || 'visitante';
+  var primeiro = String(nome).split(' ')[0];
+  document.getElementById('nome-aluno').textContent = primeiro;
+  document.getElementById('nome-prof').textContent  = primeiro;
+
+  atualizarPortaoEnsinar();
+  atualizarPrevia();
+  carregarFormPerfil();
+  pintarPainelAssinatura();
+  pintarResumoCadastro();
+}
+
+function abrirMeuPainel(){
+  var papel = perfil && perfil.papel;
+  go((papel === 'professor' || papel === 'vendedor') ? 'painel-prof' : 'painel');
+}
+
+async function sair(){
+  if(sb) await sb.auth.signOut();
+  usuario = null; perfil = null;
+  atualizarInterface();
+  go('home');
+}
+
+
+/* ================================================================
+   ETAPA 2 — OFERTAS
+   Publicar na tela "Ensinar" e listar na tela "Aprender".
+   ================================================================ */
+
+var ofertas = [];            // tudo que veio do banco
+var ofertasCarregadas = false;
+var idParaExcluir = null;    // confirmação em duas etapas
+
+/* --- ajudantes --- */
+function esc(t){
+  return String(t == null ? '' : t)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function iniciais(nome){
+  var partes = String(nome || '?').trim().split(/\s+/);
+  var a = (partes[0] || '?')[0] || '?';
+  var b = partes.length > 1 ? (partes[partes.length-1][0] || '') : '';
+  return (a + b).toUpperCase();
+}
+function corAvatar(texto){
+  var soma = 0, t = String(texto || '');
+  for(var i = 0; i < t.length; i++) soma += t.charCodeAt(i);
+  return 'a' + ((soma % 5) + 1);
+}
+function moeda(v){
+  var n = Number(v) || 0;
+  return 'R$ ' + n.toLocaleString('pt-BR', {minimumFractionDigits: (n % 1 ? 2 : 0), maximumFractionDigits: 2});
+}
+function textoDoPillLigado(idContainer, padrao){
+  var el = document.querySelector('#' + idContainer + ' .pill.on');
+  return el ? el.textContent.trim() : padrao;
+}
+function mostrarMsgOferta(texto, tipo){
+  var cores = { erro:['#FEE2E2','#991B1B'], ok:['#DCFCE7','#166534'], aviso:['#FEF3C7','#92400E'] };
+  var c = cores[tipo] || cores.aviso;
+  var el = document.getElementById('msg-oferta');
+  el.style.background = c[0]; el.style.color = c[1];
+  el.innerHTML = texto; el.style.display = 'block';
+}
+
+/* --- portão da tela Ensinar: quem pode publicar --- */
+function atualizarPortaoEnsinar(){
+  var portao = document.getElementById('portao-ensinar');
+  var form   = document.getElementById('form-oferta');
+  if(!portao || !form) return;
+
+  if(!usuario){
+    portao.style.display = 'block';
+    portao.style.background = '#DBEAFE'; portao.style.color = '#1E3A8A';
+    portao.innerHTML = '<b>Entre na sua conta para publicar.</b><br>' +
+      '<span style="font-size:.9rem;">Leva um minuto e é grátis.</span><br>' +
+      '<button class="btn btn-primary btn-sm" style="margin-top:12px;" onclick="irParaEntrar(\'criar\')">Criar conta ou entrar</button>';
+    form.style.display = 'none';
+    return;
+  }
+
+  var papel = perfil && perfil.papel;
+  if(papel !== 'professor'){
+    portao.style.display = 'block';
+    portao.style.background = '#FEF3C7'; portao.style.color = '#92400E';
+    portao.innerHTML = '<b>Só professores publicam ofertas.</b><br>' +
+      '<span style="font-size:.9rem;">Sua conta está como <b>' + esc(papel || 'aluno') + '</b>. ' +
+      'Você pode virar professor agora — continua podendo aprender do mesmo jeito, com a mesma conta.</span><br>' +
+      '<button class="btn btn-accent btn-sm" style="margin-top:12px;" id="btn-virar-prof" onclick="virarProfessor()">Quero me tornar professor</button>';
+    form.style.display = 'none';
+    return;
+  }
+
+  portao.style.display = 'none';
+  form.style.display = '';
+}
+
+async function virarProfessor(){
+  if(!sb || !usuario) return;
+  var btn = document.getElementById('btn-virar-prof');
+  if(btn){ btn.disabled = true; btn.textContent = 'Aguarde…'; }
+  var r = await sb.from('perfis').update({ papel: 'professor' }).eq('id', usuario.id);
+  if(r.error){
+    if(btn){ btn.disabled = false; btn.textContent = 'Quero me tornar professor'; }
+    alertaSimples('portao-ensinar', 'Não consegui atualizar seu perfil: ' + esc(r.error.message));
+    return;
+  }
+  await carregarSessao();
+  atualizarPortaoEnsinar();
+  atualizarPrevia();
+}
+function alertaSimples(id, html){
+  var el = document.getElementById(id);
+  if(el) el.innerHTML += '<div style="margin-top:10px;font-size:.85rem;">' + html + '</div>';
+}
+
+/* --- prévia ao vivo --- */
+function atualizarPrevia(){
+  if(!document.getElementById('pv-titulo')) return;
+  var nome     = (perfil && perfil.nome) || 'Seu nome';
+  var titulo   = (document.getElementById('of-titulo') || {}).value || '';
+  var desc     = (document.getElementById('of-desc')   || {}).value || '';
+  var area     = (document.getElementById('of-area')   || {}).value || '';
+  var valor    = (document.getElementById('of-valor')  || {}).value || 0;
+  var cobranca = (document.getElementById('of-cobranca') || {}).value || 'Hora';
+  var formato  = textoDoPillLigado('of-formato', 'Aula individual');
+  var modo     = textoDoPillLigado('of-modalidade', 'Online');
+
+  document.getElementById('pv-ini').textContent    = iniciais(nome);
+  document.getElementById('pv-ini').className      = 'ava ' + corAvatar(nome);
+  document.getElementById('pv-nome').textContent   = nome;
+  document.getElementById('pv-area').textContent   = area;
+  document.getElementById('pv-titulo').textContent = titulo || 'Título da sua oferta';
+  document.getElementById('pv-desc').textContent   = desc || 'A descrição aparece aqui conforme você digita.';
+  document.getElementById('pv-tags').innerHTML     =
+    '<span class="tag tag-b">' + esc(formato) + '</span><span class="tag">' + esc(modo) + '</span>';
+  document.getElementById('pv-preco').innerHTML    =
+    moeda(valor) + ' <small>/' + esc(String(cobranca).toLowerCase()) + '</small>';
+
+  var liq = document.getElementById('of-liquido');
+  if(liq){
+    var n = Number(valor) || 0;
+    liq.textContent = n > 0
+      ? 'Você recebe ' + moeda(n * 0.9) + ' por ' + String(cobranca).toLowerCase() + ' (comissão de 10%).'
+      : 'A plataforma fica com 10% de comissão.';
+  }
+}
+
+function limparOferta(){
+  ['of-titulo','of-desc','of-valor'].forEach(function(id){
+    var el = document.getElementById(id); if(el) el.value = '';
+  });
+  document.getElementById('msg-oferta').style.display = 'none';
+  atualizarPrevia();
+}
+
+/* --- publicar --- */
+async function publicarOferta(){
+  if(!sb) return;
+  if(!usuario){ irParaEntrar('criar'); return; }
+
+  var titulo = (document.getElementById('of-titulo').value || '').trim();
+  var desc   = (document.getElementById('of-desc').value || '').trim();
+  var valor  = Number(document.getElementById('of-valor').value);
+
+  if(titulo.length < 5){ mostrarMsgOferta('Escreva um título com pelo menos 5 letras.', 'erro'); return; }
+  if(!(valor >= 0))    { mostrarMsgOferta('Informe um valor. Use 0 se a oferta for gratuita.', 'erro'); return; }
+
+  var btn = document.getElementById('btn-publicar');
+  btn.disabled = true; btn.textContent = 'Publicando…';
+
+  var r = await sb.from('ofertas').insert({
+    professor_id: usuario.id,
+    titulo:     titulo,
+    area:       document.getElementById('of-area').value,
+    nivel:      document.getElementById('of-nivel').value,
+    formato:    textoDoPillLigado('of-formato', 'Aula individual'),
+    descricao:  desc,
+    valor:      valor,
+    cobranca:   document.getElementById('of-cobranca').value,
+    modalidade: textoDoPillLigado('of-modalidade', 'Online')
+  });
+
+  btn.disabled = false; btn.textContent = 'Publicar oferta';
+
+  if(r.error){
+    var m = r.error.message || '';
+    if(/row-level security|violates row-level/i.test(m)){
+      mostrarMsgOferta('O banco recusou: sua conta não está como <b>professor</b>. Recarregue a página e tente de novo.', 'erro');
+    } else if(/titulo_minimo/i.test(m)){
+      mostrarMsgOferta('O título precisa ter pelo menos 5 letras.', 'erro');
+    } else {
+      mostrarMsgOferta('Não deu certo: ' + esc(m), 'erro');
+    }
+    return;
+  }
+
+  mostrarMsgOferta('Oferta publicada! Ela já aparece na tela <b>Aprender</b> e no seu painel. ' +
+    '<button class="btn btn-ghost btn-sm" style="margin-top:10px;" onclick="go(\'aprender\')">Ver na lista</button>', 'ok');
+  limparOfertaSemMensagem();
+  await carregarOfertas(true);
+  await carregarMinhasOfertas();
+}
+function limparOfertaSemMensagem(){
+  ['of-titulo','of-desc','of-valor'].forEach(function(id){
+    var el = document.getElementById(id); if(el) el.value = '';
+  });
+  atualizarPrevia();
+}
+
+/* --- carregar e mostrar a lista da tela Aprender --- */
+async function carregarOfertas(forcar){
+  if(!sb) return;
+  if(ofertasCarregadas && !forcar) { filtrarOfertas(); return; }
+
+  var r = await sb.from('ofertas')
+    .select('id, titulo, area, nivel, formato, descricao, valor, cobranca, modalidade, criado_em, professor_id, perfis(nome, cidade)')
+    .eq('ativa', true)
+    .order('criado_em', { ascending: false })
+    .limit(200);
+
+  if(r.error){
+    var lista = document.getElementById('lista-ofertas');
+    if(lista) lista.innerHTML = '<p class="muted">Não consegui carregar as ofertas: ' + esc(r.error.message) + '</p>';
+    return;
+  }
+  ofertas = r.data || [];
+  ofertasCarregadas = true;
+  atualizarContagensPorArea();
+  filtrarOfertas();
+}
+
+function atualizarContagensPorArea(){
+  document.querySelectorAll('#filtros-area [data-conta]').forEach(function(el){
+    var area = el.getAttribute('data-conta');
+    var n = ofertas.filter(function(o){ return o.area === area; }).length;
+    el.textContent = '(' + n + ')';
+  });
+}
+
+function filtrarOfertas(){
+  var lista = document.getElementById('lista-ofertas');
+  var vazio = document.getElementById('vazio-ofertas');
+  var contador = document.getElementById('contador-ofertas');
+  if(!lista) return;
+
+  var busca = ((document.getElementById('busca-aprender') || {}).value || '').trim().toLowerCase();
+
+  var areas = [];
+  document.querySelectorAll('#filtros-area input:checked').forEach(function(c){ areas.push(c.getAttribute('data-area')); });
+
+  var formatos = [];
+  document.querySelectorAll('#filtros-formato input:checked').forEach(function(c){ formatos.push(c.getAttribute('data-formato')); });
+
+  var atalho = document.querySelector('#atalhos-formato .pill.on');
+  var grupo = atalho ? (atalho.getAttribute('data-grupo') || '') : '';
+  if(grupo) formatos = [grupo];
+
+  var precoEl = document.getElementById('filtro-preco');
+  var precoMax = precoEl ? Number(precoEl.value) : 99999;
+  var rotulo = document.getElementById('rotulo-preco');
+  if(rotulo) rotulo.textContent = (precoMax >= 500) ? 'qualquer valor' : 'até ' + moeda(precoMax);
+
+  var res = ofertas.filter(function(o){
+    if(areas.length && areas.indexOf(o.area) === -1) return false;
+    if(formatos.length && formatos.indexOf(o.formato) === -1) return false;
+    if(precoMax < 500 && Number(o.valor) > precoMax) return false;
+    if(busca){
+      var alvo = [o.titulo, o.descricao, o.area, o.nivel, o.formato, (o.perfis && o.perfis.nome)].join(' ').toLowerCase();
+      if(alvo.indexOf(busca) === -1) return false;
+    }
+    return true;
+  });
+
+  var ordem = (document.getElementById('ordenar-ofertas') || {}).value || 'recentes';
+  res.sort(function(a, b){
+    if(ordem === 'barato') return Number(a.valor) - Number(b.valor);
+    if(ordem === 'caro')   return Number(b.valor) - Number(a.valor);
+    if(ordem === 'az')     return String(a.titulo).localeCompare(String(b.titulo), 'pt-BR');
+    return String(b.criado_em).localeCompare(String(a.criado_em));
+  });
+
+  if(ofertas.length === 0){
+    lista.innerHTML = '';
+    if(vazio) vazio.style.display = 'block';
+    if(contador) contador.textContent = 'Nenhuma oferta publicada ainda';
+    return;
+  }
+  if(vazio) vazio.style.display = 'none';
+
+  if(contador){
+    contador.innerHTML = res.length === 1
+      ? '<b>1</b> oferta encontrada'
+      : '<b>' + res.length + '</b> ofertas encontradas' + (res.length !== ofertas.length ? ' de ' + ofertas.length : '');
+  }
+
+  if(res.length === 0){
+    lista.innerHTML = '<p class="muted" style="grid-column:1/-1;padding:30px 0;text-align:center;">' +
+      'Nenhuma oferta bate com esses filtros. ' +
+      '<b class="link-auth" onclick="limparFiltros()">Limpar filtros</b></p>';
+    return;
+  }
+  lista.innerHTML = res.map(cardOferta).join('');
+}
+
+function limparFiltros(){
+  var b = document.getElementById('busca-aprender'); if(b) b.value = '';
+  document.querySelectorAll('#filtros-area input, #filtros-formato input').forEach(function(c){ c.checked = false; });
+  var pr = document.getElementById('filtro-preco'); if(pr) pr.value = 500;
+  document.querySelectorAll('#atalhos-formato .pill').forEach(function(b2, i){ b2.classList.toggle('on', i === 0); });
+  filtrarOfertas();
+}
+
+function cardOferta(o){
+  var nome = (o.perfis && o.perfis.nome) || 'Professor';
+  var cidade = (o.perfis && o.perfis.cidade) || '';
+  var etiquetas = '<span class="tag tag-b">' + esc(o.formato) + '</span>' +
+                  '<span class="tag">' + esc(o.modalidade) + (cidade ? ' · ' + esc(cidade) : '') + '</span>' +
+                  (o.nivel ? '<span class="tag">' + esc(o.nivel) + '</span>' : '');
+  return '' +
+  '<article class="card card-h offer">' +
+    '<div class="offer-top">' +
+      '<div class="ava ' + corAvatar(nome) + '">' + esc(iniciais(nome)) + '</div>' +
+      '<div class="offer-who"><b>' + esc(nome) + '</b><small>' + esc(o.area) + '</small></div>' +
+    '</div>' +
+    '<div class="offer-body">' +
+      '<h4>' + esc(o.titulo) + '</h4>' +
+      '<p>' + esc(o.descricao || 'Sem descrição.') + '</p>' +
+      '<div class="tags">' + etiquetas + '</div>' +
+    '</div>' +
+    '<div class="offer-foot">' +
+      '<span class="price">' + moeda(o.valor) + ' <small>/' + esc(String(o.cobranca).toLowerCase()) + '</small></span>' +
+      '<button class="btn btn-primary btn-sm" onclick="verPerfil(\'' + o.professor_id + '\')">Ver perfil</button>' +
+    '</div>' +
+  '</article>';
+}
+
+/* --- minhas ofertas, no painel profissional --- */
+async function carregarMinhasOfertas(){
+  var caixa = document.getElementById('minhas-ofertas');
+  if(!caixa) return;
+  if(!sb || !usuario){ caixa.innerHTML = '<p class="muted" style="font-size:.88rem;">Entre na sua conta para ver suas ofertas.</p>'; return; }
+
+  var r = await sb.from('ofertas')
+    .select('id, titulo, formato, valor, cobranca, ativa, criado_em')
+    .eq('professor_id', usuario.id)
+    .order('criado_em', { ascending: false });
+
+  if(r.error){ caixa.innerHTML = '<p class="muted" style="font-size:.88rem;">Erro ao carregar: ' + esc(r.error.message) + '</p>'; return; }
+
+  var minhas = r.data || [];
+  if(minhas.length === 0){
+    caixa.innerHTML = '<p class="muted" style="font-size:.88rem;">Você ainda não publicou nenhuma oferta.</p>';
+    return;
+  }
+  caixa.innerHTML = minhas.map(function(o){
+    var confirmando = (idParaExcluir === o.id);
+    return '<div class="list-item">' +
+      '<div class="g"><b>' + esc(o.titulo) + '</b><small>' + esc(o.formato) + ' · ' + moeda(o.valor) + '/' + esc(String(o.cobranca).toLowerCase()) + '</small></div>' +
+      (confirmando
+        ? '<span style="display:flex;gap:6px;"><button class="btn btn-sm" style="background:#DC2626;color:#fff;" onclick="excluirOferta(\'' + o.id + '\', true)">Confirmar</button>' +
+          '<button class="btn btn-ghost btn-sm" onclick="idParaExcluir=null;carregarMinhasOfertas()">Cancelar</button></span>'
+        : '<span style="display:flex;gap:6px;align-items:center;"><span class="badge-st st-ok">Ativa</span>' +
+          '<button class="btn btn-ghost btn-sm" onclick="excluirOferta(\'' + o.id + '\')">Excluir</button></span>') +
+    '</div>';
+  }).join('');
+}
+
+async function excluirOferta(id, confirmado){
+  if(!confirmado){ idParaExcluir = id; carregarMinhasOfertas(); return; }
+  idParaExcluir = null;
+  var r = await sb.from('ofertas').delete().eq('id', id);
+  if(r.error){
+    var caixa = document.getElementById('minhas-ofertas');
+    if(caixa) caixa.innerHTML = '<p style="color:#991B1B;font-size:.88rem;">Não consegui excluir: ' + esc(r.error.message) + '</p>';
+    return;
+  }
+  await carregarMinhasOfertas();
+  await carregarOfertas(true);
+}
+
+
+/* ================================================================
+   ETAPA 3 — PERFIL PÚBLICO, MEU PERFIL E NÚMEROS REAIS
+   ================================================================ */
+
+/* --- WhatsApp --- */
+function soDigitos(t){ return String(t == null ? '' : t).replace(/\D/g, ''); }
+
+function linkWhatsapp(tel, nomeDono, tituloOferta){
+  var d = soDigitos(tel);
+  if(d.length < 10) return null;          // número incompleto
+  if(d.length <= 11) d = '55' + d;        // sem código do país: assume Brasil
+  var primeiro = String(nomeDono || '').trim().split(/\s+/)[0];
+  var msg = 'Olá' + (primeiro ? ', ' + primeiro : '') + '! Encontrei seu perfil no AprenderConecta';
+  if(tituloOferta) msg += ' e me interessei por "' + tituloOferta + '"';
+  msg += '. Podemos conversar?';
+  return 'https://wa.me/' + d + '?text=' + encodeURIComponent(msg);
+}
+
+function mesAno(iso){
+  if(!iso) return '—';
+  var meses = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+  var d = new Date(iso);
+  if(isNaN(d)) return '—';
+  return meses[d.getMonth()] + '/' + d.getFullYear();
+}
+
+
+/* --- abrir o perfil de alguém --- */
+function verPerfil(id){
+  perfilVisto = id;
+  go('perfil');
+  if(history.replaceState) history.replaceState(null, '', '#perfil/' + id);
+}
+function verMeuPerfil(){
+  if(usuario) verPerfil(usuario.id);
+}
+
+async function carregarPerfilPublico(id){
+  var elNome = document.getElementById('pf-nome');
+  if(!elNome || !sb) return;
+
+  var ini     = document.getElementById('pf-ini');
+  var linha   = document.getElementById('pf-linha');
+  var selos   = document.getElementById('pf-selos');
+  var acao    = document.getElementById('pf-acao');
+  var sobre   = document.getElementById('pf-sobre');
+  var caixaOf = document.getElementById('pf-ofertas');
+  var contato = document.getElementById('pf-contato');
+  var numeros = document.getElementById('pf-numeros');
+
+  if(!id){
+    elNome.textContent = 'Nenhum perfil escolhido';
+    linha.textContent = 'Abra a tela Aprender e clique em "Ver perfil" em alguma oferta.';
+    ini.textContent = '–'; selos.innerHTML = '';
+    acao.innerHTML = '<button class="btn btn-accent" onclick="go(\'aprender\')">Ver ofertas</button>';
+    sobre.style.display = 'none';
+    caixaOf.innerHTML = ''; contato.innerHTML = ''; numeros.innerHTML = '';
+    return;
+  }
+
+  elNome.textContent = 'Carregando…';
+  caixaOf.innerHTML = '<p class="muted" style="font-size:.9rem;">Carregando…</p>';
+
+  var r = await sb.from('perfis')
+    .select('id, nome, papel, cidade, bio, telefone, titulo_profissional, criado_em')
+    .eq('id', id).maybeSingle();
+
+  if(r.error || !r.data){
+    elNome.textContent = 'Perfil não encontrado';
+    linha.textContent = r.error ? r.error.message : 'Esse perfil não existe mais.';
+    ini.textContent = '?'; selos.innerHTML = ''; acao.innerHTML = '';
+    sobre.style.display = 'none'; caixaOf.innerHTML = ''; contato.innerHTML = ''; numeros.innerHTML = '';
+    return;
+  }
+
+  var pe = r.data;
+  var souEu = usuario && usuario.id === pe.id;
+
+  ini.textContent = iniciais(pe.nome);
+  ini.className   = 'ava ava-lg ' + corAvatar(pe.nome);
+  elNome.textContent = pe.nome;
+
+  var partes = [];
+  if(pe.titulo_profissional) partes.push(pe.titulo_profissional);
+  if(pe.cidade)             partes.push('📍 ' + pe.cidade);
+  linha.textContent = partes.join(' · ');
+
+  var papeis = { professor:'👨‍🏫 Professor', aluno:'🎓 Aluno', contratante:'💼 Contratante', vendedor:'📚 Vende materiais' };
+  selos.innerHTML = '<span class="seal">' + esc(papeis[pe.papel] || pe.papel) + '</span>' +
+                    '<span class="seal">Na plataforma desde ' + esc(mesAno(pe.criado_em)) + '</span>';
+
+  /* ofertas da pessoa */
+  var o = await sb.from('ofertas')
+    .select('id, titulo, area, nivel, formato, descricao, valor, cobranca, modalidade, criado_em')
+    .eq('professor_id', id).eq('ativa', true)
+    .order('criado_em', { ascending: false });
+
+  var lista = (o.error ? [] : (o.data || []));
+  var icones = { 'Aula individual':'🎓', 'Turma':'👥', 'Aula ao vivo':'🎥', 'Curso gravado':'📀', 'Mentoria':'🧭', 'Grupo de estudos':'📖' };
+  var cores  = { 'Aula individual':'i-blue', 'Turma':'i-green', 'Aula ao vivo':'i-amber', 'Curso gravado':'i-purple', 'Mentoria':'i-blue', 'Grupo de estudos':'i-green' };
+
+  if(lista.length === 0){
+    caixaOf.innerHTML = '<p class="muted" style="font-size:.92rem;">' +
+      (souEu ? 'Você ainda não publicou nenhuma oferta. <b class="link-auth" onclick="go(\'ensinar\')">Publicar agora</b>'
+             : 'Esta pessoa ainda não tem ofertas publicadas.') + '</p>';
+  } else {
+    caixaOf.innerHTML = lista.map(function(of){
+      return '<div class="list-item">' +
+        '<div class="path-ico ' + (cores[of.formato] || 'i-blue') + '" style="width:42px;height:42px;margin:0;font-size:1.1rem;border-radius:12px;">' + (icones[of.formato] || '🎓') + '</div>' +
+        '<div class="g"><b>' + esc(of.titulo) + '</b><small>' + esc(of.formato) + ' · ' + esc(of.modalidade) +
+          (of.nivel ? ' · ' + esc(of.nivel) : '') + '</small></div>' +
+        '<span class="price">' + moeda(of.valor) + '<small>/' + esc(String(of.cobranca).toLowerCase()) + '</small></span>' +
+      '</div>';
+    }).join('');
+  }
+
+  /* sobre */
+  if(pe.bio && pe.bio.trim()){
+    document.getElementById('pf-bio').textContent = pe.bio;
+    sobre.style.display = '';
+  } else if(souEu){
+    document.getElementById('pf-bio').innerHTML = 'Você ainda não escreveu sua apresentação. <b class="link-auth" onclick="go(\'editar-perfil\')">Escrever agora</b>';
+    sobre.style.display = '';
+  } else {
+    sobre.style.display = 'none';
+  }
+
+  /* contato */
+  var zap = linkWhatsapp(pe.telefone, pe.nome, lista.length ? lista[0].titulo : '');
+  if(souEu){
+    acao.innerHTML = '<button class="btn btn-accent" onclick="go(\'editar-perfil\')">Editar meu perfil</button>' +
+      '<p style="font-size:.78rem;color:rgba(255,255,255,.7);margin-top:10px;">Este é o seu perfil, como os outros veem.</p>';
+    contato.innerHTML = '<h4>Seu contato</h4>' + (zap
+      ? '<p style="font-size:.9rem;color:var(--ink-2);line-height:1.6;">Quem abrir seu perfil vê um botão para te chamar no WhatsApp.</p>'
+      : '<p style="font-size:.9rem;color:var(--ink-2);line-height:1.6;">Você ainda não informou um WhatsApp, então ninguém consegue te procurar. <b class="link-auth" onclick="go(\'editar-perfil\')">Adicionar agora</b></p>');
+  } else if(zap){
+    acao.innerHTML = '<a class="btn btn-accent" href="' + zap + '" target="_blank" rel="noopener">💬 Chamar no WhatsApp</a>';
+    contato.innerHTML = '<h4>Falar com ' + esc(String(pe.nome).split(' ')[0]) + '</h4>' +
+      '<a class="btn btn-primary btn-block" href="' + zap + '" target="_blank" rel="noopener">💬 Chamar no WhatsApp</a>' +
+      '<p class="muted" style="font-size:.8rem;margin-top:14px;line-height:1.55;">Horário e pagamento são combinados diretamente entre vocês. A plataforma ainda não intermedia pagamentos.</p>';
+  } else {
+    acao.innerHTML = '<p style="font-size:.85rem;color:rgba(255,255,255,.75);">Esta pessoa ainda não informou um contato.</p>';
+    contato.innerHTML = '<h4>Contato</h4><p class="muted" style="font-size:.88rem;line-height:1.55;">Esta pessoa ainda não informou um WhatsApp no perfil.</p>';
+  }
+
+  numeros.innerHTML =
+    '<div class="list-item"><div class="g"><b>' + lista.length + '</b><small>' + (lista.length === 1 ? 'oferta publicada' : 'ofertas publicadas') + '</small></div></div>' +
+    '<div class="list-item"><div class="g"><b>' + esc(mesAno(pe.criado_em)) + '</b><small>entrou na plataforma</small></div></div>' +
+    (pe.cidade ? '<div class="list-item"><div class="g"><b>' + esc(pe.cidade) + '</b><small>onde atua</small></div></div>' : '');
+}
+
+
+/* --- editar o meu perfil --- */
+function carregarFormPerfil(){
+  var portao = document.getElementById('ep-portao');
+  var form   = document.getElementById('ep-form');
+  if(!portao || !form) return;
+
+  if(!usuario){
+    portao.style.display = 'block';
+    portao.style.background = '#DBEAFE'; portao.style.color = '#1E3A8A';
+    portao.innerHTML = '<b>Entre na sua conta para editar o perfil.</b><br>' +
+      '<button class="btn btn-primary btn-sm" style="margin-top:12px;" onclick="irParaEntrar(\'entrar\')">Entrar</button>';
+    form.style.display = 'none';
+    return;
+  }
+  portao.style.display = 'none';
+  form.style.display = '';
+
+  document.getElementById('ep-nome').value   = (perfil && perfil.nome)   || '';
+  document.getElementById('ep-papel').value  = (perfil && perfil.papel)  || 'aluno';
+  document.getElementById('ep-titulo').value = (perfil && perfil.titulo_profissional) || '';
+  document.getElementById('ep-cidade').value = (perfil && perfil.cidade) || '';
+  document.getElementById('ep-bio').value    = (perfil && perfil.bio)    || '';
+  document.getElementById('ep-tel').value    = (perfil && perfil.telefone) || '';
+  document.getElementById('ep-msg').style.display = 'none';
+  previaPerfil();
+}
+
+function previaPerfil(){
+  if(!document.getElementById('ep-pv-nome')) return;
+  var nome   = (document.getElementById('ep-nome').value || '').trim();
+  var titulo = (document.getElementById('ep-titulo').value || '').trim();
+  var cidade = (document.getElementById('ep-cidade').value || '').trim();
+  var bio    = (document.getElementById('ep-bio').value || '').trim();
+  var papel  = document.getElementById('ep-papel').value;
+  var tel    = (document.getElementById('ep-tel').value || '').trim();
+
+  document.getElementById('ep-pv-ini').textContent = iniciais(nome || '?');
+  document.getElementById('ep-pv-ini').className   = 'ava ' + corAvatar(nome);
+  document.getElementById('ep-pv-nome').textContent   = nome || 'Seu nome';
+  document.getElementById('ep-pv-titulo').textContent = titulo || 'Título profissional';
+  document.getElementById('ep-pv-bio').textContent    = bio || 'Seu texto de apresentação aparece aqui.';
+
+  var etiquetas = '';
+  var papeis = { professor:'👨‍🏫 Professor', aluno:'🎓 Aluno', contratante:'💼 Contratante', vendedor:'📚 Vende materiais' };
+  etiquetas += '<span class="tag tag-b">' + esc(papeis[papel] || papel) + '</span>';
+  if(cidade) etiquetas += '<span class="tag">📍 ' + esc(cidade) + '</span>';
+  if(linkWhatsapp(tel)) etiquetas += '<span class="tag tag-g">💬 WhatsApp</span>';
+  document.getElementById('ep-pv-tags').innerHTML = etiquetas;
+
+  document.getElementById('ep-conta-bio').textContent = bio.length + ' caracteres';
+  document.getElementById('ep-bloco-zap').style.display = (papel === 'professor' || papel === 'vendedor') ? '' : 'none';
+}
+
+function mostrarMsgPerfil(texto, tipo){
+  var cores = { erro:['#FEE2E2','#991B1B'], ok:['#DCFCE7','#166534'], aviso:['#FEF3C7','#92400E'] };
+  var c = cores[tipo] || cores.aviso;
+  var el = document.getElementById('ep-msg');
+  el.style.background = c[0]; el.style.color = c[1];
+  el.innerHTML = texto; el.style.display = 'block';
+}
+
+async function salvarPerfil(){
+  if(!sb || !usuario) return;
+  var nome = (document.getElementById('ep-nome').value || '').trim();
+  if(nome.length < 2){ mostrarMsgPerfil('Escreva seu nome.', 'erro'); return; }
+
+  var tel = (document.getElementById('ep-tel').value || '').trim();
+  if(tel && !linkWhatsapp(tel)){
+    mostrarMsgPerfil('Esse WhatsApp parece incompleto. Escreva com DDD, por exemplo <b>(65) 99999-9999</b>.', 'erro');
+    return;
+  }
+
+  var btn = document.getElementById('ep-salvar');
+  btn.disabled = true; btn.textContent = 'Salvando…';
+
+  var r = await sb.from('perfis').update({
+    nome:                nome,
+    papel:               document.getElementById('ep-papel').value,
+    titulo_profissional: (document.getElementById('ep-titulo').value || '').trim() || null,
+    cidade:              (document.getElementById('ep-cidade').value || '').trim() || null,
+    bio:                 (document.getElementById('ep-bio').value || '').trim() || null,
+    telefone:            tel || null
+  }).eq('id', usuario.id);
+
+  btn.disabled = false; btn.textContent = 'Salvar perfil';
+
+  if(r.error){
+    var m = r.error.message || '';
+    if(/titulo_profissional|column .* does not exist/i.test(m)){
+      mostrarMsgPerfil('Falta rodar o <b>banco-etapa3.sql</b> no Supabase — a coluna do título profissional ainda não existe.', 'erro');
+    } else {
+      mostrarMsgPerfil('Não deu certo: ' + esc(m), 'erro');
+    }
+    return;
+  }
+
+  await carregarSessao();
+  ofertasCarregadas = false;   // o nome do professor aparece nos cards
+  mostrarMsgPerfil('Perfil salvo! <button class="btn btn-ghost btn-sm" style="margin-top:10px;" onclick="verMeuPerfil()">Ver como ficou</button>', 'ok');
+}
+
+
+/* --- página inicial com números de verdade --- */
+async function carregarHome(){
+  if(!sb || !document.getElementById('hs-ofertas')) return;
+  await carregarOfertas();
+
+  var c = await sb.from('perfis').select('id', { count: 'exact', head: true }).eq('papel', 'professor');
+  var nProf = (c && typeof c.count === 'number') ? c.count : 0;
+
+  var areas = {};
+  ofertas.forEach(function(o){ if(o.area) areas[o.area] = (areas[o.area] || 0) + 1; });
+
+  document.getElementById('hs-professores').textContent = nProf;
+  document.getElementById('hs-ofertas').textContent     = ofertas.length;
+  document.getElementById('hs-areas').textContent       = Object.keys(areas).length;
+
+  document.querySelectorAll('.cats [data-cat]').forEach(function(sm){
+    var n = areas[sm.getAttribute('data-cat')] || 0;
+    sm.textContent = n === 0 ? 'nenhuma ainda' : (n === 1 ? '1 oferta' : n + ' ofertas');
+  });
+
+  var sec   = document.getElementById('sec-destaques');
+  var caixa = document.getElementById('home-ofertas');
+  if(ofertas.length){
+    sec.style.display = '';
+    caixa.innerHTML = ofertas.slice(0, 3).map(cardOferta).join('');
+  } else {
+    sec.style.display = 'none';
+  }
+}
+
+function buscarArea(area){
+  go('aprender');
+  document.querySelectorAll('#filtros-area input').forEach(function(c){
+    c.checked = (c.getAttribute('data-area') === area);
+  });
+  var b = document.getElementById('busca-aprender'); if(b) b.value = '';
+  filtrarOfertas();
+}
+
+
+/* ================================================================
+   ETAPA 4 — ASSINATURA DO PROFESSOR
+   Fica pronta e DESLIGADA. Só entra em vigor quando você mudar
+   "cobranca_ativa" para true na tabela config, no Supabase.
+   ================================================================ */
+
+var config = null;
+
+async function carregarConfig(){
+  if(!sb) return;
+  var r = await sb.from('config').select('cobranca_ativa, preco_mensal, chave_pix').maybeSingle();
+  config = (r && r.data) ? r.data : { cobranca_ativa: false, preco_mensal: 0, chave_pix: null };
+}
+
+function hojeISO(){
+  var d = new Date();
+  var m = String(d.getMonth() + 1); if(m.length < 2) m = '0' + m;
+  var dia = String(d.getDate());    if(dia.length < 2) dia = '0' + dia;
+  return d.getFullYear() + '-' + m + '-' + dia;
+}
+
+function dataBR(iso){
+  if(!iso) return '—';
+  var p = String(iso).slice(0, 10).split('-');
+  return p.length === 3 ? (p[2] + '/' + p[1] + '/' + p[0]) : String(iso);
+}
+
+function diasAte(iso){
+  if(!iso) return null;
+  var a = new Date(String(iso).slice(0,10) + 'T12:00:00');
+  var b = new Date(hojeISO() + 'T12:00:00');
+  return Math.round((a - b) / 86400000);
+}
+
+/* A cobrança está desligada? Então todo mundo está em dia. */
+function cobrancaLigada(){ return !!(config && config.cobranca_ativa); }
+
+function euEstouEmDia(){
+  if(!cobrancaLigada()) return true;
+  if(!perfil || !perfil.assinatura_ate) return false;
+  return String(perfil.assinatura_ate).slice(0,10) >= hojeISO();
+}
+
+function pintarPainelAssinatura(){
+  var caixa = document.getElementById('painel-assinatura');
+  if(!caixa) return;
+
+  if(!usuario || !perfil){ caixa.innerHTML = ''; caixa.style.display = 'none'; return; }
+  caixa.style.display = '';
+
+  var ate    = perfil.assinatura_ate ? String(perfil.assinatura_ate).slice(0,10) : null;
+  var dias   = diasAte(ate);
+  var preco  = config ? Number(config.preco_mensal || 0) : 0;
+  var pix    = config ? (config.chave_pix || '') : '';
+
+  /* ---- cobrança desligada: fase gratuita ---- */
+  if(!cobrancaLigada()){
+    caixa.innerHTML =
+      '<h4>Seu plano</h4>' +
+      '<div class="list-item"><div class="g"><b>Gratuito</b>' +
+      '<small>A plataforma ainda não cobra nada dos professores.</small></div>' +
+      '<span class="badge-st st-ok">Ativo</span></div>' +
+      (ate ? '<div class="list-item"><div class="g"><b>' + esc(dataBR(ate)) + '</b><small>assinatura registrada até esta data</small></div></div>' : '') +
+      '<p class="muted" style="font-size:.83rem;margin-top:12px;line-height:1.55;">Suas ofertas aparecem normalmente na busca.</p>';
+    return;
+  }
+
+  /* ---- em dia ---- */
+  if(euEstouEmDia()){
+    var aviso = (dias !== null && dias <= 7)
+      ? '<p style="font-size:.85rem;color:#92400E;background:#FEF3C7;padding:10px 12px;border-radius:9px;margin-top:12px;line-height:1.5;">' +
+        'Vence em <b>' + dias + (dias === 1 ? ' dia' : ' dias') + '</b>. Renove para suas ofertas continuarem na busca.</p>'
+      : '';
+    caixa.innerHTML =
+      '<h4>Sua assinatura</h4>' +
+      '<div class="list-item"><div class="g"><b>Ativa até ' + esc(dataBR(ate)) + '</b>' +
+      '<small>' + (dias !== null ? dias + (dias === 1 ? ' dia restante' : ' dias restantes') : '') + '</small></div>' +
+      '<span class="badge-st st-ok">Em dia</span></div>' +
+      '<div class="list-item"><div class="g"><b>' + moeda(preco) + '</b><small>por mês</small></div></div>' +
+      aviso;
+    return;
+  }
+
+  /* ---- vencida ou nunca assinou ---- */
+  caixa.innerHTML =
+    '<h4>Sua assinatura</h4>' +
+    '<div style="background:#FEE2E2;color:#991B1B;padding:14px 16px;border-radius:11px;font-size:.88rem;line-height:1.55;margin-bottom:14px;">' +
+      '<b>Suas ofertas estão ocultas na busca.</b><br>' +
+      (ate ? 'A assinatura venceu em ' + esc(dataBR(ate)) + '.' : 'Você ainda não tem assinatura ativa.') +
+    '</div>' +
+    '<div class="list-item"><div class="g"><b>' + moeda(preco) + '</b><small>por mês</small></div></div>' +
+    (pix
+      ? '<div class="list-item"><div class="g"><b>Chave PIX</b><small style="word-break:break-all;">' + esc(pix) + '</small></div></div>'
+      : '') +
+    '<p class="muted" style="font-size:.83rem;margin-top:12px;line-height:1.55;">' +
+      'Faça o PIX e envie o comprovante para <a href="mailto:julianaluizcamargo@gmail.com" style="color:var(--brand-600);">julianaluizcamargo@gmail.com</a>. ' +
+      'Suas ofertas voltam para a busca assim que o pagamento for confirmado.</p>';
+}
+
+/* aviso na tela Ensinar, para quem está vencido */
+function avisoAssinaturaEnsinar(){
+  var portao = document.getElementById('portao-ensinar');
+  if(!portao || !usuario) return;
+  if(!cobrancaLigada() || euEstouEmDia()) return;
+  if((perfil && perfil.papel) !== 'professor') return;
+
+  portao.style.display = 'block';
+  portao.style.background = '#FEE2E2'; portao.style.color = '#991B1B';
+  portao.innerHTML = '<b>Sua assinatura está vencida.</b><br>' +
+    '<span style="font-size:.9rem;">Você pode publicar normalmente, mas suas ofertas só voltam a aparecer na busca depois da renovação.</span><br>' +
+    '<button class="btn btn-ghost btn-sm" style="margin-top:12px;" onclick="go(\'painel-prof\')">Ver como renovar</button>';
+}
+
+
+/* --- painéis com dados de verdade --- */
+function itemResumo(rotulo, valor, ok){
+  return '<div class="list-item"><div class="g"><b>' + esc(valor) + '</b><small>' + esc(rotulo) + '</small></div>' +
+         (ok === true  ? '<span class="badge-st st-ok">✓</span>' : '') +
+         (ok === false ? '<span class="badge-st st-wait">falta</span>' : '') + '</div>';
+}
+
+function pintarResumoCadastro(){
+  if(!perfil) return;
+  var papeis = { professor:'Professor', aluno:'Aluno', contratante:'Contratante', vendedor:'Vende materiais' };
+  var html =
+    itemResumo('seu papel na plataforma', papeis[perfil.papel] || perfil.papel) +
+    itemResumo('cidade', perfil.cidade || 'não informada', !!perfil.cidade) +
+    itemResumo('WhatsApp no perfil', perfil.telefone ? 'informado' : 'não informado', !!perfil.telefone) +
+    itemResumo('apresentação', (perfil.bio && perfil.bio.trim()) ? 'escrita' : 'não escrita', !!(perfil.bio && perfil.bio.trim())) +
+    itemResumo('na plataforma desde', mesAno(perfil.criado_em));
+
+  ['resumo-aluno','resumo-prof'].forEach(function(id){
+    var el = document.getElementById(id); if(el) el.innerHTML = html;
+  });
+}
+
+async function pintarStatsProf(){
+  var caixa = document.getElementById('stats-prof');
+  if(!caixa || !sb || !usuario) return;
+
+  var r = await sb.from('ofertas').select('id, ativa').eq('professor_id', usuario.id);
+  var minhas = (r.error ? [] : (r.data || []));
+
+  var completo = 0, total = 4;
+  if(perfil){
+    if(perfil.cidade) completo++;
+    if(perfil.telefone) completo++;
+    if(perfil.bio && perfil.bio.trim()) completo++;
+    if(perfil.titulo_profissional) completo++;
+  }
+
+  var plano = !cobrancaLigada() ? 'Gratuito' : (euEstouEmDia() ? 'Ativo' : 'Vencido');
+
+  caixa.innerHTML =
+    '<div class="card stat"><small>Ofertas publicadas</small><b>' + minhas.length + '</b>' +
+      '<span class="muted" style="font-size:.8rem;font-weight:600;">' + (minhas.length ? 'visíveis na busca' : 'publique a primeira') + '</span></div>' +
+    '<div class="card stat"><small>Perfil completo</small><b>' + completo + '/' + total + '</b>' +
+      '<span class="' + (completo === total ? 'delta' : 'muted') + '" style="font-size:.8rem;font-weight:600;">' +
+      (completo === total ? 'tudo preenchido' : 'faltam ' + (total - completo) + ' campos') + '</span></div>' +
+    '<div class="card stat"><small>Na plataforma desde</small><b style="font-size:1.5rem;">' + esc(mesAno(perfil && perfil.criado_em)) + '</b>' +
+      '<span class="muted" style="font-size:.8rem;font-weight:600;">membro fundador</span></div>' +
+    '<div class="card stat"><small>Seu plano</small><b style="font-size:1.5rem;">' + plano + '</b>' +
+      '<span class="muted" style="font-size:.8rem;font-weight:600;">' + (cobrancaLigada() ? moeda(config.preco_mensal) + '/mês' : 'sem custo') + '</span></div>';
+
+  var sub = document.getElementById('sub-painel-prof');
+  if(sub){
+    sub.textContent = minhas.length === 0
+      ? 'Você ainda não publicou nenhuma oferta. Comece por aí.'
+      : (minhas.length === 1 ? 'Você tem 1 oferta publicada.' : 'Você tem ' + minhas.length + ' ofertas publicadas.');
+  }
+}
+
+
+/* ---------- aviso caso as chaves não tenham sido preenchidas ---------- */
+function textoSemConfig(){
+  return 'O banco de dados ainda não foi ligado. Abra o <b>index.html</b> num editor de texto e preencha ' +
+         '<b>SUPABASE_URL</b> e <b>SUPABASE_CHAVE</b> lá no comecinho do bloco &lt;script&gt;. ' +
+         'O arquivo PASSO-A-PASSO.md explica onde achar esses dois valores.';
+}
+function avisarSemConfig(){
+  var faixa = document.createElement('div');
+  faixa.style.cssText = 'background:#7F1D1D;color:#fff;padding:10px 16px;font-size:.86rem;text-align:center;';
+  faixa.innerHTML = '⚠️ Banco de dados não configurado — preencha <b>SUPABASE_URL</b> e <b>SUPABASE_CHAVE</b> no index.html. ' +
+                    'O site funciona normalmente, mas cadastro e login ainda não gravam nada.';
+  document.body.insertBefore(faixa, document.body.firstChild);
+}
+
+
+/* ---------- início ---------- */
+window.addEventListener('DOMContentLoaded', async function(){
+  modoAuth('criar');
+  if(sb){
+    await carregarConfig();
+    await carregarSessao();
+    sb.auth.onAuthStateChange(function(evento){
+      if(evento === 'SIGNED_IN' || evento === 'SIGNED_OUT' || evento === 'USER_UPDATED'){
+        setTimeout(carregarSessao, 0);
+      }
+    });
+  } else {
+    atualizarInterface();
+    avisarSemConfig();
+  }
+  fromHash();
+});
+window.addEventListener('hashchange', fromHash);
+</script>
+</body>
+</html>
