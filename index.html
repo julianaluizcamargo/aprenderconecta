@@ -1488,6 +1488,8 @@ ul{margin:0;padding:0;list-style:none;}
             <p class="muted" style="font-size:.85rem;margin-top:14px;">Agosto é o seu melhor mês até aqui: <b style="color:var(--green-600);">R$ 3.240</b> em ganhos, 18% acima de julho.</p>
           </div>
 
+          <div class="panel" id="painel-assinatura"></div>
+
           <div class="panel">
             <h4>Minhas ofertas <span class="tag tag-g" style="margin-left:6px;">dados reais</span></h4>
             <div id="minhas-ofertas"><p class="muted" style="font-size:.88rem;">Carregando…</p></div>
@@ -2034,8 +2036,8 @@ function go(view){
   if(history.replaceState) history.replaceState(null,'','#'+view);
 
   if(view === 'aprender')      carregarOfertas();
-  if(view === 'ensinar')       { atualizarPortaoEnsinar(); atualizarPrevia(); }
-  if(view === 'painel-prof')   carregarMinhasOfertas();
+  if(view === 'ensinar')       { atualizarPortaoEnsinar(); avisoAssinaturaEnsinar(); atualizarPrevia(); }
+  if(view === 'painel-prof')   { carregarMinhasOfertas(); pintarPainelAssinatura(); }
   if(view === 'home')          carregarHome();
   if(view === 'perfil')        carregarPerfilPublico(perfilVisto);
   if(view === 'editar-perfil') carregarFormPerfil();
@@ -2187,7 +2189,9 @@ async function carregarSessao(){
   usuario = (s.data && s.data.session) ? s.data.session.user : null;
   perfil = null;
   if(usuario){
-    var p = await sb.from('perfis').select('nome, papel').eq('id', usuario.id).maybeSingle();
+    var p = await sb.from('perfis')
+      .select('nome, papel, cidade, bio, telefone, titulo_profissional, assinatura_ate, criado_em')
+      .eq('id', usuario.id).maybeSingle();
     perfil = p.data || null;
   }
   atualizarInterface();
@@ -2206,6 +2210,7 @@ function atualizarInterface(){
   atualizarPortaoEnsinar();
   atualizarPrevia();
   carregarFormPerfil();
+  pintarPainelAssinatura();
 }
 
 function abrirMeuPainel(){
@@ -2874,6 +2879,120 @@ function buscarArea(area){
 }
 
 
+/* ================================================================
+   ETAPA 4 — ASSINATURA DO PROFESSOR
+   Fica pronta e DESLIGADA. Só entra em vigor quando você mudar
+   "cobranca_ativa" para true na tabela config, no Supabase.
+   ================================================================ */
+
+var config = null;
+
+async function carregarConfig(){
+  if(!sb) return;
+  var r = await sb.from('config').select('cobranca_ativa, preco_mensal, chave_pix').maybeSingle();
+  config = (r && r.data) ? r.data : { cobranca_ativa: false, preco_mensal: 0, chave_pix: null };
+}
+
+function hojeISO(){
+  var d = new Date();
+  var m = String(d.getMonth() + 1); if(m.length < 2) m = '0' + m;
+  var dia = String(d.getDate());    if(dia.length < 2) dia = '0' + dia;
+  return d.getFullYear() + '-' + m + '-' + dia;
+}
+
+function dataBR(iso){
+  if(!iso) return '—';
+  var p = String(iso).slice(0, 10).split('-');
+  return p.length === 3 ? (p[2] + '/' + p[1] + '/' + p[0]) : String(iso);
+}
+
+function diasAte(iso){
+  if(!iso) return null;
+  var a = new Date(String(iso).slice(0,10) + 'T12:00:00');
+  var b = new Date(hojeISO() + 'T12:00:00');
+  return Math.round((a - b) / 86400000);
+}
+
+/* A cobrança está desligada? Então todo mundo está em dia. */
+function cobrancaLigada(){ return !!(config && config.cobranca_ativa); }
+
+function euEstouEmDia(){
+  if(!cobrancaLigada()) return true;
+  if(!perfil || !perfil.assinatura_ate) return false;
+  return String(perfil.assinatura_ate).slice(0,10) >= hojeISO();
+}
+
+function pintarPainelAssinatura(){
+  var caixa = document.getElementById('painel-assinatura');
+  if(!caixa) return;
+
+  if(!usuario || !perfil){ caixa.innerHTML = ''; caixa.style.display = 'none'; return; }
+  caixa.style.display = '';
+
+  var ate    = perfil.assinatura_ate ? String(perfil.assinatura_ate).slice(0,10) : null;
+  var dias   = diasAte(ate);
+  var preco  = config ? Number(config.preco_mensal || 0) : 0;
+  var pix    = config ? (config.chave_pix || '') : '';
+
+  /* ---- cobrança desligada: fase gratuita ---- */
+  if(!cobrancaLigada()){
+    caixa.innerHTML =
+      '<h4>Seu plano</h4>' +
+      '<div class="list-item"><div class="g"><b>Gratuito</b>' +
+      '<small>A plataforma ainda não cobra nada dos professores.</small></div>' +
+      '<span class="badge-st st-ok">Ativo</span></div>' +
+      (ate ? '<div class="list-item"><div class="g"><b>' + esc(dataBR(ate)) + '</b><small>assinatura registrada até esta data</small></div></div>' : '') +
+      '<p class="muted" style="font-size:.83rem;margin-top:12px;line-height:1.55;">Suas ofertas aparecem normalmente na busca.</p>';
+    return;
+  }
+
+  /* ---- em dia ---- */
+  if(euEstouEmDia()){
+    var aviso = (dias !== null && dias <= 7)
+      ? '<p style="font-size:.85rem;color:#92400E;background:#FEF3C7;padding:10px 12px;border-radius:9px;margin-top:12px;line-height:1.5;">' +
+        'Vence em <b>' + dias + (dias === 1 ? ' dia' : ' dias') + '</b>. Renove para suas ofertas continuarem na busca.</p>'
+      : '';
+    caixa.innerHTML =
+      '<h4>Sua assinatura</h4>' +
+      '<div class="list-item"><div class="g"><b>Ativa até ' + esc(dataBR(ate)) + '</b>' +
+      '<small>' + (dias !== null ? dias + (dias === 1 ? ' dia restante' : ' dias restantes') : '') + '</small></div>' +
+      '<span class="badge-st st-ok">Em dia</span></div>' +
+      '<div class="list-item"><div class="g"><b>' + moeda(preco) + '</b><small>por mês</small></div></div>' +
+      aviso;
+    return;
+  }
+
+  /* ---- vencida ou nunca assinou ---- */
+  caixa.innerHTML =
+    '<h4>Sua assinatura</h4>' +
+    '<div style="background:#FEE2E2;color:#991B1B;padding:14px 16px;border-radius:11px;font-size:.88rem;line-height:1.55;margin-bottom:14px;">' +
+      '<b>Suas ofertas estão ocultas na busca.</b><br>' +
+      (ate ? 'A assinatura venceu em ' + esc(dataBR(ate)) + '.' : 'Você ainda não tem assinatura ativa.') +
+    '</div>' +
+    '<div class="list-item"><div class="g"><b>' + moeda(preco) + '</b><small>por mês</small></div></div>' +
+    (pix
+      ? '<div class="list-item"><div class="g"><b>Chave PIX</b><small style="word-break:break-all;">' + esc(pix) + '</small></div></div>'
+      : '') +
+    '<p class="muted" style="font-size:.83rem;margin-top:12px;line-height:1.55;">' +
+      'Faça o PIX e envie o comprovante para <a href="mailto:julianaluizcamargo@gmail.com" style="color:var(--brand-600);">julianaluizcamargo@gmail.com</a>. ' +
+      'Suas ofertas voltam para a busca assim que o pagamento for confirmado.</p>';
+}
+
+/* aviso na tela Ensinar, para quem está vencido */
+function avisoAssinaturaEnsinar(){
+  var portao = document.getElementById('portao-ensinar');
+  if(!portao || !usuario) return;
+  if(!cobrancaLigada() || euEstouEmDia()) return;
+  if((perfil && perfil.papel) !== 'professor') return;
+
+  portao.style.display = 'block';
+  portao.style.background = '#FEE2E2'; portao.style.color = '#991B1B';
+  portao.innerHTML = '<b>Sua assinatura está vencida.</b><br>' +
+    '<span style="font-size:.9rem;">Você pode publicar normalmente, mas suas ofertas só voltam a aparecer na busca depois da renovação.</span><br>' +
+    '<button class="btn btn-ghost btn-sm" style="margin-top:12px;" onclick="go(\'painel-prof\')">Ver como renovar</button>';
+}
+
+
 /* ---------- aviso caso as chaves não tenham sido preenchidas ---------- */
 function textoSemConfig(){
   return 'O banco de dados ainda não foi ligado. Abra o <b>index.html</b> num editor de texto e preencha ' +
@@ -2893,6 +3012,7 @@ function avisarSemConfig(){
 window.addEventListener('DOMContentLoaded', async function(){
   modoAuth('criar');
   if(sb){
+    await carregarConfig();
     await carregarSessao();
     sb.auth.onAuthStateChange(function(evento){
       if(evento === 'SIGNED_IN' || evento === 'SIGNED_OUT' || evento === 'USER_UPDATED'){
