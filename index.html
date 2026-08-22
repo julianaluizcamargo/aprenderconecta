@@ -571,14 +571,7 @@ ul{margin:0;padding:0;list-style:none;}
         <h2 class="h2">O que você está procurando hoje?</h2>
         <p>Do reforço escolar à revisão de tese — conhecimento e serviços educacionais em uma só busca.</p>
       </div>
-      <div class="cats">
-        <a href="#" class="cat" onclick="buscarArea('Educação e Pedagogia');return false;"><i>📚</i><span>Educação e Pedagogia<small data-cat="Educação e Pedagogia">ver ofertas</small></span></a>
-        <a href="#" class="cat" onclick="buscarArea('Matemática');return false;"><i>📐</i><span>Matemática<small data-cat="Matemática">ver ofertas</small></span></a>
-        <a href="#" class="cat" onclick="buscarArea('Idiomas');return false;"><i>🗣️</i><span>Idiomas<small data-cat="Idiomas">ver ofertas</small></span></a>
-        <a href="#" class="cat" onclick="buscarArea('Tecnologia');return false;"><i>💻</i><span>Tecnologia<small data-cat="Tecnologia">ver ofertas</small></span></a>
-        <a href="#" class="cat" onclick="buscarArea('Ciências');return false;"><i>🔬</i><span>Ciências<small data-cat="Ciências">ver ofertas</small></span></a>
-        <a href="#" class="cat" onclick="buscarArea('Música');return false;"><i>🎵</i><span>Música<small data-cat="Música">ver ofertas</small></span></a>
-      </div>
+      <div class="cats" id="lista-categorias"></div>
     </div>
   </div>
 
@@ -701,12 +694,6 @@ ul{margin:0;padding:0;list-style:none;}
       <aside>
         <div class="panel" id="filtros-area">
           <h4>Área de conhecimento</h4>
-          <label class="filter"><input type="checkbox" data-area="Matemática" onchange="filtrarOfertas()">Matemática <span class="muted" data-conta="Matemática">(0)</span></label>
-          <label class="filter"><input type="checkbox" data-area="Idiomas" onchange="filtrarOfertas()">Idiomas <span class="muted" data-conta="Idiomas">(0)</span></label>
-          <label class="filter"><input type="checkbox" data-area="Tecnologia" onchange="filtrarOfertas()">Tecnologia <span class="muted" data-conta="Tecnologia">(0)</span></label>
-          <label class="filter"><input type="checkbox" data-area="Educação e Pedagogia" onchange="filtrarOfertas()">Educação e Pedagogia <span class="muted" data-conta="Educação e Pedagogia">(0)</span></label>
-          <label class="filter"><input type="checkbox" data-area="Música" onchange="filtrarOfertas()">Música <span class="muted" data-conta="Música">(0)</span></label>
-          <label class="filter"><input type="checkbox" data-area="Ciências" onchange="filtrarOfertas()">Ciências <span class="muted" data-conta="Ciências">(0)</span></label>
         </div>
         <div class="panel" id="filtros-formato">
           <h4>Formato</h4>
@@ -803,11 +790,11 @@ ul{margin:0;padding:0;list-style:none;}
           <div class="grid g2" style="gap:16px;">
             <div class="field">
               <label>Área de conhecimento</label>
-              <select id="of-area"><option>Matemática</option><option>Idiomas</option><option>Tecnologia</option><option>Educação e Pedagogia</option><option>Música</option><option>Ciências</option></select>
+              <select id="of-area"></select>
             </div>
             <div class="field">
               <label>Nível</label>
-              <select id="of-nivel"><option>Ensino Fundamental</option><option>Ensino Médio</option><option>Técnico</option><option>Graduação</option><option>Pós-graduação</option></select>
+              <select id="of-nivel"></select>
             </div>
           </div>
 
@@ -2949,6 +2936,69 @@ async function pintarStatsProf(){
 }
 
 
+/* ================================================================
+   ÁREAS E NÍVEIS — a lista mora só aqui.
+   Para acrescentar uma área nova, adicione uma linha em AREAS e pronto:
+   o formulário, os filtros e a página inicial se atualizam sozinhos.
+   ================================================================ */
+
+var AREAS = [
+  { nome: 'Educação e Pedagogia',       icone: '📚' },
+  { nome: 'Contabilidade e Finanças',   icone: '📊' },
+  { nome: 'Administração e Negócios',   icone: '💼' },
+  { nome: 'Matemática',                 icone: '📐' },
+  { nome: 'Idiomas',                    icone: '🗣️' },
+  { nome: 'Tecnologia',                 icone: '💻' },
+  { nome: 'Ciências',                   icone: '🔬' },
+  { nome: 'Concursos e Certificações',  icone: '🏛️' },
+  { nome: 'Música',                     icone: '🎵' }
+];
+
+var NIVEIS = [
+  'Livre / Profissional',
+  'Ensino Fundamental',
+  'Ensino Médio',
+  'Técnico',
+  'Graduação',
+  'Pós-graduação'
+];
+
+function montarListas(){
+  /* formulário da tela Ensinar */
+  var selArea = document.getElementById('of-area');
+  if(selArea && !selArea.options.length){
+    selArea.innerHTML = AREAS.map(function(a){
+      return '<option>' + esc(a.nome) + '</option>';
+    }).join('');
+  }
+  var selNivel = document.getElementById('of-nivel');
+  if(selNivel && !selNivel.options.length){
+    selNivel.innerHTML = NIVEIS.map(function(n){
+      return '<option>' + esc(n) + '</option>';
+    }).join('');
+  }
+
+  /* filtros da tela Aprender */
+  var filtros = document.getElementById('filtros-area');
+  if(filtros && !filtros.querySelector('label')){
+    filtros.insertAdjacentHTML('beforeend', AREAS.map(function(a){
+      return '<label class="filter"><input type="checkbox" data-area="' + esc(a.nome) + '" onchange="filtrarOfertas()">' +
+             esc(a.nome) + ' <span class="muted" data-conta="' + esc(a.nome) + '">(0)</span></label>';
+    }).join(''));
+  }
+
+  /* categorias da página inicial */
+  var cats = document.getElementById('lista-categorias');
+  if(cats && !cats.children.length){
+    cats.innerHTML = AREAS.map(function(a){
+      return '<a href="#" class="cat" onclick="buscarArea(\'' + String(a.nome).replace(/'/g, "\\'") + '\');return false;">' +
+             '<i>' + a.icone + '</i><span>' + esc(a.nome) +
+             '<small data-cat="' + esc(a.nome) + '">ver ofertas</small></span></a>';
+    }).join('');
+  }
+}
+
+
 /* ---------- aviso caso as chaves não tenham sido preenchidas ---------- */
 function textoSemConfig(){
   return 'O banco de dados ainda não foi ligado. Abra o <b>index.html</b> num editor de texto e preencha ' +
@@ -2966,6 +3016,7 @@ function avisarSemConfig(){
 
 /* ---------- início ---------- */
 window.addEventListener('DOMContentLoaded', async function(){
+  montarListas();
   modoAuth('criar');
   if(sb){
     await carregarConfig();
