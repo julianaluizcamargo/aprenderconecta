@@ -2033,6 +2033,20 @@ var perfilVisto = null;   // id do professor aberto na tela de perfil
 
 /* ---------- navegação entre as telas ---------- */
 function go(view){
+  /* saiu da tela de um formulário que estava em modo edição?
+     então a edição foi abandonada: desliga o modo e esvazia o formulário,
+     para o próximo "Publicar" começar em branco. */
+  if(typeof materialEditando !== 'undefined' && materialEditando && view !== 'publicar-material'){
+    materialEditando = null;
+    if(typeof limparFormMaterial === 'function') limparFormMaterial();
+    if(typeof atualizarModoMaterial === 'function') atualizarModoMaterial();
+  }
+  if(typeof ofertaEditando !== 'undefined' && ofertaEditando && view !== 'ensinar'){
+    ofertaEditando = null;
+    if(typeof limparOfertaSemMensagem === 'function') limparOfertaSemMensagem();
+    if(typeof atualizarModoOferta === 'function') atualizarModoOferta();
+  }
+
   if(TELAS_PROTEGIDAS.indexOf(view) !== -1 && !usuario){
     view = 'entrar';
     setTimeout(function(){
@@ -2432,6 +2446,11 @@ function limparOfertaSemMensagem(){
   ['of-titulo','of-desc','of-valor'].forEach(function(id){
     var el = document.getElementById(id); if(el) el.value = '';
   });
+  ['of-area','of-nivel','of-cobranca'].forEach(function(id){
+    var el = document.getElementById(id); if(el) el.selectedIndex = 0;
+  });
+  marcarPill('of-formato', null);
+  marcarPill('of-modalidade', null);
   atualizarPrevia();
 }
 
@@ -3336,6 +3355,20 @@ function previaMaterial(){
   ic.className = 'prod-img ' + (f ? corArquivo(f.name) : 'p1');
 }
 
+function limparFormMaterial(){
+  ['mt-titulo','mt-desc','mt-arquivo','mt-capa'].forEach(function(id){
+    var el = document.getElementById(id); if(el) el.value = '';
+  });
+  ['mt-area','mt-nivel'].forEach(function(id){
+    var el = document.getElementById(id); if(el) el.selectedIndex = 0;
+  });
+  capaEscolhidaArq = null;
+  ['mt-info-arquivo','mt-info-capa','mt-barra'].forEach(function(id){
+    var el = document.getElementById(id); if(el) el.style.display = 'none';
+  });
+  previaMaterial();
+}
+
 function arquivoEscolhido(){
   var f = document.getElementById('mt-arquivo').files[0];
   var caixa = document.getElementById('mt-info-arquivo');
@@ -3448,15 +3481,10 @@ async function publicarMaterial(){
   mostrarMsgMaterial('Material publicado! Já está disponível para qualquer pessoa baixar. ' +
     '<button class="btn btn-ghost btn-sm" style="margin-top:10px;" onclick="go(\'loja\')">Ver na lista</button>', 'ok');
 
-  document.getElementById('mt-titulo').value = '';
-  document.getElementById('mt-desc').value = '';
-  document.getElementById('mt-arquivo').value = '';
-  document.getElementById('mt-capa').value = '';
-  capaEscolhidaArq = null;
-  document.getElementById('mt-info-arquivo').style.display = 'none';
-  document.getElementById('mt-info-capa').style.display = 'none';
-  setTimeout(function(){ document.getElementById('mt-barra').style.display = 'none'; }, 1200);
-  previaMaterial();
+  var barraEl = document.getElementById('mt-barra');
+  limparFormMaterial();
+  if(barraEl) barraEl.style.display = 'block';
+  setTimeout(function(){ if(barraEl) barraEl.style.display = 'none'; }, 1200);
 
   await carregarMateriais(true);
   await carregarMeusMateriais();
@@ -3752,16 +3780,10 @@ async function editarMaterial(id){
 }
 
 function cancelarEdicaoMaterial(){
-  materialEditando = null; capaEscolhidaArq = null;
-  document.getElementById('mt-titulo').value = '';
-  document.getElementById('mt-desc').value = '';
-  document.getElementById('mt-arquivo').value = '';
-  document.getElementById('mt-capa').value = '';
-  document.getElementById('mt-info-arquivo').style.display = 'none';
-  document.getElementById('mt-info-capa').style.display = 'none';
+  materialEditando = null;
+  limparFormMaterial();
   document.getElementById('mt-msg').style.display = 'none';
   atualizarModoMaterial();
-  previaMaterial();
   go('painel-prof');
 }
 
@@ -3824,6 +3846,7 @@ async function salvarEdicaoMaterial(){
     '<button class="btn btn-ghost btn-sm" style="margin-top:10px;" onclick="go(\'loja\')">Ver na lista</button>', 'ok');
   materialEditando = null;
   atualizarModoMaterial();
+  limparFormMaterial();
   await carregarMateriais(true);
   await carregarMeusMateriais();
 }
