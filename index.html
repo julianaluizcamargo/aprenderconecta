@@ -644,15 +644,17 @@ ul{margin:0;padding:0;list-style:none;}
     </div>
   </div>
 
-  <!-- LOJA — EM BREVE -->
-  <div class="section" style="padding-top:0;">
+  <!-- MATERIAIS -->
+  <div class="section" id="sec-materiais-home" style="padding-top:0;display:none;">
     <div class="wrap">
-      <div class="panel" style="padding:38px;text-align:center;">
-        <div style="font-size:2.2rem;margin-bottom:10px;">📚</div>
-        <div class="eyebrow" style="display:inline-block;">Em breve</div>
-        <h2 class="h2" style="margin:12px 0 10px;">Loja de materiais</h2>
-        <p class="muted" style="font-size:.95rem;max-width:520px;margin:0 auto;">Apostilas, planos de aula, atividades e e-books, vendidos pelos próprios professores. Esta parte ainda está sendo construída — por enquanto, o que já funciona são as aulas e ofertas.</p>
+      <div class="toolbar" style="justify-content:space-between;">
+        <div class="sec-head" style="margin-bottom:0;">
+          <div class="eyebrow">Para baixar de graça</div>
+          <h2 class="h2">Materiais publicados por professores</h2>
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="go('loja')">Ver todos →</button>
       </div>
+      <div class="grid g4" id="home-materiais" style="margin-top:28px;"></div>
     </div>
   </div>
 
@@ -1065,15 +1067,21 @@ ul{margin:0;padding:0;list-style:none;}
 </section>
 <!-- ========================= LOJA ========================= -->
 <section class="view" id="v-loja">
-  <div style="background:#FEF3C7;color:#92400E;padding:12px 16px;text-align:center;font-size:.9rem;line-height:1.5;">🚧 <b>Em construção.</b> Esta área ainda é uma demonstração — os itens mostrados são exemplos e nada é gravado. Por enquanto o que funciona de verdade é <b onclick="go('aprender')" class="link-auth">Aprender</b> e <b onclick="go('ensinar')" class="link-auth">Ensinar</b>.</div>
   <div class="page-head">
     <div class="wrap">
-      <div class="crumb">Início › Loja de conhecimento</div>
-      <h1>Loja de Conhecimento</h1>
-      <p>Apostilas, e-books, planos de aula, atividades, jogos pedagógicos e mapas mentais — produzidos por professores, para professores.</p>
-      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:22px;">
-        <button class="btn btn-primary">Explorar materiais</button>
-        <button class="btn btn-ghost" onclick="go('painel-prof')">Vender meu material</button>
+      <div class="crumb">Início › Materiais</div>
+      <h1>Materiais para baixar</h1>
+      <p>Apostilas, atividades, planos de aula e planilhas — publicados por professores, de graça.</p>
+
+      <div class="searchbar" style="margin:24px 0 0;max-width:640px;box-shadow:var(--sh-1);border:1px solid var(--line);">
+        <i>🔎</i>
+        <input type="text" id="busca-materiais" placeholder="Ex.: alfabetização, planilha de custos, atividades..." aria-label="Buscar materiais"
+               oninput="filtrarMateriais()" onkeydown="if(event.key==='Enter')filtrarMateriais()">
+        <button class="btn btn-primary" onclick="filtrarMateriais()">Buscar</button>
+      </div>
+
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:20px;">
+        <button class="btn btn-accent" onclick="go('publicar-material')">＋ Publicar meu material</button>
       </div>
     </div>
   </div>
@@ -1082,145 +1090,134 @@ ul{margin:0;padding:0;list-style:none;}
     <div class="wrap split">
 
       <aside>
-        <div class="panel">
-          <h4>Tipo de material</h4>
-          <label class="filter"><input type="checkbox" checked>Apostilas e e-books</label>
-          <label class="filter"><input type="checkbox" checked>Planos de aula</label>
-          <label class="filter"><input type="checkbox">Atividades</label>
-          <label class="filter"><input type="checkbox">Jogos pedagógicos</label>
-          <label class="filter"><input type="checkbox">Apresentações e slides</label>
-          <label class="filter"><input type="checkbox">Mapas mentais</label>
-          <label class="filter"><input type="checkbox">Cursos</label>
+        <div class="panel" id="filtros-area-mat">
+          <h4>Área de conhecimento</h4>
         </div>
         <div class="panel">
-          <h4>Etapa de ensino</h4>
-          <label class="filter"><input type="checkbox">Educação Infantil</label>
-          <label class="filter"><input type="checkbox" checked>Fundamental I</label>
-          <label class="filter"><input type="checkbox">Fundamental II</label>
-          <label class="filter"><input type="checkbox">Ensino Médio</label>
-          <label class="filter"><input type="checkbox">Superior</label>
+          <h4>Como funciona</h4>
+          <p style="font-size:.88rem;color:var(--ink-2);line-height:1.6;">Todo material aqui é <b>gratuito</b>. Você baixa sem criar conta e sem pagar nada.</p>
+          <p style="font-size:.88rem;color:var(--ink-2);line-height:1.6;margin-top:10px;">Cada arquivo pertence a quem publicou. Use em sala, adapte para a sua turma — mas não revenda como se fosse seu.</p>
         </div>
         <div class="panel">
-          <h4>Preço</h4>
-          <label class="filter"><input type="radio" name="pr" checked>Todos</label>
-          <label class="filter"><input type="radio" name="pr">Gratuitos</label>
-          <label class="filter"><input type="radio" name="pr">Até R$ 30</label>
-          <label class="filter"><input type="radio" name="pr">R$ 30 a R$ 80</label>
-          <label class="filter"><input type="radio" name="pr">Acima de R$ 80</label>
+          <h4>Você é professor?</h4>
+          <p style="font-size:.88rem;color:var(--ink-2);line-height:1.6;">Publicar um material é a forma mais rápida de mostrar seu trabalho para quem procura aula.</p>
+          <button class="btn btn-accent btn-block btn-sm" style="margin-top:14px;" onclick="go('publicar-material')">Publicar material</button>
         </div>
       </aside>
 
       <div>
-        <div class="pill-row">
-          <button class="pill on" onclick="pick(this)">Todos</button>
-          <button class="pill" onclick="pick(this)">Mais vendidos</button>
-          <button class="pill" onclick="pick(this)">Novidades</button>
-          <button class="pill" onclick="pick(this)">Melhor avaliados</button>
-          <button class="pill" onclick="pick(this)">Gratuitos</button>
-        </div>
         <div class="toolbar">
-          <span class="count"><b>8.312</b> materiais disponíveis</span>
-          <select style="margin-left:auto;"><option>Mais relevantes</option><option>Mais vendidos</option><option>Menor preço</option><option>Lançamentos</option></select>
+          <span class="count" id="contador-materiais">Carregando materiais…</span>
+          <select style="margin-left:auto;" id="ordenar-materiais" onchange="filtrarMateriais()">
+            <option value="recentes">Mais recentes</option>
+            <option value="baixados">Mais baixados</option>
+            <option value="az">Título (A–Z)</option>
+          </select>
         </div>
 
-        <div class="grid g3">
+        <div class="grid g3" id="lista-materiais"></div>
 
-          <article class="card card-h prod">
-            <div class="prod-img p1">📘<span class="prod-badge">Mais vendido</span></div>
-            <div class="prod-body">
-              <h4>Caderno de Alfabetização — 120 atividades prontas</h4>
-              <small>por Maria Silva · PDF, 134 págs.</small>
-              <div class="rate"><i>★</i>4,9 <span>(312 avaliações)</span></div>
-            </div>
-            <div class="prod-foot"><span class="price">R$ 39,90</span><button class="btn btn-primary btn-sm">Comprar</button></div>
-          </article>
-
-          <article class="card card-h prod">
-            <div class="prod-img p2">🧩</div>
-            <div class="prod-body">
-              <h4>50 Jogos pedagógicos para Educação Infantil</h4>
-              <small>por Renata Alves · PDF + moldes</small>
-              <div class="rate"><i>★</i>4,8 <span>(187 avaliações)</span></div>
-            </div>
-            <div class="prod-foot"><span class="price">R$ 29,90</span><button class="btn btn-primary btn-sm">Comprar</button></div>
-          </article>
-
-          <article class="card card-h prod">
-            <div class="prod-img p3">📄<span class="prod-badge">Novo</span></div>
-            <div class="prod-body">
-              <h4>Modelo de TCC formatado nas normas ABNT 2026</h4>
-              <small>por Ana Lúcia Ferraz · DOCX editável</small>
-              <div class="rate"><i>★</i>5,0 <span>(96 avaliações)</span></div>
-            </div>
-            <div class="prod-foot"><span class="price">R$ 24,90</span><button class="btn btn-primary btn-sm">Comprar</button></div>
-          </article>
-
-          <article class="card card-h prod">
-            <div class="prod-img p4">🗂️</div>
-            <div class="prod-body">
-              <h4>Planos de aula anuais — Fundamental I completo (BNCC)</h4>
-              <small>por Juliana Camargo · DOCX + PDF</small>
-              <div class="rate"><i>★</i>4,9 <span>(241 avaliações)</span></div>
-            </div>
-            <div class="prod-foot"><span class="price">R$ 79,90</span><button class="btn btn-primary btn-sm">Comprar</button></div>
-          </article>
-
-          <article class="card card-h prod">
-            <div class="prod-img p5">🧠</div>
-            <div class="prod-body">
-              <h4>Mapas mentais de História do Brasil — ENEM</h4>
-              <small>por Rafael Pinto · PDF colorido</small>
-              <div class="rate"><i>★</i>4,7 <span>(158 avaliações)</span></div>
-            </div>
-            <div class="prod-foot"><span class="price">R$ 19,90</span><button class="btn btn-primary btn-sm">Comprar</button></div>
-          </article>
-
-          <article class="card card-h prod">
-            <div class="prod-img p6">🎬<span class="prod-badge">Curso</span></div>
-            <div class="prod-body">
-              <h4>Curso: Práticas de leitura na alfabetização</h4>
-              <small>por Letícia Campos · 18 videoaulas + certificado</small>
-              <div class="rate"><i>★</i>4,9 <span>(423 avaliações)</span></div>
-            </div>
-            <div class="prod-foot"><span class="price">R$ 149,00</span><button class="btn btn-primary btn-sm">Comprar</button></div>
-          </article>
-
-          <article class="card card-h prod">
-            <div class="prod-img p2">📊<span class="prod-badge">Grátis</span></div>
-            <div class="prod-body">
-              <h4>Modelo de relatório de desenvolvimento do aluno</h4>
-              <small>por Beatriz Moura · DOCX editável</small>
-              <div class="rate"><i>★</i>4,8 <span>(1.204 downloads)</span></div>
-            </div>
-            <div class="prod-foot"><span class="price" style="color:var(--green-600);">Gratuito</span><button class="btn btn-ghost btn-sm">Baixar</button></div>
-          </article>
-
-          <article class="card card-h prod">
-            <div class="prod-img p1">✏️</div>
-            <div class="prod-body">
-              <h4>Atividades de produção textual — 6º ao 9º ano</h4>
-              <small>por Thiago Gomes · PDF, 88 págs.</small>
-              <div class="rate"><i>★</i>4,8 <span>(134 avaliações)</span></div>
-            </div>
-            <div class="prod-foot"><span class="price">R$ 34,90</span><button class="btn btn-primary btn-sm">Comprar</button></div>
-          </article>
-
-          <article class="card card-h prod">
-            <div class="prod-img p3">🎼</div>
-            <div class="prod-body">
-              <h4>Musicalização infantil: 30 planos de aula</h4>
-              <small>por Daniel Freitas · PDF + áudios</small>
-              <div class="rate"><i>★</i>5,0 <span>(72 avaliações)</span></div>
-            </div>
-            <div class="prod-foot"><span class="price">R$ 44,90</span><button class="btn btn-primary btn-sm">Comprar</button></div>
-          </article>
-
-        </div>
-
-        <div style="text-align:center;margin-top:34px;">
-          <button class="btn btn-ghost">Carregar mais materiais</button>
+        <div id="vazio-materiais" style="display:none;text-align:center;padding:54px 20px;">
+          <div style="font-size:2.4rem;margin-bottom:10px;">📂</div>
+          <h3 class="h3" style="margin-bottom:8px;">Nenhum material por aqui ainda</h3>
+          <p class="muted" style="font-size:.92rem;max-width:440px;margin:0 auto 20px;">Assim que um professor publicar uma apostila ou atividade, ela aparece nesta lista para qualquer pessoa baixar.</p>
+          <button class="btn btn-primary" onclick="go('publicar-material')">Publicar o primeiro</button>
         </div>
       </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ========================= PUBLICAR MATERIAL ========================= -->
+<section class="view" id="v-publicar-material">
+  <div class="page-head">
+    <div class="wrap">
+      <div class="crumb">Materiais › Publicar</div>
+      <h1>Publicar um material</h1>
+      <p>Compartilhe uma apostila, atividade, plano de aula ou planilha. É gratuito para quem baixa.</p>
+    </div>
+  </div>
+
+  <div class="section-sm">
+    <div class="wrap split" style="grid-template-columns:1fr 340px;">
+
+      <div class="panel" style="padding:30px;">
+        <div id="portao-material" style="display:none;padding:18px 20px;border-radius:12px;margin-bottom:24px;"></div>
+
+        <div id="form-material">
+          <div class="field">
+            <label>Título do material</label>
+            <input type="text" id="mt-titulo" placeholder="Ex.: 30 atividades de alfabetização para o 1º ano" oninput="previaMaterial()">
+            <small>Diga o que é e para quem serve.</small>
+          </div>
+
+          <div class="grid g2" style="gap:16px;">
+            <div class="field">
+              <label>Área de conhecimento</label>
+              <select id="mt-area" onchange="previaMaterial()"></select>
+            </div>
+            <div class="field">
+              <label>Nível</label>
+              <select id="mt-nivel"></select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Descrição</label>
+            <textarea rows="5" id="mt-desc" placeholder="O que tem dentro, quantas páginas, como usar em sala." oninput="previaMaterial()"></textarea>
+          </div>
+
+          <div class="field">
+            <label>Arquivo</label>
+            <input type="file" id="mt-arquivo" onchange="arquivoEscolhido()"
+                   accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.csv,.txt,.png,.jpg,.jpeg">
+            <small>PDF, Word, Excel, PowerPoint, CSV ou imagem. Até <b>25 MB</b>.</small>
+          </div>
+
+          <div id="mt-info-arquivo" style="display:none;background:var(--surface);border-radius:11px;padding:14px 16px;font-size:.88rem;margin-bottom:16px;"></div>
+
+          <div id="mt-barra" style="display:none;margin-bottom:16px;">
+            <div style="height:8px;background:var(--line);border-radius:99px;overflow:hidden;">
+              <div id="mt-barra-fill" style="height:100%;width:0;background:var(--brand-500);transition:width .2s;"></div>
+            </div>
+            <small class="muted" id="mt-barra-txt" style="display:block;margin-top:6px;">Enviando…</small>
+          </div>
+
+          <div id="mt-msg" style="display:none;padding:12px 14px;border-radius:10px;font-size:.88rem;line-height:1.45;margin-bottom:16px;"></div>
+
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;">
+            <button class="btn btn-primary" id="mt-publicar" onclick="publicarMaterial()">Publicar material</button>
+            <button class="btn btn-ghost" onclick="go('loja')">Ver os materiais</button>
+          </div>
+        </div>
+      </div>
+
+      <aside>
+        <div class="panel">
+          <h4>Como vai aparecer</h4>
+          <article class="card card-h prod" style="box-shadow:none;">
+            <div class="prod-img p1" id="mt-pv-icone">📄</div>
+            <div class="prod-body">
+              <h4 id="mt-pv-titulo">Título do material</h4>
+              <small id="mt-pv-autor">por você</small>
+              <p class="muted" style="font-size:.85rem;margin-top:6px;" id="mt-pv-desc">A descrição aparece aqui.</p>
+            </div>
+            <div class="prod-foot"><span class="price" style="color:var(--green-600);">Gratuito</span><span class="tag tag-g">Prévia</span></div>
+          </article>
+        </div>
+
+        <div class="panel">
+          <h4>Antes de publicar</h4>
+          <p style="font-size:.88rem;color:var(--ink-2);line-height:1.6;">Publique apenas material <b>de sua autoria</b>. Não suba livro escaneado, apostila de curso pago ou conteúdo de terceiros — além de ser errado, pode dar problema para você e para a plataforma.</p>
+        </div>
+
+        <div class="panel">
+          <h4>Uma dica</h4>
+          <p style="font-size:.88rem;color:var(--ink-2);line-height:1.6;">Coloque seu nome e o endereço do seu perfil dentro do arquivo. Material bom circula sozinho — e quem receber vai saber quem fez.</p>
+        </div>
+      </aside>
+
     </div>
   </div>
 </section>
@@ -1364,6 +1361,12 @@ ul{margin:0;padding:0;list-style:none;}
           </div>
 
           <div class="panel" style="padding:28px;">
+            <h4 style="margin-bottom:14px;">Meus materiais <span class="tag tag-g" style="margin-left:6px;">gratuitos</span></h4>
+            <div id="meus-materiais"><p class="muted" style="font-size:.88rem;">Carregando…</p></div>
+            <button class="btn btn-accent btn-block btn-sm" style="margin-top:16px;" onclick="go('publicar-material')">＋ Publicar material</button>
+          </div>
+
+          <div class="panel" style="padding:28px;">
             <h3 class="h3" style="margin-bottom:8px;">Como aparecer para mais alunos</h3>
             <div class="list-item">
               <div class="path-ico i-blue" style="width:42px;height:42px;margin:0;font-size:1.1rem;border-radius:12px;">📝</div>
@@ -1382,7 +1385,7 @@ ul{margin:0;padding:0;list-style:none;}
 
           <div class="panel" style="padding:28px;">
             <h3 class="h3" style="margin-bottom:8px;">Em construção</h3>
-            <p class="muted" style="font-size:.93rem;line-height:1.65;">Ganhos, solicitações, avaliações e venda de materiais vão aparecer nesta área conforme a plataforma crescer. Hoje o contato acontece direto entre você e o aluno, pelo WhatsApp.</p>
+            <p class="muted" style="font-size:.93rem;line-height:1.65;">Ganhos, solicitações e avaliações vão aparecer nesta área conforme a plataforma crescer. Hoje o contato acontece direto entre você e o aluno, pelo WhatsApp, e os materiais são gratuitos.</p>
           </div>
         </div>
 
@@ -1965,11 +1968,13 @@ function go(view){
   if(view === 'aprender')      carregarOfertas();
   if(view === 'ensinar')       { atualizarPortaoEnsinar(); avisoAssinaturaEnsinar(); atualizarPrevia(); }
   if(view === 'painel')        { pintarResumoCadastro(); }
-  if(view === 'painel-prof')   { carregarMinhasOfertas(); pintarPainelAssinatura(); pintarResumoCadastro(); pintarStatsProf(); }
+  if(view === 'painel-prof')   { carregarMinhasOfertas(); carregarMeusMateriais(); pintarPainelAssinatura(); pintarResumoCadastro(); pintarStatsProf(); }
   if(view === 'home')          carregarHome();
   if(view === 'perfil')        carregarPerfilPublico(perfilVisto);
   if(view === 'editar-perfil') carregarFormPerfil();
   if(view === 'nova-senha')    prepararNovaSenha();
+  if(view === 'loja')          carregarMateriais();
+  if(view === 'publicar-material') { atualizarPortaoMaterial(); previaMaterial(); }
 }
 function pick(el){
   var p = el.parentElement;
@@ -2139,6 +2144,7 @@ function atualizarInterface(){
   document.getElementById('nome-prof').textContent  = primeiro;
 
   atualizarPortaoEnsinar();
+  atualizarPortaoMaterial();
   atualizarPrevia();
   carregarFormPerfil();
   pintarPainelAssinatura();
@@ -2775,6 +2781,7 @@ async function salvarPerfil(){
 async function carregarHome(){
   if(!sb || !document.getElementById('hs-ofertas')) return;
   await carregarOfertas();
+  await carregarMateriais();
 
   var c = await sb.from('perfis').select('id', { count: 'exact', head: true }).eq('papel', 'professor');
   var nProf = (c && typeof c.count === 'number') ? c.count : 0;
@@ -3035,6 +3042,25 @@ function montarListas(){
     }).join(''));
   }
 
+  /* formulário de publicar material */
+  var mtArea = document.getElementById('mt-area');
+  if(mtArea && !mtArea.options.length){
+    mtArea.innerHTML = AREAS.map(function(a){ return '<option>' + esc(a.nome) + '</option>'; }).join('');
+  }
+  var mtNivel = document.getElementById('mt-nivel');
+  if(mtNivel && !mtNivel.options.length){
+    mtNivel.innerHTML = NIVEIS.map(function(n){ return '<option>' + esc(n) + '</option>'; }).join('');
+  }
+
+  /* filtros da tela Materiais */
+  var fmat = document.getElementById('filtros-area-mat');
+  if(fmat && !fmat.querySelector('label')){
+    fmat.insertAdjacentHTML('beforeend', AREAS.map(function(a){
+      return '<label class="filter"><input type="checkbox" data-area-mat="' + esc(a.nome) + '" onchange="filtrarMateriais()">' +
+             esc(a.nome) + ' <span class="muted" data-conta-mat="' + esc(a.nome) + '">(0)</span></label>';
+    }).join(''));
+  }
+
   /* categorias da página inicial */
   var cats = document.getElementById('lista-categorias');
   if(cats && !cats.children.length){
@@ -3117,6 +3143,400 @@ async function salvarNovaSenha(){
   mostrarMsgSenha('Senha alterada! Levando você para o painel…', 'ok');
   await carregarSessao();
   setTimeout(function(){ abrirMeuPainel(); }, 1400);
+}
+
+
+/* ================================================================
+   ETAPA 5 — MATERIAIS GRATUITOS
+   O arquivo fica no Storage do Supabase; a tabela guarda os dados dele.
+   ================================================================ */
+
+var materiais = [];
+var materiaisCarregados = false;
+var materialParaExcluir = null;
+
+var MAX_ARQUIVO = 25 * 1024 * 1024;   /* 25 MB */
+var EXTENSOES_OK = ['pdf','doc','docx','xls','xlsx','ppt','pptx','csv','txt','png','jpg','jpeg'];
+
+function extensaoDe(nome){
+  var partes = String(nome || '').split('.');
+  return partes.length > 1 ? partes.pop().toLowerCase() : '';
+}
+
+function iconeArquivo(nome){
+  var e = extensaoDe(nome);
+  if(e === 'pdf') return '📕';
+  if(e === 'doc' || e === 'docx') return '📘';
+  if(e === 'xls' || e === 'xlsx' || e === 'csv') return '📗';
+  if(e === 'ppt' || e === 'pptx') return '📙';
+  if(e === 'png' || e === 'jpg' || e === 'jpeg') return '🖼️';
+  return '📄';
+}
+
+function corArquivo(nome){
+  var e = extensaoDe(nome);
+  if(e === 'pdf') return 'p1';
+  if(e === 'doc' || e === 'docx') return 'p2';
+  if(e === 'xls' || e === 'xlsx' || e === 'csv') return 'p3';
+  if(e === 'ppt' || e === 'pptx') return 'p4';
+  return 'p5';
+}
+
+function tamanhoLegivel(bytes){
+  var b = Number(bytes) || 0;
+  if(b < 1024) return b + ' B';
+  if(b < 1048576) return Math.round(b / 1024) + ' KB';
+  return (b / 1048576).toFixed(1).replace('.', ',') + ' MB';
+}
+
+function urlDoArquivo(caminho){
+  if(!sb) return '#';
+  var r = sb.storage.from('materiais').getPublicUrl(caminho);
+  return (r && r.data && r.data.publicUrl) ? r.data.publicUrl : '#';
+}
+
+
+/* --- portão de quem pode publicar --- */
+function atualizarPortaoMaterial(){
+  var portao = document.getElementById('portao-material');
+  var form   = document.getElementById('form-material');
+  if(!portao || !form) return;
+
+  if(!usuario){
+    portao.style.display = 'block';
+    portao.style.background = '#DBEAFE'; portao.style.color = '#1E3A8A';
+    portao.innerHTML = '<b>Entre na sua conta para publicar.</b><br>' +
+      '<span style="font-size:.9rem;">Baixar material não exige conta. Publicar, sim.</span><br>' +
+      '<button class="btn btn-primary btn-sm" style="margin-top:12px;" onclick="irParaEntrar(\'criar\')">Criar conta ou entrar</button>';
+    form.style.display = 'none';
+    return;
+  }
+
+  var papel = perfil && perfil.papel;
+  if(papel !== 'professor' && papel !== 'vendedor'){
+    portao.style.display = 'block';
+    portao.style.background = '#FEF3C7'; portao.style.color = '#92400E';
+    portao.innerHTML = '<b>Só professores publicam materiais.</b><br>' +
+      '<span style="font-size:.9rem;">Sua conta está como <b>' + esc(papel || 'aluno') + '</b>. ' +
+      'Mude seu papel no perfil para publicar — você continua podendo aprender do mesmo jeito.</span><br>' +
+      '<button class="btn btn-accent btn-sm" style="margin-top:12px;" onclick="go(\'editar-perfil\')">Mudar meu papel</button>';
+    form.style.display = 'none';
+    return;
+  }
+
+  portao.style.display = 'none';
+  form.style.display = '';
+}
+
+function mostrarMsgMaterial(texto, tipo){
+  var cores = { erro:['#FEE2E2','#991B1B'], ok:['#DCFCE7','#166534'], aviso:['#FEF3C7','#92400E'] };
+  var c = cores[tipo] || cores.aviso;
+  var el = document.getElementById('mt-msg');
+  el.style.background = c[0]; el.style.color = c[1];
+  el.innerHTML = texto; el.style.display = 'block';
+}
+
+function previaMaterial(){
+  if(!document.getElementById('mt-pv-titulo')) return;
+  var t = (document.getElementById('mt-titulo').value || '').trim();
+  var d = (document.getElementById('mt-desc').value || '').trim();
+  var f = document.getElementById('mt-arquivo').files[0];
+
+  document.getElementById('mt-pv-titulo').textContent = t || 'Título do material';
+  document.getElementById('mt-pv-desc').textContent   = d || 'A descrição aparece aqui.';
+  document.getElementById('mt-pv-autor').textContent  = 'por ' + ((perfil && perfil.nome) || 'você');
+  var ic = document.getElementById('mt-pv-icone');
+  ic.textContent = f ? iconeArquivo(f.name) : '📄';
+  ic.className = 'prod-img ' + (f ? corArquivo(f.name) : 'p1');
+}
+
+function arquivoEscolhido(){
+  var f = document.getElementById('mt-arquivo').files[0];
+  var caixa = document.getElementById('mt-info-arquivo');
+  document.getElementById('mt-msg').style.display = 'none';
+
+  if(!f){ caixa.style.display = 'none'; previaMaterial(); return; }
+
+  var ext = extensaoDe(f.name);
+  var problemas = [];
+  if(EXTENSOES_OK.indexOf(ext) === -1) problemas.push('Tipo de arquivo não aceito (<b>.' + esc(ext || '?') + '</b>).');
+  if(f.size > MAX_ARQUIVO)             problemas.push('Arquivo grande demais: <b>' + tamanhoLegivel(f.size) + '</b>. O limite é 25 MB.');
+
+  caixa.style.display = 'block';
+  caixa.innerHTML = '<b>' + iconeArquivo(f.name) + ' ' + esc(f.name) + '</b><br>' +
+                    '<span class="muted">' + tamanhoLegivel(f.size) + '</span>';
+
+  if(problemas.length) mostrarMsgMaterial(problemas.join('<br>'), 'erro');
+  previaMaterial();
+}
+
+async function publicarMaterial(){
+  if(!sb || !usuario) { irParaEntrar('criar'); return; }
+
+  var titulo = (document.getElementById('mt-titulo').value || '').trim();
+  var desc   = (document.getElementById('mt-desc').value || '').trim();
+  var f      = document.getElementById('mt-arquivo').files[0];
+
+  if(titulo.length < 5){ mostrarMsgMaterial('Escreva um título com pelo menos 5 letras.', 'erro'); return; }
+  if(!f)               { mostrarMsgMaterial('Escolha o arquivo que você quer publicar.', 'erro'); return; }
+  if(EXTENSOES_OK.indexOf(extensaoDe(f.name)) === -1){
+    mostrarMsgMaterial('Esse tipo de arquivo não é aceito. Use PDF, Word, Excel, PowerPoint, CSV ou imagem.', 'erro'); return;
+  }
+  if(f.size > MAX_ARQUIVO){
+    mostrarMsgMaterial('O arquivo tem ' + tamanhoLegivel(f.size) + ' e o limite é 25 MB. Tente comprimir o PDF ou dividir em partes.', 'erro'); return;
+  }
+
+  var btn = document.getElementById('mt-publicar');
+  btn.disabled = true; btn.textContent = 'Enviando…';
+  document.getElementById('mt-barra').style.display = 'block';
+  document.getElementById('mt-barra-fill').style.width = '35%';
+  document.getElementById('mt-barra-txt').textContent = 'Enviando o arquivo…';
+
+  var nomeSeguro = String(f.name).normalize('NFD').replace(/[̀-ͯ]/g, '')
+                     .replace(/[^a-zA-Z0-9._-]/g, '_');
+  var caminho = usuario.id + '/' + Date.now() + '-' + nomeSeguro;
+
+  var up = await sb.storage.from('materiais').upload(caminho, f, { contentType: f.type || undefined });
+
+  if(up.error){
+    document.getElementById('mt-barra').style.display = 'none';
+    btn.disabled = false; btn.textContent = 'Publicar material';
+    var m = up.error.message || '';
+    if(/Bucket not found/i.test(m)){
+      mostrarMsgMaterial('Falta rodar o <b>banco-etapa5.sql</b> no Supabase — o lugar de guardar arquivos ainda não existe.', 'erro');
+    } else if(/exceeded|too large|maximum/i.test(m)){
+      mostrarMsgMaterial('O arquivo passou do limite de tamanho aceito pelo servidor.', 'erro');
+    } else if(/mime|not allowed/i.test(m)){
+      mostrarMsgMaterial('Esse tipo de arquivo não é aceito pelo servidor.', 'erro');
+    } else if(/row-level security|Unauthorized/i.test(m)){
+      mostrarMsgMaterial('O servidor recusou: sua conta precisa estar como <b>professor</b>. Recarregue a página e tente de novo.', 'erro');
+    } else {
+      mostrarMsgMaterial('Não consegui enviar o arquivo: ' + esc(m), 'erro');
+    }
+    return;
+  }
+
+  document.getElementById('mt-barra-fill').style.width = '75%';
+  document.getElementById('mt-barra-txt').textContent = 'Salvando as informações…';
+
+  var r = await sb.from('materiais').insert({
+    professor_id:  usuario.id,
+    titulo:        titulo,
+    descricao:     desc,
+    area:          document.getElementById('mt-area').value,
+    nivel:         document.getElementById('mt-nivel').value,
+    arquivo_path:  caminho,
+    arquivo_nome:  f.name,
+    arquivo_tipo:  f.type || extensaoDe(f.name),
+    tamanho_bytes: f.size
+  });
+
+  if(r.error){
+    /* deu erro depois do upload: apaga o arquivo para não ficar lixo guardado */
+    await sb.storage.from('materiais').remove([caminho]);
+    document.getElementById('mt-barra').style.display = 'none';
+    btn.disabled = false; btn.textContent = 'Publicar material';
+    var m2 = r.error.message || '';
+    if(/row-level security/i.test(m2)){
+      mostrarMsgMaterial('O banco recusou: sua conta não está como <b>professor</b>.', 'erro');
+    } else if(/relation .*materiais.* does not exist/i.test(m2)){
+      mostrarMsgMaterial('Falta rodar o <b>banco-etapa5.sql</b> no Supabase — a tabela de materiais ainda não existe.', 'erro');
+    } else {
+      mostrarMsgMaterial('Não deu certo: ' + esc(m2), 'erro');
+    }
+    return;
+  }
+
+  document.getElementById('mt-barra-fill').style.width = '100%';
+  document.getElementById('mt-barra-txt').textContent = 'Pronto!';
+  btn.disabled = false; btn.textContent = 'Publicar material';
+
+  mostrarMsgMaterial('Material publicado! Já está disponível para qualquer pessoa baixar. ' +
+    '<button class="btn btn-ghost btn-sm" style="margin-top:10px;" onclick="go(\'loja\')">Ver na lista</button>', 'ok');
+
+  document.getElementById('mt-titulo').value = '';
+  document.getElementById('mt-desc').value = '';
+  document.getElementById('mt-arquivo').value = '';
+  document.getElementById('mt-info-arquivo').style.display = 'none';
+  setTimeout(function(){ document.getElementById('mt-barra').style.display = 'none'; }, 1200);
+  previaMaterial();
+
+  await carregarMateriais(true);
+  await carregarMeusMateriais();
+}
+
+
+/* --- lista pública --- */
+async function carregarMateriais(forcar){
+  if(!sb) return;
+  if(materiaisCarregados && !forcar){ filtrarMateriais(); return; }
+
+  var r = await sb.from('materiais')
+    .select('id, titulo, descricao, area, nivel, arquivo_path, arquivo_nome, tamanho_bytes, downloads, criado_em, professor_id, perfis(nome, cidade)')
+    .eq('ativo', true)
+    .order('criado_em', { ascending: false })
+    .limit(200);
+
+  if(r.error){
+    var lista = document.getElementById('lista-materiais');
+    if(lista) lista.innerHTML = '<p class="muted">Não consegui carregar: ' + esc(r.error.message) + '</p>';
+    return;
+  }
+  materiais = r.data || [];
+  materiaisCarregados = true;
+  atualizarContagensMateriais();
+  filtrarMateriais();
+  pintarMateriaisHome();
+}
+
+function atualizarContagensMateriais(){
+  document.querySelectorAll('#filtros-area-mat [data-conta-mat]').forEach(function(el){
+    var area = el.getAttribute('data-conta-mat');
+    var n = materiais.filter(function(m){ return m.area === area; }).length;
+    el.textContent = '(' + n + ')';
+  });
+}
+
+function filtrarMateriais(){
+  var lista = document.getElementById('lista-materiais');
+  var vazio = document.getElementById('vazio-materiais');
+  var contador = document.getElementById('contador-materiais');
+  if(!lista) return;
+
+  var busca = ((document.getElementById('busca-materiais') || {}).value || '').trim().toLowerCase();
+  var areas = [];
+  document.querySelectorAll('#filtros-area-mat input:checked').forEach(function(c){
+    areas.push(c.getAttribute('data-area-mat'));
+  });
+
+  var res = materiais.filter(function(m){
+    if(areas.length && areas.indexOf(m.area) === -1) return false;
+    if(busca){
+      var alvo = [m.titulo, m.descricao, m.area, m.nivel, m.arquivo_nome, (m.perfis && m.perfis.nome)].join(' ').toLowerCase();
+      if(alvo.indexOf(busca) === -1) return false;
+    }
+    return true;
+  });
+
+  var ordem = (document.getElementById('ordenar-materiais') || {}).value || 'recentes';
+  res.sort(function(a, b){
+    if(ordem === 'baixados') return (Number(b.downloads) || 0) - (Number(a.downloads) || 0);
+    if(ordem === 'az')       return String(a.titulo).localeCompare(String(b.titulo), 'pt-BR');
+    return String(b.criado_em).localeCompare(String(a.criado_em));
+  });
+
+  if(materiais.length === 0){
+    lista.innerHTML = '';
+    if(vazio) vazio.style.display = 'block';
+    if(contador) contador.textContent = 'Nenhum material publicado ainda';
+    return;
+  }
+  if(vazio) vazio.style.display = 'none';
+
+  if(contador){
+    contador.innerHTML = res.length === 1
+      ? '<b>1</b> material encontrado'
+      : '<b>' + res.length + '</b> materiais encontrados' + (res.length !== materiais.length ? ' de ' + materiais.length : '');
+  }
+
+  if(res.length === 0){
+    lista.innerHTML = '<p class="muted" style="grid-column:1/-1;padding:30px 0;text-align:center;">' +
+      'Nenhum material bate com esses filtros. <b class="link-auth" onclick="limparFiltrosMateriais()">Limpar filtros</b></p>';
+    return;
+  }
+  lista.innerHTML = res.map(cardMaterial).join('');
+}
+
+function limparFiltrosMateriais(){
+  var b = document.getElementById('busca-materiais'); if(b) b.value = '';
+  document.querySelectorAll('#filtros-area-mat input').forEach(function(c){ c.checked = false; });
+  filtrarMateriais();
+}
+
+function cardMaterial(m){
+  var autor = (m.perfis && m.perfis.nome) || 'Professor';
+  return '' +
+  '<article class="card card-h prod">' +
+    '<div class="prod-img ' + corArquivo(m.arquivo_nome) + '">' + iconeArquivo(m.arquivo_nome) +
+      '<span class="prod-badge">' + esc(extensaoDe(m.arquivo_nome).toUpperCase()) + '</span></div>' +
+    '<div class="prod-body">' +
+      '<h4>' + esc(m.titulo) + '</h4>' +
+      '<small>por <b class="link-auth" onclick="verPerfil(\'' + m.professor_id + '\')">' + esc(autor) + '</b></small>' +
+      '<p class="muted" style="font-size:.85rem;margin-top:6px;">' + esc(m.descricao || 'Sem descrição.') + '</p>' +
+      '<div class="tags" style="margin-top:8px;"><span class="tag">' + esc(m.area) + '</span>' +
+        (m.nivel ? '<span class="tag">' + esc(m.nivel) + '</span>' : '') +
+        '<span class="tag">' + esc(tamanhoLegivel(m.tamanho_bytes)) + '</span></div>' +
+      '<div class="rate" style="margin-top:8px;"><span>' + (Number(m.downloads) || 0) +
+        ((Number(m.downloads) === 1) ? ' download' : ' downloads') + '</span></div>' +
+    '</div>' +
+    '<div class="prod-foot">' +
+      '<span class="price" style="color:var(--green-600);">Gratuito</span>' +
+      '<button class="btn btn-primary btn-sm" onclick="baixarMaterial(\'' + m.id + '\', \'' + m.arquivo_path.replace(/'/g, "\\'") + '\')">Baixar</button>' +
+    '</div>' +
+  '</article>';
+}
+
+async function baixarMaterial(id, caminho){
+  var url = urlDoArquivo(caminho);
+  window.open(url, '_blank');
+  if(sb){
+    try { await sb.rpc('registrar_download', { material_id: id }); } catch(e){}
+    var m = materiais.filter(function(x){ return x.id === id; })[0];
+    if(m){ m.downloads = (Number(m.downloads) || 0) + 1; filtrarMateriais(); }
+  }
+}
+
+
+/* --- meus materiais, no painel --- */
+async function carregarMeusMateriais(){
+  var caixa = document.getElementById('meus-materiais');
+  if(!caixa) return;
+  if(!sb || !usuario){ caixa.innerHTML = '<p class="muted" style="font-size:.88rem;">Entre para ver seus materiais.</p>'; return; }
+
+  var r = await sb.from('materiais')
+    .select('id, titulo, arquivo_path, arquivo_nome, tamanho_bytes, downloads, criado_em')
+    .eq('professor_id', usuario.id)
+    .order('criado_em', { ascending: false });
+
+  if(r.error){ caixa.innerHTML = '<p class="muted" style="font-size:.88rem;">Erro: ' + esc(r.error.message) + '</p>'; return; }
+
+  var meus = r.data || [];
+  if(meus.length === 0){
+    caixa.innerHTML = '<p class="muted" style="font-size:.88rem;">Você ainda não publicou nenhum material.</p>';
+    return;
+  }
+  caixa.innerHTML = meus.map(function(m){
+    var confirmando = (materialParaExcluir === m.id);
+    return '<div class="list-item">' +
+      '<div class="g"><b>' + iconeArquivo(m.arquivo_nome) + ' ' + esc(m.titulo) + '</b>' +
+      '<small>' + (Number(m.downloads) || 0) + ((Number(m.downloads) === 1) ? ' download' : ' downloads') +
+      ' · ' + esc(tamanhoLegivel(m.tamanho_bytes)) + '</small></div>' +
+      (confirmando
+        ? '<span style="display:flex;gap:6px;"><button class="btn btn-sm" style="background:#DC2626;color:#fff;" onclick="excluirMaterial(\'' + m.id + '\', \'' + m.arquivo_path.replace(/'/g, "\\'") + '\', true)">Confirmar</button>' +
+          '<button class="btn btn-ghost btn-sm" onclick="materialParaExcluir=null;carregarMeusMateriais()">Cancelar</button></span>'
+        : '<button class="btn btn-ghost btn-sm" onclick="excluirMaterial(\'' + m.id + '\', \'' + m.arquivo_path.replace(/'/g, "\\'") + '\')">Excluir</button>') +
+    '</div>';
+  }).join('');
+}
+
+async function excluirMaterial(id, caminho, confirmado){
+  if(!confirmado){ materialParaExcluir = id; carregarMeusMateriais(); return; }
+  materialParaExcluir = null;
+  await sb.from('materiais').delete().eq('id', id);
+  await sb.storage.from('materiais').remove([caminho]);
+  await carregarMeusMateriais();
+  await carregarMateriais(true);
+}
+
+
+/* --- vitrine de materiais na página inicial --- */
+function pintarMateriaisHome(){
+  var sec   = document.getElementById('sec-materiais-home');
+  var caixa = document.getElementById('home-materiais');
+  if(!sec || !caixa) return;
+  if(materiais.length === 0){ sec.style.display = 'none'; return; }
+  sec.style.display = '';
+  caixa.innerHTML = materiais.slice(0, 4).map(cardMaterial).join('');
 }
 
 
