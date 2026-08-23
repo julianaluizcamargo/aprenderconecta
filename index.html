@@ -435,6 +435,17 @@ ul{margin:0;padding:0;list-style:none;}
    visual normal de card de oferta. */
 .panel .offer-body h4{font-size:1.02rem;text-transform:none;letter-spacing:0;color:var(--ink);font-weight:700;margin-bottom:8px;}
 
+/* capa dos materiais */
+.prod-img.com-capa{padding:0;overflow:hidden;}
+.prod-img.com-capa img{width:100%;height:100%;object-fit:cover;display:block;}
+
+/* caixa de diálogo (denúncia) */
+.modal-fundo{position:fixed;inset:0;background:rgba(11,37,69,.55);z-index:60;
+  display:flex;align-items:center;justify-content:center;padding:20px;}
+.modal-caixa{background:var(--card);border-radius:var(--r-lg);max-width:460px;width:100%;
+  padding:28px;box-shadow:var(--sh-2);max-height:90vh;overflow-y:auto;}
+.modal-caixa h3{font-size:1.15rem;font-weight:800;color:var(--brand-900);margin-bottom:8px;}
+
 /* páginas legais (termos e privacidade) */
 .legal{max-width:760px;}
 .legal h2{font-size:1.18rem;font-weight:800;color:var(--brand-900);margin:34px 0 12px;}
@@ -776,8 +787,8 @@ ul{margin:0;padding:0;list-style:none;}
 
         <!-- FORMULÁRIO -->
         <div class="panel" style="padding:30px;">
-          <h3 class="h3" style="margin-bottom:6px;">Criar uma nova oferta</h3>
-          <p class="muted" style="font-size:.9rem;margin-bottom:24px;">Preencha os campos abaixo. Você pode editar tudo depois.</p>
+          <h3 class="h3" style="margin-bottom:6px;" id="of-titulo-form">Criar uma nova oferta</h3>
+          <p class="muted" style="font-size:.9rem;margin-bottom:24px;" id="of-sub-form">Preencha os campos abaixo. Você pode editar tudo depois.</p>
 
           <!-- avisos: visitante sem conta, ou conta que ainda não é professor -->
           <div id="portao-ensinar" style="display:none;padding:18px 20px;border-radius:12px;margin-bottom:24px;"></div>
@@ -842,7 +853,8 @@ ul{margin:0;padding:0;list-style:none;}
 
           <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:26px;">
             <button class="btn btn-primary" id="btn-publicar" onclick="publicarOferta()">Publicar oferta</button>
-            <button class="btn btn-ghost" onclick="limparOferta()">Limpar formulário</button>
+            <button class="btn btn-ghost" id="of-cancelar" onclick="cancelarEdicaoOferta()" style="display:none;">Cancelar edição</button>
+            <button class="btn btn-ghost" id="of-limpar" onclick="limparOferta()">Limpar formulário</button>
           </div>
           </div>
         </div>
@@ -1133,9 +1145,9 @@ ul{margin:0;padding:0;list-style:none;}
 <section class="view" id="v-publicar-material">
   <div class="page-head">
     <div class="wrap">
-      <div class="crumb">Materiais › Publicar</div>
-      <h1>Publicar um material</h1>
-      <p>Compartilhe uma apostila, atividade, plano de aula ou planilha. É gratuito para quem baixa.</p>
+      <div class="crumb" id="mt-crumb">Materiais › Publicar</div>
+      <h1 id="mt-titulo-tela">Publicar um material</h1>
+      <p id="mt-sub-tela">Compartilhe uma apostila, atividade, plano de aula ou planilha. É gratuito para quem baixa.</p>
     </div>
   </div>
 
@@ -1169,11 +1181,19 @@ ul{margin:0;padding:0;list-style:none;}
           </div>
 
           <div class="field">
-            <label>Arquivo</label>
+            <label id="mt-rotulo-arquivo">Arquivo</label>
             <input type="file" id="mt-arquivo" onchange="arquivoEscolhido()"
                    accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.csv,.txt,.png,.jpg,.jpeg">
-            <small>PDF, Word, Excel, PowerPoint, CSV ou imagem. Até <b>25 MB</b>.</small>
+            <small id="mt-ajuda-arquivo">PDF, Word, Excel, PowerPoint, CSV ou imagem. Até <b>25 MB</b>.</small>
           </div>
+
+          <div class="field">
+            <label>Capa <span class="muted" style="font-weight:600;">(opcional)</span></label>
+            <input type="file" id="mt-capa" accept=".png,.jpg,.jpeg" onchange="capaEscolhida()">
+            <small>Uma imagem que representa o material. Sem capa, aparece um ícone conforme o tipo de arquivo.</small>
+          </div>
+
+          <div id="mt-info-capa" style="display:none;align-items:center;gap:14px;background:var(--surface);border-radius:11px;padding:12px 14px;font-size:.88rem;margin-bottom:16px;"></div>
 
           <div id="mt-info-arquivo" style="display:none;background:var(--surface);border-radius:11px;padding:14px 16px;font-size:.88rem;margin-bottom:16px;"></div>
 
@@ -1188,7 +1208,8 @@ ul{margin:0;padding:0;list-style:none;}
 
           <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;">
             <button class="btn btn-primary" id="mt-publicar" onclick="publicarMaterial()">Publicar material</button>
-            <button class="btn btn-ghost" onclick="go('loja')">Ver os materiais</button>
+            <button class="btn btn-ghost" id="mt-cancelar" onclick="cancelarEdicaoMaterial()" style="display:none;">Cancelar edição</button>
+            <button class="btn btn-ghost" id="mt-ver" onclick="go('loja')">Ver os materiais</button>
           </div>
         </div>
       </div>
@@ -1390,6 +1411,8 @@ ul{margin:0;padding:0;list-style:none;}
         </div>
 
         <aside>
+          <div class="panel" id="painel-moderacao" style="display:none;"></div>
+
           <div class="panel" id="painel-assinatura"></div>
 
           <div class="panel">
@@ -1650,6 +1673,30 @@ ul{margin:0;padding:0;list-style:none;}
   </div>
 </section>
 
+<!-- ========================= MODERAÇÃO ========================= -->
+<section class="view" id="v-moderacao">
+  <div class="page-head">
+    <div class="wrap" style="display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;">
+      <div>
+        <div class="crumb">Minha conta › Moderação</div>
+        <h1>Denúncias</h1>
+        <p id="mod-sub">Conteúdo que alguém sinalizou como impróprio.</p>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn btn-ghost" id="mod-filtro" onclick="alternarFiltroDenuncias()">Ver resolvidas</button>
+        <button class="btn btn-primary" onclick="carregarDenuncias(true)">Atualizar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-sm">
+    <div class="wrap">
+      <div id="mod-portao" style="display:none;padding:20px 22px;border-radius:12px;margin-bottom:22px;"></div>
+      <div id="mod-lista"></div>
+    </div>
+  </div>
+</section>
+
 <!-- ========================= NOVA SENHA ========================= -->
 <section class="view" id="v-nova-senha">
   <div class="section">
@@ -1892,6 +1939,40 @@ ul{margin:0;padding:0;list-style:none;}
   </div>
 </footer>
 
+<!-- ========================= CAIXA DE DENÚNCIA ========================= -->
+<div id="caixa-denuncia" class="modal-fundo" style="display:none;">
+  <div class="modal-caixa">
+    <h3>Denunciar conteúdo</h3>
+    <p class="muted" style="font-size:.9rem;line-height:1.6;margin-bottom:20px;" id="dn-alvo">—</p>
+
+    <div class="field">
+      <label>Qual é o problema?</label>
+      <select id="dn-motivo">
+        <option>Conteúdo de outra pessoa (plágio)</option>
+        <option>Material de curso pago ou livro escaneado</option>
+        <option>Conteúdo ofensivo ou impróprio</option>
+        <option>Não é material educacional</option>
+        <option>Informação falsa sobre formação</option>
+        <option>Outro motivo</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Conte o que aconteceu <span class="muted" style="font-weight:600;">(opcional)</span></label>
+      <textarea id="dn-detalhe" rows="4" placeholder="Se souber a origem do material ou tiver algum detalhe, escreva aqui."></textarea>
+    </div>
+
+    <div id="dn-msg" style="display:none;padding:12px 14px;border-radius:10px;font-size:.88rem;line-height:1.45;margin-bottom:14px;"></div>
+
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;">
+      <button class="btn btn-primary" id="dn-enviar" onclick="enviarDenuncia()">Enviar denúncia</button>
+      <button class="btn btn-ghost" onclick="fecharDenuncia()">Cancelar</button>
+    </div>
+
+    <p class="muted" style="font-size:.8rem;margin-top:16px;line-height:1.55;">Sua denúncia vai para a administração da plataforma. O autor do conteúdo não vê quem denunciou.</p>
+  </div>
+</div>
+
 <!-- ============================================================
      BIBLIOTECA DO SUPABASE (o banco de dados)
      Não precisa mexer nesta linha.
@@ -1966,15 +2047,16 @@ function go(view){
   if(history.replaceState) history.replaceState(null,'','#'+view);
 
   if(view === 'aprender')      carregarOfertas();
-  if(view === 'ensinar')       { atualizarPortaoEnsinar(); avisoAssinaturaEnsinar(); atualizarPrevia(); }
+  if(view === 'ensinar')       { atualizarPortaoEnsinar(); avisoAssinaturaEnsinar(); atualizarModoOferta(); atualizarPrevia(); }
   if(view === 'painel')        { pintarResumoCadastro(); }
-  if(view === 'painel-prof')   { carregarMinhasOfertas(); carregarMeusMateriais(); pintarPainelAssinatura(); pintarResumoCadastro(); pintarStatsProf(); }
+  if(view === 'painel-prof')   { carregarMinhasOfertas(); carregarMeusMateriais(); pintarPainelAssinatura(); pintarResumoCadastro(); pintarStatsProf(); pintarPainelModeracao(); }
   if(view === 'home')          carregarHome();
   if(view === 'perfil')        carregarPerfilPublico(perfilVisto);
   if(view === 'editar-perfil') carregarFormPerfil();
   if(view === 'nova-senha')    prepararNovaSenha();
   if(view === 'loja')          carregarMateriais();
-  if(view === 'publicar-material') { atualizarPortaoMaterial(); previaMaterial(); }
+  if(view === 'publicar-material') { atualizarPortaoMaterial(); atualizarModoMaterial(); previaMaterial(); }
+  if(view === 'moderacao')     carregarDenuncias(true);
 }
 function pick(el){
   var p = el.parentElement;
@@ -2126,7 +2208,7 @@ async function carregarSessao(){
   perfil = null;
   if(usuario){
     var p = await sb.from('perfis')
-      .select('nome, papel, cidade, bio, telefone, titulo_profissional, assinatura_ate, criado_em')
+      .select('nome, papel, cidade, bio, telefone, titulo_profissional, assinatura_ate, admin, criado_em')
       .eq('id', usuario.id).maybeSingle();
     perfil = p.data || null;
   }
@@ -2149,6 +2231,7 @@ function atualizarInterface(){
   carregarFormPerfil();
   pintarPainelAssinatura();
   pintarResumoCadastro();
+  pintarPainelModeracao();
 }
 
 function abrirMeuPainel(){
@@ -2301,6 +2384,7 @@ function limparOferta(){
 async function publicarOferta(){
   if(!sb) return;
   if(!usuario){ irParaEntrar('criar'); return; }
+  if(ofertaEditando){ return salvarEdicaoOferta(); }
 
   var titulo = (document.getElementById('of-titulo').value || '').trim();
   var desc   = (document.getElementById('of-desc').value || '').trim();
@@ -2503,7 +2587,8 @@ async function carregarMinhasOfertas(){
       (confirmando
         ? '<span style="display:flex;gap:6px;"><button class="btn btn-sm" style="background:#DC2626;color:#fff;" onclick="excluirOferta(\'' + o.id + '\', true)">Confirmar</button>' +
           '<button class="btn btn-ghost btn-sm" onclick="idParaExcluir=null;carregarMinhasOfertas()">Cancelar</button></span>'
-        : '<span style="display:flex;gap:6px;align-items:center;"><span class="badge-st st-ok">Ativa</span>' +
+        : '<span style="display:flex;gap:6px;align-items:center;">' +
+          '<button class="btn btn-ghost btn-sm" onclick="editarOferta(\'' + o.id + '\')">Editar</button>' +
           '<button class="btn btn-ghost btn-sm" onclick="excluirOferta(\'' + o.id + '\')">Excluir</button></span>') +
     '</div>';
   }).join('');
@@ -2662,7 +2747,8 @@ async function carregarPerfilPublico(id){
     acao.innerHTML = '<a class="btn btn-accent" href="' + zap + '" target="_blank" rel="noopener">💬 Chamar no WhatsApp</a>';
     contato.innerHTML = '<h4>Falar com ' + esc(String(pe.nome).split(' ')[0]) + '</h4>' +
       '<a class="btn btn-primary btn-block" href="' + zap + '" target="_blank" rel="noopener">💬 Chamar no WhatsApp</a>' +
-      '<p class="muted" style="font-size:.8rem;margin-top:14px;line-height:1.55;">Horário e pagamento são combinados diretamente entre vocês. A plataforma ainda não intermedia pagamentos.</p>';
+      '<p class="muted" style="font-size:.8rem;margin-top:14px;line-height:1.55;">Horário e pagamento são combinados diretamente entre vocês. A plataforma ainda não intermedia pagamentos.</p>' +
+      '<p style="font-size:.8rem;margin-top:12px;text-align:center;"><b class="link-auth" onclick="abrirDenuncia(\'perfil\', \'' + pe.id + '\', \'' + String(pe.nome).replace(/'/g, "\\'") + '\')">⚑ Denunciar este perfil</b></p>';
   } else {
     acao.innerHTML = '<p style="font-size:.85rem;color:rgba(255,255,255,.75);">Esta pessoa ainda não informou um contato.</p>';
     contato.innerHTML = '<h4>Contato</h4><p class="muted" style="font-size:.88rem;line-height:1.55;">Esta pessoa ainda não informou um WhatsApp no perfil.</p>';
@@ -3272,6 +3358,7 @@ function arquivoEscolhido(){
 
 async function publicarMaterial(){
   if(!sb || !usuario) { irParaEntrar('criar'); return; }
+  if(materialEditando){ return salvarEdicaoMaterial(); }
 
   var titulo = (document.getElementById('mt-titulo').value || '').trim();
   var desc   = (document.getElementById('mt-desc').value || '').trim();
@@ -3319,8 +3406,15 @@ async function publicarMaterial(){
   document.getElementById('mt-barra-fill').style.width = '75%';
   document.getElementById('mt-barra-txt').textContent = 'Salvando as informações…';
 
+  var caminhoCapa = null;
+  if(capaEscolhidaArq){
+    document.getElementById('mt-barra-txt').textContent = 'Enviando a capa…';
+    caminhoCapa = await enviarCapa();
+  }
+
   var r = await sb.from('materiais').insert({
     professor_id:  usuario.id,
+    capa_path:     caminhoCapa,
     titulo:        titulo,
     descricao:     desc,
     area:          document.getElementById('mt-area').value,
@@ -3357,7 +3451,10 @@ async function publicarMaterial(){
   document.getElementById('mt-titulo').value = '';
   document.getElementById('mt-desc').value = '';
   document.getElementById('mt-arquivo').value = '';
+  document.getElementById('mt-capa').value = '';
+  capaEscolhidaArq = null;
   document.getElementById('mt-info-arquivo').style.display = 'none';
+  document.getElementById('mt-info-capa').style.display = 'none';
   setTimeout(function(){ document.getElementById('mt-barra').style.display = 'none'; }, 1200);
   previaMaterial();
 
@@ -3372,7 +3469,7 @@ async function carregarMateriais(forcar){
   if(materiaisCarregados && !forcar){ filtrarMateriais(); return; }
 
   var r = await sb.from('materiais')
-    .select('id, titulo, descricao, area, nivel, arquivo_path, arquivo_nome, tamanho_bytes, downloads, criado_em, professor_id, perfis(nome, cidade)')
+    .select('id, titulo, descricao, area, nivel, arquivo_path, arquivo_nome, capa_path, tamanho_bytes, downloads, criado_em, professor_id, perfis(nome, cidade)')
     .eq('ativo', true)
     .order('criado_em', { ascending: false })
     .limit(200);
@@ -3457,8 +3554,11 @@ function cardMaterial(m){
   var autor = (m.perfis && m.perfis.nome) || 'Professor';
   return '' +
   '<article class="card card-h prod">' +
-    '<div class="prod-img ' + corArquivo(m.arquivo_nome) + '">' + iconeArquivo(m.arquivo_nome) +
-      '<span class="prod-badge">' + esc(extensaoDe(m.arquivo_nome).toUpperCase()) + '</span></div>' +
+    (m.capa_path
+      ? '<div class="prod-img com-capa"><img src="' + esc(urlDoArquivo(m.capa_path)) + '" alt="' + esc(m.titulo) + '" loading="lazy">' +
+        '<span class="prod-badge">' + esc(extensaoDe(m.arquivo_nome).toUpperCase()) + '</span></div>'
+      : '<div class="prod-img ' + corArquivo(m.arquivo_nome) + '">' + iconeArquivo(m.arquivo_nome) +
+        '<span class="prod-badge">' + esc(extensaoDe(m.arquivo_nome).toUpperCase()) + '</span></div>') +
     '<div class="prod-body">' +
       '<h4>' + esc(m.titulo) + '</h4>' +
       '<small>por <b class="link-auth" onclick="verPerfil(\'' + m.professor_id + '\')">' + esc(autor) + '</b></small>' +
@@ -3471,7 +3571,11 @@ function cardMaterial(m){
     '</div>' +
     '<div class="prod-foot">' +
       '<span class="price" style="color:var(--green-600);">Gratuito</span>' +
-      '<button class="btn btn-primary btn-sm" onclick="baixarMaterial(\'' + m.id + '\', \'' + m.arquivo_path.replace(/'/g, "\\'") + '\')">Baixar</button>' +
+      '<span style="display:flex;gap:6px;align-items:center;">' +
+        '<button class="btn btn-ghost btn-sm" title="Denunciar este material" ' +
+          'onclick="abrirDenuncia(\'material\', \'' + m.id + '\', \'' + String(m.titulo).replace(/'/g, "\\'").replace(/"/g, '') + '\')">⚑</button>' +
+        '<button class="btn btn-primary btn-sm" onclick="baixarMaterial(\'' + m.id + '\', \'' + m.arquivo_path.replace(/'/g, "\\'") + '\')">Baixar</button>' +
+      '</span>' +
     '</div>' +
   '</article>';
 }
@@ -3514,7 +3618,9 @@ async function carregarMeusMateriais(){
       (confirmando
         ? '<span style="display:flex;gap:6px;"><button class="btn btn-sm" style="background:#DC2626;color:#fff;" onclick="excluirMaterial(\'' + m.id + '\', \'' + m.arquivo_path.replace(/'/g, "\\'") + '\', true)">Confirmar</button>' +
           '<button class="btn btn-ghost btn-sm" onclick="materialParaExcluir=null;carregarMeusMateriais()">Cancelar</button></span>'
-        : '<button class="btn btn-ghost btn-sm" onclick="excluirMaterial(\'' + m.id + '\', \'' + m.arquivo_path.replace(/'/g, "\\'") + '\')">Excluir</button>') +
+        : '<span style="display:flex;gap:6px;">' +
+          '<button class="btn btn-ghost btn-sm" onclick="editarMaterial(\'' + m.id + '\')">Editar</button>' +
+          '<button class="btn btn-ghost btn-sm" onclick="excluirMaterial(\'' + m.id + '\', \'' + m.arquivo_path.replace(/'/g, "\\'") + '\')">Excluir</button></span>') +
     '</div>';
   }).join('');
 }
@@ -3537,6 +3643,467 @@ function pintarMateriaisHome(){
   if(materiais.length === 0){ sec.style.display = 'none'; return; }
   sec.style.display = '';
   caixa.innerHTML = materiais.slice(0, 4).map(cardMaterial).join('');
+}
+
+
+/* ================================================================
+   ETAPA 6 — EDITAR, CAPA, DENÚNCIA E MODERAÇÃO
+   ================================================================ */
+
+var materialEditando = null;   /* id do material em edição, ou null */
+var ofertaEditando   = null;
+var capaEscolhidaArq = null;
+var denunciaAlvo     = null;
+var filtroDenuncias  = 'aberta';
+
+function souAdmin(){ return !!(perfil && perfil.admin); }
+
+
+/* ---------------- CAPA ---------------- */
+function capaEscolhida(){
+  var f = document.getElementById('mt-capa').files[0];
+  var caixa = document.getElementById('mt-info-capa');
+  capaEscolhidaArq = f || null;
+
+  if(!f){ caixa.style.display = 'none'; previaMaterial(); return; }
+
+  if(['png','jpg','jpeg'].indexOf(extensaoDe(f.name)) === -1){
+    mostrarMsgMaterial('A capa precisa ser uma imagem PNG ou JPG.', 'erro');
+    document.getElementById('mt-capa').value = ''; capaEscolhidaArq = null;
+    caixa.style.display = 'none'; return;
+  }
+  if(f.size > 5 * 1024 * 1024){
+    mostrarMsgMaterial('A capa está com ' + tamanhoLegivel(f.size) + '. Use uma imagem de até 5 MB.', 'erro');
+    document.getElementById('mt-capa').value = ''; capaEscolhidaArq = null;
+    caixa.style.display = 'none'; return;
+  }
+
+  caixa.style.display = 'flex';
+  caixa.innerHTML = '<img src="' + URL.createObjectURL(f) + '" alt="capa" ' +
+    'style="width:56px;height:56px;object-fit:cover;border-radius:9px;">' +
+    '<span><b>' + esc(f.name) + '</b><br><span class="muted">' + tamanhoLegivel(f.size) + '</span></span>';
+  previaMaterial();
+}
+
+async function enviarCapa(){
+  if(!capaEscolhidaArq) return null;
+  var f = capaEscolhidaArq;
+  var nome = String(f.name).replace(/[^a-zA-Z0-9._-]/g, '_');
+  var caminho = usuario.id + '/capas/' + Date.now() + '-' + nome;
+  var up = await sb.storage.from('materiais').upload(caminho, f, { contentType: f.type || undefined });
+  return up.error ? null : caminho;
+}
+
+
+/* ---------------- EDITAR MATERIAL ---------------- */
+function atualizarModoMaterial(){
+  var editando = !!materialEditando;
+  var t  = document.getElementById('mt-titulo-tela');
+  var sb2 = document.getElementById('mt-sub-tela');
+  var cr = document.getElementById('mt-crumb');
+  if(t)  t.textContent  = editando ? 'Editar material' : 'Publicar um material';
+  if(cr) cr.textContent = editando ? 'Materiais › Editar' : 'Materiais › Publicar';
+  if(sb2) sb2.textContent = editando
+    ? 'Altere o que quiser. O arquivo só muda se você escolher um novo.'
+    : 'Compartilhe uma apostila, atividade, plano de aula ou planilha. É gratuito para quem baixa.';
+
+  var bt = document.getElementById('mt-publicar');
+  if(bt) bt.textContent = editando ? 'Salvar alterações' : 'Publicar material';
+  var bc = document.getElementById('mt-cancelar');
+  if(bc) bc.style.display = editando ? '' : 'none';
+  var bv = document.getElementById('mt-ver');
+  if(bv) bv.style.display = editando ? 'none' : '';
+
+  var rot = document.getElementById('mt-rotulo-arquivo');
+  if(rot) rot.innerHTML = editando ? 'Trocar o arquivo <span class="muted" style="font-weight:600;">(opcional)</span>' : 'Arquivo';
+  var aj = document.getElementById('mt-ajuda-arquivo');
+  if(aj) aj.innerHTML = editando
+    ? 'Deixe em branco para manter o arquivo atual. Até <b>25 MB</b>.'
+    : 'PDF, Word, Excel, PowerPoint, CSV ou imagem. Até <b>25 MB</b>.';
+}
+
+async function editarMaterial(id){
+  if(!sb || !usuario) return;
+  var r = await sb.from('materiais')
+    .select('id, titulo, descricao, area, nivel, arquivo_nome, capa_path')
+    .eq('id', id).maybeSingle();
+  if(r.error || !r.data){ return; }
+
+  materialEditando = id;
+  capaEscolhidaArq = null;
+  go('publicar-material');
+
+  document.getElementById('mt-titulo').value = r.data.titulo || '';
+  document.getElementById('mt-desc').value   = r.data.descricao || '';
+  if(r.data.area)  document.getElementById('mt-area').value  = r.data.area;
+  if(r.data.nivel) document.getElementById('mt-nivel').value = r.data.nivel;
+  document.getElementById('mt-arquivo').value = '';
+  document.getElementById('mt-capa').value = '';
+  document.getElementById('mt-msg').style.display = 'none';
+  document.getElementById('mt-info-capa').style.display = 'none';
+
+  var cx = document.getElementById('mt-info-arquivo');
+  cx.style.display = 'block';
+  cx.innerHTML = '<b>' + iconeArquivo(r.data.arquivo_nome) + ' ' + esc(r.data.arquivo_nome) + '</b><br>' +
+                 '<span class="muted">arquivo atual — só muda se você escolher outro</span>';
+
+  atualizarModoMaterial();
+  previaMaterial();
+}
+
+function cancelarEdicaoMaterial(){
+  materialEditando = null; capaEscolhidaArq = null;
+  document.getElementById('mt-titulo').value = '';
+  document.getElementById('mt-desc').value = '';
+  document.getElementById('mt-arquivo').value = '';
+  document.getElementById('mt-capa').value = '';
+  document.getElementById('mt-info-arquivo').style.display = 'none';
+  document.getElementById('mt-info-capa').style.display = 'none';
+  document.getElementById('mt-msg').style.display = 'none';
+  atualizarModoMaterial();
+  previaMaterial();
+  go('painel-prof');
+}
+
+async function salvarEdicaoMaterial(){
+  var titulo = (document.getElementById('mt-titulo').value || '').trim();
+  if(titulo.length < 5){ mostrarMsgMaterial('Escreva um título com pelo menos 5 letras.', 'erro'); return; }
+
+  var btn = document.getElementById('mt-publicar');
+  btn.disabled = true; btn.textContent = 'Salvando…';
+
+  var mudancas = {
+    titulo:    titulo,
+    descricao: (document.getElementById('mt-desc').value || '').trim(),
+    area:      document.getElementById('mt-area').value,
+    nivel:     document.getElementById('mt-nivel').value
+  };
+
+  /* arquivo novo? */
+  var f = document.getElementById('mt-arquivo').files[0];
+  var caminhoAntigo = null;
+  if(f){
+    if(EXTENSOES_OK.indexOf(extensaoDe(f.name)) === -1){
+      btn.disabled = false; atualizarModoMaterial();
+      mostrarMsgMaterial('Esse tipo de arquivo não é aceito.', 'erro'); return;
+    }
+    if(f.size > MAX_ARQUIVO){
+      btn.disabled = false; atualizarModoMaterial();
+      mostrarMsgMaterial('O arquivo tem ' + tamanhoLegivel(f.size) + ' e o limite é 25 MB.', 'erro'); return;
+    }
+    var atual = await sb.from('materiais').select('arquivo_path').eq('id', materialEditando).maybeSingle();
+    caminhoAntigo = atual.data ? atual.data.arquivo_path : null;
+
+    var nomeSeguro = String(f.name).normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9._-]/g, '_');
+    var caminho = usuario.id + '/' + Date.now() + '-' + nomeSeguro;
+    var up = await sb.storage.from('materiais').upload(caminho, f, { contentType: f.type || undefined });
+    if(up.error){
+      btn.disabled = false; atualizarModoMaterial();
+      mostrarMsgMaterial('Não consegui enviar o arquivo novo: ' + esc(up.error.message), 'erro'); return;
+    }
+    mudancas.arquivo_path  = caminho;
+    mudancas.arquivo_nome  = f.name;
+    mudancas.arquivo_tipo  = f.type || extensaoDe(f.name);
+    mudancas.tamanho_bytes = f.size;
+  }
+
+  /* capa nova? */
+  if(capaEscolhidaArq){
+    var capa = await enviarCapa();
+    if(capa) mudancas.capa_path = capa;
+  }
+
+  var r = await sb.from('materiais').update(mudancas).eq('id', materialEditando);
+  btn.disabled = false; atualizarModoMaterial();
+
+  if(r.error){ mostrarMsgMaterial('Não deu certo: ' + esc(r.error.message), 'erro'); return; }
+
+  if(caminhoAntigo) await sb.storage.from('materiais').remove([caminhoAntigo]);
+
+  mostrarMsgMaterial('Alterações salvas! ' +
+    '<button class="btn btn-ghost btn-sm" style="margin-top:10px;" onclick="go(\'loja\')">Ver na lista</button>', 'ok');
+  materialEditando = null;
+  atualizarModoMaterial();
+  await carregarMateriais(true);
+  await carregarMeusMateriais();
+}
+
+
+/* ---------------- EDITAR OFERTA ---------------- */
+function atualizarModoOferta(){
+  var editando = !!ofertaEditando;
+  var t = document.getElementById('of-titulo-form');
+  var u = document.getElementById('of-sub-form');
+  if(t) t.textContent = editando ? 'Editar oferta' : 'Criar uma nova oferta';
+  if(u) u.textContent = editando ? 'Altere o que quiser e salve.' : 'Preencha os campos abaixo. Você pode editar tudo depois.';
+  var b = document.getElementById('btn-publicar');
+  if(b) b.textContent = editando ? 'Salvar alterações' : 'Publicar oferta';
+  var c = document.getElementById('of-cancelar');
+  if(c) c.style.display = editando ? '' : 'none';
+  var l = document.getElementById('of-limpar');
+  if(l) l.style.display = editando ? 'none' : '';
+}
+
+function marcarPill(idContainer, texto){
+  var achou = false;
+  document.querySelectorAll('#' + idContainer + ' .pill').forEach(function(b){
+    var bate = (b.textContent.trim() === String(texto || '').trim());
+    b.classList.toggle('on', bate);
+    if(bate) achou = true;
+  });
+  if(!achou){
+    var primeiro = document.querySelector('#' + idContainer + ' .pill');
+    if(primeiro) primeiro.classList.add('on');
+  }
+}
+
+async function editarOferta(id){
+  if(!sb || !usuario) return;
+  var r = await sb.from('ofertas')
+    .select('id, titulo, descricao, area, nivel, formato, valor, cobranca, modalidade')
+    .eq('id', id).maybeSingle();
+  if(r.error || !r.data) return;
+
+  ofertaEditando = id;
+  go('ensinar');
+
+  var o = r.data;
+  document.getElementById('of-titulo').value = o.titulo || '';
+  document.getElementById('of-desc').value   = o.descricao || '';
+  document.getElementById('of-valor').value  = o.valor != null ? o.valor : '';
+  if(o.area)     document.getElementById('of-area').value     = o.area;
+  if(o.nivel)    document.getElementById('of-nivel').value    = o.nivel;
+  if(o.cobranca) document.getElementById('of-cobranca').value = o.cobranca;
+  marcarPill('of-formato', o.formato);
+  marcarPill('of-modalidade', o.modalidade);
+  document.getElementById('msg-oferta').style.display = 'none';
+
+  atualizarModoOferta();
+  atualizarPrevia();
+}
+
+function cancelarEdicaoOferta(){
+  ofertaEditando = null;
+  limparOfertaSemMensagem();
+  document.getElementById('msg-oferta').style.display = 'none';
+  atualizarModoOferta();
+  go('painel-prof');
+}
+
+async function salvarEdicaoOferta(){
+  var titulo = (document.getElementById('of-titulo').value || '').trim();
+  var valor  = Number(document.getElementById('of-valor').value);
+  if(titulo.length < 5){ mostrarMsgOferta('Escreva um título com pelo menos 5 letras.', 'erro'); return; }
+  if(!(valor >= 0))    { mostrarMsgOferta('Informe um valor. Use 0 se a oferta for gratuita.', 'erro'); return; }
+
+  var btn = document.getElementById('btn-publicar');
+  btn.disabled = true; btn.textContent = 'Salvando…';
+
+  var r = await sb.from('ofertas').update({
+    titulo:     titulo,
+    area:       document.getElementById('of-area').value,
+    nivel:      document.getElementById('of-nivel').value,
+    formato:    textoDoPillLigado('of-formato', 'Aula individual'),
+    descricao:  (document.getElementById('of-desc').value || '').trim(),
+    valor:      valor,
+    cobranca:   document.getElementById('of-cobranca').value,
+    modalidade: textoDoPillLigado('of-modalidade', 'Online')
+  }).eq('id', ofertaEditando);
+
+  btn.disabled = false;
+
+  if(r.error){ atualizarModoOferta(); mostrarMsgOferta('Não deu certo: ' + esc(r.error.message), 'erro'); return; }
+
+  mostrarMsgOferta('Alterações salvas! ' +
+    '<button class="btn btn-ghost btn-sm" style="margin-top:10px;" onclick="go(\'aprender\')">Ver na lista</button>', 'ok');
+  ofertaEditando = null;
+  atualizarModoOferta();
+  limparOfertaSemMensagem();
+  await carregarOfertas(true);
+  await carregarMinhasOfertas();
+}
+
+
+/* ---------------- DENÚNCIA ---------------- */
+function abrirDenuncia(tipo, id, rotulo){
+  denunciaAlvo = { tipo: tipo, id: id, rotulo: rotulo || '' };
+  document.getElementById('dn-alvo').innerHTML =
+    'Você está denunciando ' + (tipo === 'material' ? 'o material' : tipo === 'oferta' ? 'a oferta' : 'o perfil') +
+    ' <b>' + esc(rotulo || '') + '</b>.';
+  document.getElementById('dn-detalhe').value = '';
+  document.getElementById('dn-msg').style.display = 'none';
+  document.getElementById('dn-enviar').disabled = false;
+  document.getElementById('dn-enviar').textContent = 'Enviar denúncia';
+  document.getElementById('caixa-denuncia').style.display = 'flex';
+}
+
+function fecharDenuncia(){
+  document.getElementById('caixa-denuncia').style.display = 'none';
+  denunciaAlvo = null;
+}
+
+async function enviarDenuncia(){
+  if(!sb || !denunciaAlvo) return;
+  var btn = document.getElementById('dn-enviar');
+  btn.disabled = true; btn.textContent = 'Enviando…';
+
+  var r = await sb.from('denuncias').insert({
+    tipo:           denunciaAlvo.tipo,
+    alvo_id:        denunciaAlvo.id,
+    motivo:         document.getElementById('dn-motivo').value,
+    detalhe:        (document.getElementById('dn-detalhe').value || '').trim() || null,
+    denunciante_id: usuario ? usuario.id : null
+  });
+
+  var el = document.getElementById('dn-msg');
+  if(r.error){
+    btn.disabled = false; btn.textContent = 'Enviar denúncia';
+    el.style.background = '#FEE2E2'; el.style.color = '#991B1B';
+    el.innerHTML = /relation .*denuncias.* does not exist/i.test(r.error.message || '')
+      ? 'Falta rodar o <b>banco-etapa6.sql</b> no Supabase.'
+      : 'Não consegui enviar: ' + esc(r.error.message);
+    el.style.display = 'block';
+    return;
+  }
+
+  el.style.background = '#DCFCE7'; el.style.color = '#166534';
+  el.innerHTML = 'Denúncia enviada. Obrigado — vamos analisar.';
+  el.style.display = 'block';
+  btn.textContent = 'Enviada';
+  setTimeout(fecharDenuncia, 1800);
+}
+
+
+/* ---------------- MODERAÇÃO ---------------- */
+function pintarPainelModeracao(){
+  var caixa = document.getElementById('painel-moderacao');
+  if(!caixa) return;
+  if(!souAdmin()){ caixa.style.display = 'none'; return; }
+  caixa.style.display = '';
+  caixa.innerHTML = '<h4>Administração</h4>' +
+    '<p style="font-size:.88rem;color:var(--ink-2);line-height:1.6;">Você tem acesso à moderação desta plataforma.</p>' +
+    '<button class="btn btn-primary btn-block btn-sm" style="margin-top:14px;" onclick="go(\'moderacao\')">Ver denúncias</button>';
+}
+
+function alternarFiltroDenuncias(){
+  filtroDenuncias = (filtroDenuncias === 'aberta') ? 'resolvida' : 'aberta';
+  document.getElementById('mod-filtro').textContent =
+    (filtroDenuncias === 'aberta') ? 'Ver resolvidas' : 'Ver abertas';
+  carregarDenuncias(true);
+}
+
+async function carregarDenuncias(){
+  var portao = document.getElementById('mod-portao');
+  var lista  = document.getElementById('mod-lista');
+  if(!portao || !lista || !sb) return;
+
+  if(!souAdmin()){
+    portao.style.display = 'block';
+    portao.style.background = '#FEE2E2'; portao.style.color = '#991B1B';
+    portao.innerHTML = '<b>Esta área é só para administradores.</b><br>' +
+      '<span style="font-size:.9rem;">Se você deveria ter acesso, marque a coluna <b>admin</b> do seu perfil no Supabase.</span>';
+    lista.innerHTML = '';
+    return;
+  }
+  portao.style.display = 'none';
+  lista.innerHTML = '<p class="muted">Carregando…</p>';
+
+  var r = await sb.from('denuncias')
+    .select('id, tipo, alvo_id, motivo, detalhe, status, criado_em')
+    .eq('status', filtroDenuncias)
+    .order('criado_em', { ascending: false });
+
+  if(r.error){
+    lista.innerHTML = '<p class="muted">Não consegui carregar: ' + esc(r.error.message) + '</p>';
+    return;
+  }
+
+  var ds = r.data || [];
+  var sub = document.getElementById('mod-sub');
+  if(sub) sub.textContent = ds.length === 0
+    ? (filtroDenuncias === 'aberta' ? 'Nenhuma denúncia aberta. Tudo tranquilo por aqui.' : 'Nenhuma denúncia resolvida ainda.')
+    : ds.length + (ds.length === 1 ? ' denúncia' : ' denúncias') + ' ' + (filtroDenuncias === 'aberta' ? 'aguardando você' : 'já resolvidas');
+
+  if(ds.length === 0){
+    lista.innerHTML = '<div class="panel" style="padding:38px;text-align:center;">' +
+      '<div style="font-size:2.2rem;margin-bottom:10px;">✅</div>' +
+      '<p class="muted">Nada por aqui.</p></div>';
+    return;
+  }
+
+  var blocos = [];
+  for(var i = 0; i < ds.length; i++){
+    blocos.push(await blocoDenuncia(ds[i]));
+  }
+  lista.innerHTML = blocos.join('');
+}
+
+async function blocoDenuncia(d){
+  var titulo = '(conteúdo não encontrado — talvez já tenha sido apagado)';
+  var noAr = null;
+  var dono = null;
+
+  if(d.tipo === 'material'){
+    var m = await sb.from('materiais').select('titulo, ativo, professor_id').eq('id', d.alvo_id).maybeSingle();
+    if(m.data){ titulo = m.data.titulo; noAr = m.data.ativo; dono = m.data.professor_id; }
+  } else if(d.tipo === 'oferta'){
+    var o = await sb.from('ofertas').select('titulo, ativa, professor_id').eq('id', d.alvo_id).maybeSingle();
+    if(o.data){ titulo = o.data.titulo; noAr = o.data.ativa; dono = o.data.professor_id; }
+  } else {
+    var pf = await sb.from('perfis').select('nome').eq('id', d.alvo_id).maybeSingle();
+    if(pf.data){ titulo = pf.data.nome; dono = d.alvo_id; }
+  }
+
+  var rotuloTipo = { material:'Material', oferta:'Oferta', perfil:'Perfil' }[d.tipo] || d.tipo;
+
+  var acoes = '';
+  if(d.status === 'aberta'){
+    if(noAr === true){
+      acoes += '<button class="btn btn-sm" style="background:#DC2626;color:#fff;" ' +
+               'onclick="tirarDoAr(\'' + d.tipo + '\', \'' + d.alvo_id + '\', false)">Tirar do ar</button>';
+    } else if(noAr === false){
+      acoes += '<button class="btn btn-ghost btn-sm" ' +
+               'onclick="tirarDoAr(\'' + d.tipo + '\', \'' + d.alvo_id + '\', true)">Voltar ao ar</button>';
+    }
+    acoes += '<button class="btn btn-primary btn-sm" onclick="fecharCaso(\'' + d.id + '\', \'resolvida\')">Marcar resolvida</button>';
+    acoes += '<button class="btn btn-ghost btn-sm" onclick="fecharCaso(\'' + d.id + '\', \'arquivada\')">Improcedente</button>';
+  } else {
+    acoes += '<span class="badge-st st-ok">' + esc(d.status) + '</span>';
+  }
+
+  return '<div class="panel" style="padding:24px;">' +
+    '<div style="display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;align-items:flex-start;">' +
+      '<div style="flex:1;min-width:240px;">' +
+        '<div class="tags" style="margin-bottom:8px;">' +
+          '<span class="tag tag-b">' + esc(rotuloTipo) + '</span>' +
+          (noAr === false ? '<span class="tag tag-a">fora do ar</span>' : '') +
+          '<span class="tag">' + esc(dataBR(d.criado_em)) + '</span>' +
+        '</div>' +
+        '<h4 style="font-size:1.02rem;font-weight:800;margin-bottom:6px;text-transform:none;letter-spacing:normal;color:var(--ink);">' + esc(titulo) + '</h4>' +
+        '<p style="font-size:.92rem;color:var(--ink-2);margin-bottom:6px;"><b>Motivo:</b> ' + esc(d.motivo) + '</p>' +
+        (d.detalhe ? '<p style="font-size:.9rem;color:var(--ink-2);white-space:pre-line;">' + esc(d.detalhe) + '</p>' : '') +
+        (dono ? '<p style="font-size:.85rem;margin-top:8px;"><b class="link-auth" onclick="verPerfil(\'' + dono + '\')">Ver quem publicou</b></p>' : '') +
+      '</div>' +
+      '<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">' + acoes + '</div>' +
+    '</div>' +
+  '</div>';
+}
+
+async function tirarDoAr(tipo, alvoId, novoValor){
+  if(!sb) return;
+  if(tipo === 'material')      await sb.from('materiais').update({ ativo: novoValor }).eq('id', alvoId);
+  else if(tipo === 'oferta')   await sb.from('ofertas').update({ ativa: novoValor }).eq('id', alvoId);
+  ofertasCarregadas = false; materiaisCarregados = false;
+  await carregarDenuncias(true);
+}
+
+async function fecharCaso(id, novoStatus){
+  if(!sb) return;
+  await sb.from('denuncias').update({
+    status: novoStatus,
+    resolvido_em: new Date().toISOString()
+  }).eq('id', id);
+  await carregarDenuncias(true);
 }
 
 
