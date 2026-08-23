@@ -1647,6 +1647,46 @@ ul{margin:0;padding:0;list-style:none;}
   </div>
 </section>
 
+<!-- ========================= NOVA SENHA ========================= -->
+<section class="view" id="v-nova-senha">
+  <div class="section">
+    <div class="wrap">
+      <div class="auth">
+        <div style="text-align:center;margin-bottom:26px;">
+          <div class="logo" style="justify-content:center;font-size:1.4rem;margin-bottom:14px;">
+            <span class="logo-mark">A</span><span><b>Aprender</b><span>Conecta</span></span>
+          </div>
+          <p class="muted" style="font-size:.95rem;">Escolha uma senha nova para sua conta.</p>
+        </div>
+
+        <div class="panel" style="padding:28px;">
+          <div id="ns-portao" style="display:none;padding:16px 18px;border-radius:12px;margin-bottom:20px;"></div>
+
+          <div id="ns-form">
+            <div class="field">
+              <label>Nova senha</label>
+              <input type="password" id="ns-senha" placeholder="Mínimo de 6 caracteres" autocomplete="new-password">
+            </div>
+            <div class="field">
+              <label>Repita a nova senha</label>
+              <input type="password" id="ns-senha2" placeholder="Digite de novo" autocomplete="new-password"
+                     onkeydown="if(event.key==='Enter')salvarNovaSenha()">
+            </div>
+
+            <div id="ns-msg" style="display:none;padding:12px 14px;border-radius:10px;font-size:.88rem;line-height:1.45;margin-bottom:16px;"></div>
+
+            <button class="btn btn-primary btn-block" id="ns-salvar" onclick="salvarNovaSenha()">Salvar nova senha</button>
+          </div>
+        </div>
+
+        <p class="muted" style="font-size:.82rem;text-align:center;margin-top:20px;">
+          Depois de salvar, você entra direto na sua conta.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ========================= EDITAR MEU PERFIL ========================= -->
 <section class="view" id="v-editar-perfil">
   <div class="page-head">
@@ -1708,6 +1748,7 @@ ul{margin:0;padding:0;list-style:none;}
           <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:26px;">
             <button class="btn btn-primary" id="ep-salvar" onclick="salvarPerfil()">Salvar perfil</button>
             <button class="btn btn-ghost" onclick="verMeuPerfil()">Ver meu perfil público</button>
+            <button class="btn btn-ghost" onclick="go('nova-senha')">Trocar minha senha</button>
           </div>
         </div>
       </div>
@@ -1892,6 +1933,10 @@ SUPABASE_CHAVE = String(SUPABASE_CHAVE).trim();
 
 /* ---------- ligação com o banco ---------- */
 var bancoConfigurado = SUPABASE_URL.indexOf('https://') === 0 && SUPABASE_CHAVE.length > 20;
+/* O link do e-mail de recuperação chega com "type=recovery" no endereço.
+   Precisamos anotar isso ANTES de criar o cliente, porque ele limpa o endereço. */
+var modoRecuperacao = (location.hash || '').indexOf('type=recovery') !== -1;
+
 var sb = bancoConfigurado ? window.supabase.createClient(SUPABASE_URL, SUPABASE_CHAVE) : null;
 
 var usuario   = null;   // quem está logado (e-mail, id)
@@ -1924,6 +1969,7 @@ function go(view){
   if(view === 'home')          carregarHome();
   if(view === 'perfil')        carregarPerfilPublico(perfilVisto);
   if(view === 'editar-perfil') carregarFormPerfil();
+  if(view === 'nova-senha')    prepararNovaSenha();
 }
 function pick(el){
   var p = el.parentElement;
@@ -2061,7 +2107,9 @@ async function recuperarSenha(){
   if(!email){ mostrarMsg('Escreva seu e-mail no campo acima e clique de novo em "Esqueci a senha".', 'aviso'); return; }
   var r = await sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin + location.pathname });
   if(r.error) mostrarMsg(traduzErro(r.error.message), 'erro');
-  else mostrarMsg('Enviamos um link de redefinição para <b>' + email + '</b>.', 'ok');
+  else mostrarMsg('Enviamos um link para <b>' + email + '</b>. Abra o e-mail e clique no botão — ' +
+                  'você volta para cá já na tela de escolher a senha nova. ' +
+                  '<br><small>Se não achar, procure no spam. O link vale por 1 hora.</small>', 'ok');
 }
 
 
@@ -2999,6 +3047,79 @@ function montarListas(){
 }
 
 
+/* ================================================================
+   NOVA SENHA
+   Chega aqui de dois jeitos: pelo link do e-mail de recuperação,
+   ou pelo botão "Trocar minha senha" no painel.
+   ================================================================ */
+
+function mostrarMsgSenha(texto, tipo){
+  var cores = { erro:['#FEE2E2','#991B1B'], ok:['#DCFCE7','#166534'], aviso:['#FEF3C7','#92400E'] };
+  var c = cores[tipo] || cores.aviso;
+  var el = document.getElementById('ns-msg');
+  el.style.background = c[0]; el.style.color = c[1];
+  el.innerHTML = texto; el.style.display = 'block';
+}
+
+function prepararNovaSenha(){
+  var portao = document.getElementById('ns-portao');
+  var form   = document.getElementById('ns-form');
+  if(!portao || !form) return;
+
+  document.getElementById('ns-msg').style.display = 'none';
+  document.getElementById('ns-senha').value = '';
+  document.getElementById('ns-senha2').value = '';
+
+  /* Precisa estar numa sessão: ou veio do link do e-mail, ou já está logada. */
+  if(!usuario){
+    portao.style.display = 'block';
+    portao.style.background = '#FEF3C7'; portao.style.color = '#92400E';
+    portao.innerHTML = '<b>Este link não é mais válido.</b><br>' +
+      '<span style="font-size:.9rem;">Links de recuperação valem por pouco tempo e só podem ser usados uma vez. ' +
+      'Peça um novo na tela de entrar.</span><br>' +
+      '<button class="btn btn-primary btn-sm" style="margin-top:12px;" onclick="irParaEntrar(\'entrar\')">Pedir novo link</button>';
+    form.style.display = 'none';
+    return;
+  }
+
+  portao.style.display = 'none';
+  form.style.display = '';
+}
+
+async function salvarNovaSenha(){
+  if(!sb) return;
+  var a = (document.getElementById('ns-senha').value  || '');
+  var b = (document.getElementById('ns-senha2').value || '');
+
+  if(a.length < 6){ mostrarMsgSenha('A senha precisa ter pelo menos 6 caracteres.', 'erro'); return; }
+  if(a !== b)     { mostrarMsgSenha('As duas senhas estão diferentes. Confira e tente de novo.', 'erro'); return; }
+
+  var btn = document.getElementById('ns-salvar');
+  btn.disabled = true; btn.textContent = 'Salvando…';
+
+  var r = await sb.auth.updateUser({ password: a });
+
+  btn.disabled = false; btn.textContent = 'Salvar nova senha';
+
+  if(r.error){
+    var m = r.error.message || '';
+    if(/should be different|same as the old/i.test(m)){
+      mostrarMsgSenha('Essa é a mesma senha de antes. Escolha uma diferente.', 'erro');
+    } else if(/session|expired|not authenticated/i.test(m)){
+      mostrarMsgSenha('O link expirou. Peça um novo em <b class="link-auth" onclick="irParaEntrar(\'entrar\')">Esqueci a senha</b>.', 'erro');
+    } else {
+      mostrarMsgSenha('Não deu certo: ' + esc(m), 'erro');
+    }
+    return;
+  }
+
+  modoRecuperacao = false;
+  mostrarMsgSenha('Senha alterada! Levando você para o painel…', 'ok');
+  await carregarSessao();
+  setTimeout(function(){ abrirMeuPainel(); }, 1400);
+}
+
+
 /* ---------- aviso caso as chaves não tenham sido preenchidas ---------- */
 function textoSemConfig(){
   return 'O banco de dados ainda não foi ligado. Abra o <b>index.html</b> num editor de texto e preencha ' +
@@ -3022,6 +3143,11 @@ window.addEventListener('DOMContentLoaded', async function(){
     await carregarConfig();
     await carregarSessao();
     sb.auth.onAuthStateChange(function(evento){
+      if(evento === 'PASSWORD_RECOVERY'){
+        modoRecuperacao = true;
+        setTimeout(function(){ carregarSessao().then(function(){ go('nova-senha'); }); }, 0);
+        return;
+      }
       if(evento === 'SIGNED_IN' || evento === 'SIGNED_OUT' || evento === 'USER_UPDATED'){
         setTimeout(carregarSessao, 0);
       }
@@ -3030,6 +3156,10 @@ window.addEventListener('DOMContentLoaded', async function(){
     atualizarInterface();
     avisarSemConfig();
   }
+
+  /* veio do link do e-mail? então abre direto a tela de nova senha */
+  if(modoRecuperacao){ go('nova-senha'); return; }
+
   fromHash();
 });
 window.addEventListener('hashchange', fromHash);
