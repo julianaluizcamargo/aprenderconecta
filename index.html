@@ -921,181 +921,293 @@ ul{margin:0;padding:0;list-style:none;}
 
 <!-- ========================= SERVIÇOS ========================= -->
 <section class="view" id="v-servicos">
-  <div style="background:#FEF3C7;color:#92400E;padding:12px 16px;text-align:center;font-size:.9rem;line-height:1.5;">🚧 <b>Em construção.</b> Esta área ainda é uma demonstração — os itens mostrados são exemplos e nada é gravado. Por enquanto o que funciona de verdade é <b onclick="go('aprender')" class="link-auth">Aprender</b> e <b onclick="go('ensinar')" class="link-auth">Ensinar</b>.</div>
   <div class="page-head">
     <div class="wrap">
-      <div class="crumb">Início › Contratar serviços</div>
-      <h1>Publique sua necessidade. Receba propostas.</h1>
-      <p>Orientação de TCC, revisão, formatação ABNT, projetos, diagramação de livros e materiais didáticos. Esta área ainda está em construção.</p>
-      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:22px;">
-        <button class="btn btn-accent" onclick="document.getElementById('novo-pedido').scrollIntoView({behavior:'smooth'})">＋ Publicar um pedido</button>
-        <button class="btn btn-ghost">Sou profissional, quero propor</button>
+      <div class="crumb">Início › Serviços</div>
+      <h1>Publique o que você precisa. Receba propostas.</h1>
+      <p>Revisão, formatação ABNT, diagramação, material didático, projetos. Quem precisa descreve o trabalho; quem faz manda proposta.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:20px;">
+        <button class="btn btn-accent" onclick="go('publicar-pedido')">＋ Publicar um pedido</button>
+        <button class="btn btn-ghost" onclick="go('painel')">Minhas propostas</button>
       </div>
     </div>
   </div>
 
   <div class="section-sm">
-    <div class="wrap split">
+    <div class="wrap split" style="grid-template-columns:280px 1fr;">
 
       <aside>
-        <div class="panel">
-          <h4>Categoria</h4>
-          <label class="filter"><input type="checkbox" checked>📑 Acadêmico</label>
-          <label class="filter"><input type="checkbox" checked>📚 Escolar</label>
-          <label class="filter"><input type="checkbox">📊 Projetos</label>
-          <label class="filter"><input type="checkbox">📖 Livros</label>
-          <label class="filter"><input type="checkbox">🖥️ Design educacional</label>
+        <div class="panel" style="padding:22px;">
+          <h4 style="margin-bottom:14px;">Categoria</h4>
+          <div id="filtros-categoria" style="display:grid;gap:10px;font-size:.9rem;"></div>
+
+          <h4 style="margin:22px 0 14px;">Orçamento</h4>
+          <select id="filtro-orcamento" onchange="filtrarPedidos()">
+            <option value="0">Qualquer valor</option>
+            <option value="200">Até R$ 200</option>
+            <option value="500">Até R$ 500</option>
+            <option value="99999">Acima de R$ 500</option>
+          </select>
+
+          <h4 style="margin:22px 0 12px;">Busca</h4>
+          <input type="text" id="busca-pedidos" placeholder="palavra no pedido" oninput="filtrarPedidos()">
         </div>
-        <div class="panel">
-          <h4>Tipo de serviço</h4>
-          <label class="filter"><input type="checkbox">Orientação de TCC</label>
-          <label class="filter"><input type="checkbox">Revisão textual</label>
-          <label class="filter"><input type="checkbox">Formatação ABNT</label>
-          <label class="filter"><input type="checkbox">Revisão bibliográfica</label>
-          <label class="filter"><input type="checkbox">Metodologia</label>
-          <label class="filter"><input type="checkbox">Diagramação</label>
-        </div>
-        <div class="panel">
-          <h4>Orçamento</h4>
-          <label class="filter"><input type="radio" name="orc" checked>Qualquer valor</label>
-          <label class="filter"><input type="radio" name="orc">Até R$ 200</label>
-          <label class="filter"><input type="radio" name="orc">R$ 200 a R$ 500</label>
-          <label class="filter"><input type="radio" name="orc">Acima de R$ 500</label>
-        </div>
-        <div class="panel" style="background:var(--brand-50);border-color:var(--brand-100);">
-          <h4 style="color:var(--brand-700);">⚖️ Ética acadêmica</h4>
-          <p style="font-size:.85rem;color:var(--ink-2);line-height:1.6;">A plataforma <b>não permite</b> a venda de trabalhos acadêmicos para entrega como autoria de terceiros. São permitidos orientação, tutoria, revisão, formatação e consultoria.</p>
+
+        <div class="panel" style="padding:22px;margin-top:18px;background:#FEF3C7;border:0;">
+          <h4 style="margin-bottom:10px;color:#92400E;">⚖️ Ética acadêmica</h4>
+          <p style="font-size:.86rem;line-height:1.6;color:#92400E;">
+            Não é permitido pedir nem vender trabalho acadêmico pronto para entregar como se fosse seu.
+            <b>Orientação, revisão, formatação, tutoria e consultoria são bem-vindas</b> — fazer o trabalho no lugar do aluno, não.
+          </p>
+          <p style="font-size:.82rem;line-height:1.6;color:#92400E;margin-top:10px;">
+            Pedido que pedir isso sai do ar.
+          </p>
         </div>
       </aside>
 
       <div>
-        <div class="toolbar">
-          <span class="count"><b>342</b> pedidos abertos</span>
-          <select style="margin-left:auto;"><option>Mais recentes</option><option>Maior orçamento</option><option>Prazo mais curto</option><option>Menos propostas</option></select>
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:18px;">
+          <p class="muted" id="contador-pedidos" style="font-weight:600;">Carregando…</p>
+          <button class="btn btn-ghost btn-sm" onclick="carregarPedidos(true)">Atualizar</button>
         </div>
 
-        <div class="grid" style="gap:16px;">
+        <div class="grid" style="gap:16px;" id="lista-pedidos"></div>
 
-          <article class="card job">
-            <div class="job-head">
-              <div>
-                <h4>Revisão e formatação ABNT do meu TCC (Pedagogia)</h4>
-                <div class="tags" style="margin-top:8px;"><span class="tag tag-b">📑 Acadêmico</span><span class="tag">Formatação ABNT</span><span class="tag">Revisão textual</span></div>
-              </div>
-              <div class="budget"><b>R$ 350 – 500</b><small>orçamento</small></div>
-            </div>
-            <div class="job-meta"><span>📄 68 páginas</span><span>⏱ Prazo: 12 dias</span><span>📍 Remoto</span><span>🕐 Publicado há 2 horas</span></div>
-            <p class="muted" style="font-size:.9rem;">Preciso de revisão gramatical, ajuste de coesão e normalização completa nas normas ABNT, incluindo sumário automático, citações e referências.</p>
-            <div class="job-foot">
-              <div style="display:flex;align-items:center;gap:14px;">
-                <div class="props"><span class="ava ava-sm a1">MS</span><span class="ava ava-sm a3">JP</span><span class="ava ava-sm a4">AL</span></div>
-                <span class="muted" style="font-size:.85rem;font-weight:600;margin-left:6px;">7 propostas recebidas</span>
-              </div>
-              <button class="btn btn-primary btn-sm">Enviar proposta</button>
-            </div>
-          </article>
-
-          <article class="card job">
-            <div class="job-head">
-              <div>
-                <h4>Diagramação e capa para e-book infantil (32 páginas)</h4>
-                <div class="tags" style="margin-top:8px;"><span class="tag tag-a">📖 Livros</span><span class="tag">Diagramação</span><span class="tag">Design de capa</span></div>
-              </div>
-              <div class="budget"><b>R$ 800 – 1.200</b><small>orçamento</small></div>
-            </div>
-            <div class="job-meta"><span>📄 32 páginas</span><span>⏱ Prazo: 20 dias</span><span>📍 Remoto</span><span>🕐 Publicado ontem</span></div>
-            <p class="muted" style="font-size:.9rem;">Livro já escrito e ilustrado. Preciso de diagramação para impressão e versão e-book, além do design da capa em dois formatos.</p>
-            <div class="job-foot">
-              <div style="display:flex;align-items:center;gap:14px;">
-                <div class="props"><span class="ava ava-sm a5">RC</span><span class="ava ava-sm a6">DF</span></div>
-                <span class="muted" style="font-size:.85rem;font-weight:600;margin-left:6px;">4 propostas recebidas</span>
-              </div>
-              <button class="btn btn-primary btn-sm">Enviar proposta</button>
-            </div>
-          </article>
-
-          <article class="card job">
-            <div class="job-head">
-              <div>
-                <h4>Orientação metodológica para projeto de pesquisa (Mestrado)</h4>
-                <div class="tags" style="margin-top:8px;"><span class="tag tag-b">📑 Acadêmico</span><span class="tag">Metodologia</span><span class="tag">Consultoria</span></div>
-              </div>
-              <div class="budget"><b>R$ 600</b><small>valor fixo</small></div>
-            </div>
-            <div class="job-meta"><span>🎓 Mestrado em Educação</span><span>⏱ Prazo: 30 dias</span><span>📍 Remoto</span><span>🕐 Publicado há 3 dias</span></div>
-            <p class="muted" style="font-size:.9rem;">Preciso de apoio na definição do desenho metodológico, escolha dos instrumentos e estruturação do capítulo de metodologia. 4 encontros online.</p>
-            <div class="job-foot">
-              <div style="display:flex;align-items:center;gap:14px;">
-                <div class="props"><span class="ava ava-sm a2">TG</span><span class="ava ava-sm a4">AL</span><span class="ava ava-sm a1">MS</span><span class="ava ava-sm a3">BM</span></div>
-                <span class="muted" style="font-size:.85rem;font-weight:600;margin-left:6px;">11 propostas recebidas</span>
-              </div>
-              <button class="btn btn-primary btn-sm">Enviar proposta</button>
-            </div>
-          </article>
-
-          <article class="card job">
-            <div class="job-head">
-              <div>
-                <h4>Sequência didática de Ciências para 5º ano (bimestre completo)</h4>
-                <div class="tags" style="margin-top:8px;"><span class="tag tag-g">📚 Escolar</span><span class="tag">Material didático</span><span class="tag">BNCC</span></div>
-              </div>
-              <div class="budget"><b>R$ 400</b><small>valor fixo</small></div>
-            </div>
-            <div class="job-meta"><span>📚 5º ano · Fundamental I</span><span>⏱ Prazo: 15 dias</span><span>📍 Remoto</span><span>🕐 Publicado há 5 horas</span></div>
-            <p class="muted" style="font-size:.9rem;">Escola particular busca sequência didática alinhada à BNCC, com plano de aula, atividades e avaliação para um bimestre.</p>
-            <div class="job-foot">
-              <div style="display:flex;align-items:center;gap:14px;">
-                <div class="props"><span class="ava ava-sm a1">MS</span><span class="ava ava-sm a5">LC</span></div>
-                <span class="muted" style="font-size:.85rem;font-weight:600;margin-left:6px;">3 propostas recebidas</span>
-              </div>
-              <button class="btn btn-primary btn-sm">Enviar proposta</button>
-            </div>
-          </article>
-
+        <div id="vazio-pedidos" class="panel" style="padding:40px;text-align:center;display:none;">
+          <h3 class="h3" style="margin-bottom:8px;">Nenhum pedido por aqui ainda</h3>
+          <p class="muted" style="line-height:1.6;max-width:460px;margin:0 auto;">
+            Esta área acabou de abrir. Se você precisa de uma revisão, uma formatação ou um material,
+            publique o primeiro pedido — é de graça e leva dois minutos.
+          </p>
+          <button class="btn btn-accent" style="margin-top:18px;" onclick="go('publicar-pedido')">＋ Publicar um pedido</button>
         </div>
+      </div>
 
-        <!-- NOVO PEDIDO -->
-        <div class="panel" id="novo-pedido" style="padding:30px;margin-top:34px;">
-          <div class="eyebrow">Publicar</div>
-          <h3 class="h3" style="margin-bottom:6px;">Descreva o que você precisa</h3>
-          <p class="muted" style="font-size:.9rem;margin-bottom:24px;">Quanto mais detalhes, melhores as propostas que você recebe.</p>
+    </div>
+  </div>
+</section>
 
+
+<!-- ========================= PUBLICAR PEDIDO ========================= -->
+<section class="view" id="v-publicar-pedido">
+  <div class="page-head">
+    <div class="wrap">
+      <div class="crumb" id="pd-crumb">Serviços › Publicar pedido</div>
+      <h1 id="pd-titulo-tela">Descreva o que você precisa</h1>
+      <p id="pd-sub-tela">Quanto mais detalhe, melhores as propostas que você recebe.</p>
+    </div>
+  </div>
+
+  <div class="section-sm">
+    <div class="wrap split" style="grid-template-columns:1fr 340px;">
+
+      <div class="panel" style="padding:30px;">
+        <div id="portao-pedido" style="display:none;padding:18px 20px;border-radius:12px;margin-bottom:24px;"></div>
+
+        <div id="form-pedido">
           <div class="field">
             <label>Título do pedido</label>
-            <input type="text" placeholder="Ex.: Preciso de revisão e formatação do meu TCC">
+            <input type="text" id="pd-titulo" placeholder="Ex.: Revisão e formatação ABNT do meu TCC de Pedagogia" oninput="previaPedido()">
+            <small>Diga em uma linha o que precisa ser feito.</small>
           </div>
-          <div class="grid g3" style="gap:16px;">
-            <div class="field"><label>Categoria</label>
-              <select><option>📑 Acadêmico</option><option>📚 Escolar</option><option>📊 Projetos</option><option>📖 Livros</option><option>🖥️ Design educacional</option></select></div>
-            <div class="field"><label>Tipo de serviço</label>
-              <select><option>Revisão textual</option><option>Formatação ABNT</option><option>Orientação de TCC</option><option>Metodologia</option><option>Diagramação</option></select></div>
-            <div class="field"><label>Área do conhecimento</label>
-              <select><option>Educação / Pedagogia</option><option>Saúde</option><option>Direito</option><option>Engenharias</option><option>Ciências Humanas</option></select></div>
-          </div>
-          <div class="field">
-            <label>Detalhes do serviço</label>
-            <textarea rows="4" placeholder="Explique o que precisa, o que já está pronto e o que espera receber ao final."></textarea>
-          </div>
-          <div class="grid g3" style="gap:16px;">
-            <div class="field"><label>Quantidade de páginas</label><input type="text" placeholder="Ex.: 68"></div>
-            <div class="field"><label>Prazo desejado</label><input type="text" placeholder="Ex.: 12 dias"></div>
-            <div class="field"><label>Orçamento estimado</label><input type="text" placeholder="Ex.: R$ 350 a R$ 500"></div>
-          </div>
-          <div class="field">
-            <label>Anexos</label>
-            <div style="border:1.5px dashed var(--line);border-radius:12px;padding:26px;text-align:center;color:var(--muted);font-size:.9rem;">
-              📎 Arraste arquivos aqui ou <b style="color:var(--brand-600);">selecione do computador</b><br>
-              <small style="color:var(--muted);">PDF, DOCX ou imagens · até 20 MB</small>
+
+          <div class="grid g2" style="gap:16px;">
+            <div class="field">
+              <label>Categoria</label>
+              <select id="pd-categoria" onchange="montarTiposServico();previaPedido()"></select>
+            </div>
+            <div class="field">
+              <label>Tipo de serviço</label>
+              <select id="pd-tipo" onchange="previaPedido()"></select>
             </div>
           </div>
-          <label class="filter" style="margin:6px 0 18px;"><input type="checkbox" checked>Declaro que o serviço solicitado respeita a política de ética acadêmica da plataforma.</label>
+
+          <div class="field">
+            <label>Descrição</label>
+            <textarea rows="6" id="pd-desc" placeholder="Quantas páginas, qual o curso, o que exatamente precisa ser feito, o que você já tem pronto." oninput="previaPedido()"></textarea>
+            <small>Detalhe evita proposta fora da realidade — e evita discussão depois.</small>
+          </div>
+
+          <div class="grid g3" style="gap:16px;">
+            <div class="field">
+              <label>Orçamento de (R$)</label>
+              <input type="number" id="pd-min" min="0" step="0.01" placeholder="200" oninput="previaPedido()">
+            </div>
+            <div class="field">
+              <label>até (R$)</label>
+              <input type="number" id="pd-max" min="0" step="0.01" placeholder="500" oninput="previaPedido()">
+            </div>
+            <div class="field">
+              <label>Prazo (dias)</label>
+              <input type="number" id="pd-prazo" min="1" step="1" placeholder="15" oninput="previaPedido()">
+            </div>
+          </div>
+          <small class="muted" style="display:block;margin:-6px 0 18px;">Os três são opcionais. Sem orçamento, você recebe propostas mais variadas — e mais fora do alvo.</small>
+
+          <div id="pd-msg" style="display:none;padding:12px 14px;border-radius:10px;font-size:.88rem;line-height:1.45;margin-bottom:14px;"></div>
+
           <div style="display:flex;gap:10px;flex-wrap:wrap;">
-            <button class="btn btn-accent" onclick="go('painel')">Publicar pedido</button>
-            <button class="btn btn-ghost">Salvar rascunho</button>
+            <button class="btn btn-accent" id="pd-publicar" onclick="publicarPedido()">Publicar pedido</button>
+            <button class="btn btn-ghost" id="pd-cancelar" style="display:none;" onclick="cancelarEdicaoPedido()">Cancelar edição</button>
+            <button class="btn btn-ghost" id="pd-ver" onclick="go('servicos')">Ver os pedidos</button>
+          </div>
+        </div>
+      </div>
+
+      <aside>
+        <div class="panel" style="padding:24px;">
+          <h4 style="margin-bottom:14px;">Como vai aparecer</h4>
+          <div class="card job" style="box-shadow:none;border:1px solid var(--line);">
+            <div class="job-head">
+              <div>
+                <h4 id="pd-pv-titulo">Título do pedido</h4>
+                <div class="tags" style="margin-top:8px;">
+                  <span class="tag" id="pd-pv-cat">Categoria</span>
+                  <span class="tag" id="pd-pv-tipo">Tipo</span>
+                </div>
+              </div>
+              <div class="budget"><b id="pd-pv-valor">a combinar</b><small>orçamento</small></div>
+            </div>
+            <p class="muted" style="font-size:.86rem;line-height:1.6;" id="pd-pv-desc">A descrição aparece aqui.</p>
+            <div class="job-meta"><span id="pd-pv-prazo">sem prazo definido</span></div>
           </div>
         </div>
 
+        <div class="panel" style="padding:24px;margin-top:18px;">
+          <h4 style="margin-bottom:10px;">Antes de publicar</h4>
+          <p class="muted" style="font-size:.85rem;line-height:1.65;">
+            Seu pedido fica <b>visível para qualquer pessoa</b>, inclusive quem não tem conta.
+            Não escreva aqui dados pessoais, matrícula, nome da instituição nem nada que você não queira público.
+          </p>
+          <p class="muted" style="font-size:.85rem;line-height:1.65;margin-top:10px;">
+            O documento em si você só envia depois de escolher alguém — aí sim, numa área fechada entre vocês dois.
+          </p>
+        </div>
+      </aside>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ========================= UM PEDIDO ========================= -->
+<section class="view" id="v-pedido">
+  <div class="page-head">
+    <div class="wrap">
+      <div class="crumb">Serviços › Pedido</div>
+      <h1 id="pe-titulo">Carregando…</h1>
+      <p id="pe-sub"></p>
+    </div>
+  </div>
+
+  <div class="section-sm">
+    <div class="wrap split" style="grid-template-columns:1fr 340px;">
+      <div>
+        <div class="panel" style="padding:28px;">
+          <h4 style="margin-bottom:14px;">O pedido</h4>
+          <div id="pe-corpo"></div>
+        </div>
+
+        <div class="panel" style="padding:28px;">
+          <h4 style="margin-bottom:14px;" id="pe-titulo-propostas">Propostas</h4>
+          <div id="pe-propostas"></div>
+        </div>
       </div>
+
+      <aside>
+        <div class="panel" style="padding:24px;" id="pe-acao"></div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+
+<!-- ========================= MEUS SERVIÇOS ========================= -->
+<section class="view" id="v-meus-servicos">
+  <div class="page-head">
+    <div class="wrap" style="display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;">
+      <div>
+        <div class="crumb">Minha conta › Serviços</div>
+        <h1>Meus serviços</h1>
+        <p>Os pedidos que você publicou, as propostas que você enviou e os trabalhos em andamento.</p>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn btn-ghost" onclick="carregarMeusServicos(true)">Atualizar</button>
+        <button class="btn btn-accent" onclick="go('publicar-pedido')">＋ Publicar pedido</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-sm">
+    <div class="wrap">
+      <div class="panel" style="padding:28px;">
+        <h4 style="margin-bottom:14px;">Trabalhos em andamento</h4>
+        <div id="meus-trabalhos"><p class="muted" style="font-size:.88rem;">Carregando…</p></div>
+      </div>
+
+      <div class="panel" style="padding:28px;">
+        <h4 style="margin-bottom:14px;">Pedidos que publiquei</h4>
+        <div id="meus-pedidos"><p class="muted" style="font-size:.88rem;">Carregando…</p></div>
+      </div>
+
+      <div class="panel" style="padding:28px;">
+        <h4 style="margin-bottom:14px;">Propostas que enviei</h4>
+        <div id="minhas-propostas"><p class="muted" style="font-size:.88rem;">Carregando…</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ========================= ÁREA DO TRABALHO ========================= -->
+<section class="view" id="v-trabalho">
+  <div class="page-head">
+    <div class="wrap">
+      <div class="crumb">Serviços › Trabalho</div>
+      <h1 id="tr-titulo">Carregando…</h1>
+      <p id="tr-sub"></p>
+    </div>
+  </div>
+
+  <div class="section-sm">
+    <div class="wrap split" style="grid-template-columns:1fr 340px;">
+      <div>
+        <div class="panel" style="padding:28px;">
+          <h4 style="margin-bottom:6px;">Arquivos deste trabalho</h4>
+          <p class="muted" style="font-size:.86rem;line-height:1.6;margin-bottom:18px;">
+            Só você e a outra pessoa deste trabalho enxergam o que está aqui.
+          </p>
+
+          <div class="field">
+            <label>Enviar um arquivo</label>
+            <input type="file" id="tr-arquivo" onchange="arquivoTrabalhoEscolhido()">
+            <small>Word, PDF, planilha, apresentação, zip ou imagem. Até <b>50 MB</b>.</small>
+          </div>
+          <div class="field">
+            <label>Recado junto ao arquivo <span class="muted" style="font-weight:600;">(opcional)</span></label>
+            <input type="text" id="tr-obs" placeholder="Ex.: versão revisada, com marcações no capítulo 3">
+          </div>
+
+          <div id="tr-barra" style="display:none;margin-bottom:16px;">
+            <div style="height:8px;background:var(--line);border-radius:99px;overflow:hidden;">
+              <div id="tr-barra-fill" style="height:100%;width:0;background:var(--brand-500);transition:width .2s;"></div>
+            </div>
+            <small class="muted" id="tr-barra-txt">Enviando…</small>
+          </div>
+
+          <div id="tr-msg" style="display:none;padding:12px 14px;border-radius:10px;font-size:.88rem;line-height:1.45;margin-bottom:14px;"></div>
+
+          <button class="btn btn-accent" id="tr-enviar" onclick="enviarArquivoTrabalho()">Enviar arquivo</button>
+
+          <div style="border-top:1px solid var(--line-2);margin:24px 0 0;padding-top:20px;">
+            <div id="tr-lista"></div>
+          </div>
+        </div>
+      </div>
+
+      <aside>
+        <div class="panel" style="padding:24px;" id="tr-lado"></div>
+      </aside>
     </div>
   </div>
 </section>
@@ -1377,6 +1489,7 @@ ul{margin:0;padding:0;list-style:none;}
           <div id="resumo-aluno"></div>
           <button class="btn btn-ghost btn-block btn-sm" style="margin-top:14px;" onclick="go('editar-perfil')">Editar meu perfil</button>
           <button class="btn btn-ghost btn-block btn-sm" style="margin-top:10px;" onclick="go('compras')">Minhas compras</button>
+          <button class="btn btn-ghost btn-block btn-sm" style="margin-top:10px;" onclick="go('meus-servicos')">Meus serviços</button>
         </div>
 
         <div class="panel">
@@ -1399,6 +1512,7 @@ ul{margin:0;padding:0;list-style:none;}
         <p id="sub-painel-prof">Publique suas ofertas e receba contatos de alunos.</p>
       </div>
       <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn btn-ghost" onclick="go('meus-servicos')">Meus serviços</button>
         <button class="btn btn-ghost" onclick="go('compras')">Minhas compras</button>
         <button class="btn btn-ghost" onclick="go('editar-perfil')">Editar meu perfil</button>
         <button class="btn btn-accent" onclick="go('ensinar')">＋ Criar nova oferta</button>
@@ -2123,7 +2237,8 @@ var usuario   = null;   // quem está logado (e-mail, id)
 var perfil    = null;   // nome e papel, vindos da tabela "perfis"
 var modoAtual = 'criar';
 
-var TELAS_PROTEGIDAS = ['painel', 'painel-prof', 'editar-perfil', 'compras'];
+var TELAS_PROTEGIDAS = ['painel', 'painel-prof', 'editar-perfil', 'compras',
+                        'publicar-pedido', 'meus-servicos', 'trabalho'];
 var perfilVisto = null;   // id do professor aberto na tela de perfil
 
 
@@ -2141,6 +2256,11 @@ function go(view){
     ofertaEditando = null;
     if(typeof limparOfertaSemMensagem === 'function') limparOfertaSemMensagem();
     if(typeof atualizarModoOferta === 'function') atualizarModoOferta();
+  }
+  if(typeof pedidoEditando !== 'undefined' && pedidoEditando && view !== 'publicar-pedido'){
+    pedidoEditando = null;
+    if(typeof limparFormPedido === 'function') limparFormPedido();
+    if(typeof atualizarModoPedido === 'function') atualizarModoPedido();
   }
 
   if(TELAS_PROTEGIDAS.indexOf(view) !== -1 && !usuario){
@@ -2168,6 +2288,11 @@ function go(view){
   if(view === 'publicar-material') { atualizarPortaoMaterial(); atualizarModoMaterial(); previaMaterial(); pintarCampoPrecoMaterial(); }
   if(view === 'moderacao')     carregarDenuncias(true);
   if(view === 'compras')       carregarCompras(true);
+  /* sempre do zero: um pedido fechado agora há pouco precisa sumir
+     daqui, e uma proposta nova precisa aparecer na contagem */
+  if(view === 'servicos')      carregarPedidos(true);
+  if(view === 'publicar-pedido'){ atualizarModoPedido(); previaPedido(); }
+  if(view === 'meus-servicos') carregarMeusServicos(true);
 }
 function pick(el){
   var p = el.parentElement;
@@ -2186,7 +2311,9 @@ function fromHash(){
 
   var partes = bruto.split('/');
   var h = partes[0];
-  if(h === 'perfil' && partes[1]){ verPerfil(partes[1]); return; }
+  if(h === 'perfil'   && partes[1]){ verPerfil(partes[1]);   return; }
+  if(h === 'pedido'   && partes[1]){ verPedido(partes[1]);   return; }
+  if(h === 'trabalho' && partes[1]){ verTrabalho(partes[1]); return; }
   if(!document.getElementById('v-'+h)) h = 'home';
   go(h);
 }
@@ -2357,6 +2484,7 @@ function atualizarInterface(){
 
   atualizarPortaoEnsinar();
   atualizarPortaoMaterial();
+  if(typeof atualizarModoPedido === 'function') atualizarModoPedido();
   atualizarPrevia();
   carregarFormPerfil();
   pintarPainelAssinatura();
@@ -4855,8 +4983,971 @@ async function confirmarAula(compraId){
 }
 
 
+
+/* ================================================================
+   ETAPA 8 — MURAL DE SERVIÇOS
+
+   O caminho de uma ponta à outra:
+
+     pedido publicado  →  propostas recebidas  →  cliente escolhe uma
+                       →  paga (ou aceita, se for grátis)
+                       →  área fechada onde os dois trocam arquivos
+
+   Duas coisas que NÃO estão aqui, e sim no banco, de propósito:
+
+     · proposta só é lida por quem enviou e pelo dono do pedido;
+     · arquivo de trabalho só é lido pelas duas pessoas daquele
+       trabalho.
+
+   Se alguém burlar esta tela, esbarra na regra do banco.
+   ================================================================ */
+
+var CATEGORIAS = {
+  '📑 Acadêmico': ['Revisão textual', 'Formatação ABNT', 'Orientação de TCC',
+                   'Revisão bibliográfica', 'Metodologia', 'Tradução de resumo'],
+  '📚 Escolar':   ['Plano de aula', 'Sequência didática', 'Material de apoio',
+                   'Correção de atividades', 'Adaptação BNCC'],
+  '📊 Projetos':  ['Projeto pedagógico', 'Relatório', 'Apresentação', 'Planilha'],
+  '📖 Livros':    ['Diagramação', 'Design de capa', 'Preparação de texto', 'Revisão de prova'],
+  '🖥️ Design educacional': ['Slides', 'Videoaula', 'Ilustração', 'Infográfico']
+};
+
+var pedidos            = [];
+var pedidosCarregados  = false;
+var pedidoEditando     = null;
+var pedidoAberto       = null;   /* o pedido que está na tela v-pedido */
+var trabalhoAberto     = null;   /* o pedido que está na tela v-trabalho */
+var arquivoTrabalho    = null;
+
+var MAX_TRABALHO = 50 * 1024 * 1024;
+
+
+/* ---------------- listas ---------------- */
+function montarListasServicos(){
+  var cat = document.getElementById('pd-categoria');
+  if(cat && !cat.options.length){
+    Object.keys(CATEGORIAS).forEach(function(c){
+      var o = document.createElement('option'); o.textContent = c; cat.appendChild(o);
+    });
+  }
+  montarTiposServico();
+
+  var filtros = document.getElementById('filtros-categoria');
+  if(filtros && !filtros.innerHTML.trim()){
+    filtros.innerHTML = Object.keys(CATEGORIAS).map(function(c){
+      return '<label style="display:flex;align-items:center;gap:8px;cursor:pointer;">' +
+             '<input type="checkbox" data-cat="' + esc(c) + '" onchange="filtrarPedidos()"> ' +
+             esc(c) + '</label>';
+    }).join('');
+  }
+}
+
+function montarTiposServico(){
+  var cat = document.getElementById('pd-categoria');
+  var tipo = document.getElementById('pd-tipo');
+  if(!cat || !tipo) return;
+  var lista = CATEGORIAS[cat.value] || [];
+  tipo.innerHTML = lista.map(function(t){ return '<option>' + esc(t) + '</option>'; }).join('');
+}
+
+
+/* ---------------- a lista de pedidos ---------------- */
+async function carregarPedidos(forcar){
+  if(!sb) return;
+  if(pedidosCarregados && !forcar){ filtrarPedidos(); return; }
+
+  var lista = document.getElementById('lista-pedidos');
+
+  /* Se o banco-etapa8.sql ainda não rodou, esta consulta falha.
+     Falhar é aceitável; derrubar o resto da página, não. */
+  var r;
+  try {
+    r = await sb.from('pedidos')
+      .select('id, titulo, categoria, tipo_servico, descricao, orcamento_min, orcamento_max, ' +
+              'prazo_dias, status, criado_em, cliente_id, perfis:cliente_id(nome, cidade)')
+      .eq('status', 'aberto')
+      .order('criado_em', { ascending: false })
+      .limit(200);
+  } catch(e){
+    if(lista) lista.innerHTML = '<p class="muted">Esta área ainda não existe neste banco. Falta rodar o <b>banco-etapa8.sql</b>.</p>';
+    var vz = document.getElementById('vazio-pedidos'); if(vz) vz.style.display = 'none';
+    var ct = document.getElementById('contador-pedidos'); if(ct) ct.textContent = '';
+    return;
+  }
+
+  if(r.error){
+    if(lista){
+      lista.innerHTML = /relation|does not exist/i.test(r.error.message || '')
+        ? '<p class="muted">Esta área ainda não existe neste banco. Falta rodar o <b>banco-etapa8.sql</b>.</p>'
+        : '<p class="muted">Não consegui carregar: ' + esc(r.error.message) + '</p>';
+    }
+    return;
+  }
+
+  pedidos = r.data || [];
+  pedidosCarregados = true;
+
+  /* quantas propostas cada um tem. O número é público; o conteúdo não. */
+  await Promise.all(pedidos.map(async function(p){
+    try {
+      var c = await sb.rpc('quantas_propostas', { ped: p.id });
+      p.__props = Number((c && c.data) || 0);
+    } catch(e){ p.__props = 0; }
+  }));
+
+  filtrarPedidos();
+}
+
+function filtrarPedidos(){
+  var lista = document.getElementById('lista-pedidos');
+  var vazio = document.getElementById('vazio-pedidos');
+  var cont  = document.getElementById('contador-pedidos');
+  if(!lista) return;
+
+  var busca = ((document.getElementById('busca-pedidos') || {}).value || '').trim().toLowerCase();
+
+  var cats = [];
+  document.querySelectorAll('#filtros-categoria input:checked').forEach(function(c){
+    cats.push(c.getAttribute('data-cat'));
+  });
+
+  var tetoEl = document.getElementById('filtro-orcamento');
+  var teto = tetoEl ? Number(tetoEl.value) : 0;
+
+  var res = pedidos.filter(function(p){
+    if(cats.length && cats.indexOf(p.categoria) === -1) return false;
+    if(teto > 0 && teto < 99999){
+      var ref = Number(p.orcamento_max || p.orcamento_min || 0);
+      if(ref > teto) return false;
+    }
+    if(teto === 99999){
+      var ref2 = Number(p.orcamento_max || p.orcamento_min || 0);
+      if(ref2 <= 500) return false;
+    }
+    if(busca){
+      var alvo = [p.titulo, p.descricao, p.categoria, p.tipo_servico].join(' ').toLowerCase();
+      if(alvo.indexOf(busca) === -1) return false;
+    }
+    return true;
+  });
+
+  if(cont) cont.textContent = res.length === 1 ? '1 pedido aberto' : res.length + ' pedidos abertos';
+
+  if(vazio) vazio.style.display = res.length ? 'none' : 'block';
+  lista.innerHTML = res.map(cardPedido).join('');
+}
+
+function orcamentoTexto(p){
+  var a = Number(p.orcamento_min || 0), b = Number(p.orcamento_max || 0);
+  if(a && b && a !== b) return moeda(a) + ' – ' + moeda(b);
+  if(b) return 'até ' + moeda(b);
+  if(a) return 'a partir de ' + moeda(a);
+  return 'a combinar';
+}
+
+function cardPedido(p){
+  var quem = (p.perfis && p.perfis.nome) || 'alguém';
+  var n = Number(p.__props || 0);
+  return '' +
+  '<article class="card job">' +
+    '<div class="job-head">' +
+      '<div>' +
+        '<h4>' + esc(p.titulo) + '</h4>' +
+        '<div class="tags" style="margin-top:8px;">' +
+          '<span class="tag">' + esc(p.categoria) + '</span>' +
+          '<span class="tag">' + esc(p.tipo_servico) + '</span>' +
+        '</div>' +
+      '</div>' +
+      '<div class="budget"><b>' + esc(orcamentoTexto(p)) + '</b><small>orçamento</small></div>' +
+    '</div>' +
+    '<p class="muted" style="font-size:.88rem;line-height:1.6;">' +
+      esc(cortar(p.descricao || 'Sem descrição.', 260)) + '</p>' +
+    '<div class="job-meta">' +
+      '<span>por ' + esc(quem) + '</span>' +
+      (p.prazo_dias ? '<span>⏱ Prazo: ' + p.prazo_dias + ' dias</span>' : '') +
+      '<span>🕐 ' + esc(dataBR(p.criado_em)) + '</span>' +
+    '</div>' +
+    '<div class="job-foot">' +
+      '<span class="muted" style="font-size:.85rem;font-weight:600;">' +
+        (n === 0 ? 'nenhuma proposta ainda' : n === 1 ? '1 proposta recebida' : n + ' propostas recebidas') +
+      '</span>' +
+      '<button class="btn btn-primary btn-sm" onclick="verPedido(\'' + p.id + '\')">Ver e propor</button>' +
+    '</div>' +
+  '</article>';
+}
+
+function cortar(t, n){
+  t = String(t || '');
+  return t.length > n ? t.slice(0, n - 1) + '…' : t;
+}
+
+
+/* ---------------- publicar um pedido ---------------- */
+function previaPedido(){
+  if(!document.getElementById('pd-pv-titulo')) return;
+  var t = (document.getElementById('pd-titulo').value || '').trim();
+  var d = (document.getElementById('pd-desc').value || '').trim();
+  var c = (document.getElementById('pd-categoria') || {}).value || '';
+  var tp = (document.getElementById('pd-tipo') || {}).value || '';
+  var pz = (document.getElementById('pd-prazo') || {}).value || '';
+
+  document.getElementById('pd-pv-titulo').textContent = t || 'Título do pedido';
+  document.getElementById('pd-pv-desc').textContent   = d || 'A descrição aparece aqui.';
+  document.getElementById('pd-pv-cat').textContent    = c || 'Categoria';
+  document.getElementById('pd-pv-tipo').textContent   = tp || 'Tipo';
+  document.getElementById('pd-pv-valor').textContent  = orcamentoTexto({
+    orcamento_min: (document.getElementById('pd-min') || {}).value,
+    orcamento_max: (document.getElementById('pd-max') || {}).value
+  });
+  document.getElementById('pd-pv-prazo').textContent = pz ? ('⏱ Prazo: ' + pz + ' dias') : 'sem prazo definido';
+}
+
+function mostrarMsgPedido(texto, tipo){
+  var c = { ok:['#DCFCE7','#166534'], erro:['#FEE2E2','#991B1B'], aviso:['#FEF3C7','#92400E'] }[tipo || 'aviso'];
+  var el = document.getElementById('pd-msg');
+  if(!el) return;
+  el.style.background = c[0]; el.style.color = c[1];
+  el.innerHTML = texto; el.style.display = 'block';
+}
+
+function atualizarPortaoPedido(){
+  var portao = document.getElementById('portao-pedido');
+  var form   = document.getElementById('form-pedido');
+  if(!portao || !form) return;
+
+  if(!usuario){
+    portao.style.display = 'block';
+    portao.style.background = '#FEF3C7'; portao.style.color = '#92400E';
+    portao.innerHTML = '<b>Entre na sua conta para publicar um pedido.</b><br>' +
+      'É rápido, e é o que permite os profissionais falarem com você. ' +
+      '<button class="btn btn-primary btn-sm" style="margin-top:10px;" onclick="irParaEntrar(\'criar\')">Entrar ou criar conta</button>';
+    form.style.display = 'none';
+    return;
+  }
+  portao.style.display = 'none';
+  form.style.display = '';
+}
+
+function atualizarModoPedido(){
+  atualizarPortaoPedido();
+  var editando = !!pedidoEditando;
+  var t = document.getElementById('pd-titulo-tela');
+  var u = document.getElementById('pd-sub-tela');
+  var c = document.getElementById('pd-crumb');
+  if(t) t.textContent = editando ? 'Editar pedido' : 'Descreva o que você precisa';
+  if(u) u.textContent = editando ? 'Altere o que quiser e salve.' : 'Quanto mais detalhe, melhores as propostas que você recebe.';
+  if(c) c.textContent = editando ? 'Serviços › Editar pedido' : 'Serviços › Publicar pedido';
+  var b = document.getElementById('pd-publicar');
+  if(b) b.textContent = editando ? 'Salvar alterações' : 'Publicar pedido';
+  var x = document.getElementById('pd-cancelar');
+  if(x) x.style.display = editando ? '' : 'none';
+}
+
+function lerFormPedido(){
+  var titulo = (document.getElementById('pd-titulo').value || '').trim();
+  if(titulo.length < 8){ mostrarMsgPedido('Escreva um título com pelo menos 8 letras — ajuda quem vai propor.', 'erro'); return null; }
+
+  var min = document.getElementById('pd-min').value;
+  var max = document.getElementById('pd-max').value;
+  min = min === '' ? null : Number(min);
+  max = max === '' ? null : Number(max);
+  if(min !== null && max !== null && max < min){
+    mostrarMsgPedido('O valor final do orçamento não pode ser menor que o inicial.', 'erro'); return null;
+  }
+
+  var prazo = document.getElementById('pd-prazo').value;
+
+  return {
+    titulo:        titulo,
+    categoria:     document.getElementById('pd-categoria').value,
+    tipo_servico:  document.getElementById('pd-tipo').value,
+    descricao:     (document.getElementById('pd-desc').value || '').trim(),
+    orcamento_min: min,
+    orcamento_max: max,
+    prazo_dias:    prazo === '' ? null : Number(prazo)
+  };
+}
+
+async function publicarPedido(){
+  if(!sb) return;
+  if(!usuario){ irParaEntrar('criar'); return; }
+  if(pedidoEditando) return salvarEdicaoPedido();
+
+  var dados = lerFormPedido();
+  if(!dados) return;
+
+  var btn = document.getElementById('pd-publicar');
+  btn.disabled = true; btn.textContent = 'Publicando…';
+
+  dados.cliente_id = usuario.id;
+  var r = await sb.from('pedidos').insert(dados);
+
+  btn.disabled = false; atualizarModoPedido();
+
+  if(r.error){
+    mostrarMsgPedido(/relation|does not exist/i.test(r.error.message || '')
+      ? 'Falta rodar o <b>banco-etapa8.sql</b> no Supabase.'
+      : 'Não deu certo: ' + esc(r.error.message), 'erro');
+    return;
+  }
+
+  mostrarMsgPedido('Pedido publicado! Agora é esperar as propostas. ' +
+    '<button class="btn btn-ghost btn-sm" style="margin-top:10px;" onclick="go(\'servicos\')">Ver no mural</button>', 'ok');
+  limparFormPedido();
+  await carregarPedidos(true);
+}
+
+function limparFormPedido(){
+  ['pd-titulo','pd-desc','pd-min','pd-max','pd-prazo'].forEach(function(id){
+    var el = document.getElementById(id); if(el) el.value = '';
+  });
+  var c = document.getElementById('pd-categoria'); if(c) c.selectedIndex = 0;
+  montarTiposServico();
+  previaPedido();
+}
+
+async function editarPedido(id){
+  if(!sb || !usuario) return;
+  var r = await sb.from('pedidos')
+    .select('id, titulo, categoria, tipo_servico, descricao, orcamento_min, orcamento_max, prazo_dias')
+    .eq('id', id).maybeSingle();
+  if(r.error || !r.data) return;
+
+  pedidoEditando = id;
+  go('publicar-pedido');
+
+  var p = r.data;
+  document.getElementById('pd-titulo').value = p.titulo || '';
+  document.getElementById('pd-desc').value   = p.descricao || '';
+  if(p.categoria) document.getElementById('pd-categoria').value = p.categoria;
+  montarTiposServico();
+  if(p.tipo_servico) document.getElementById('pd-tipo').value = p.tipo_servico;
+  document.getElementById('pd-min').value   = p.orcamento_min != null ? p.orcamento_min : '';
+  document.getElementById('pd-max').value   = p.orcamento_max != null ? p.orcamento_max : '';
+  document.getElementById('pd-prazo').value = p.prazo_dias != null ? p.prazo_dias : '';
+  document.getElementById('pd-msg').style.display = 'none';
+
+  atualizarModoPedido();
+  previaPedido();
+}
+
+function cancelarEdicaoPedido(){
+  pedidoEditando = null;
+  limparFormPedido();
+  document.getElementById('pd-msg').style.display = 'none';
+  atualizarModoPedido();
+  go('meus-servicos');
+}
+
+async function salvarEdicaoPedido(){
+  var dados = lerFormPedido();
+  if(!dados) return;
+
+  var btn = document.getElementById('pd-publicar');
+  btn.disabled = true; btn.textContent = 'Salvando…';
+
+  var r = await sb.from('pedidos').update(dados).eq('id', pedidoEditando);
+  btn.disabled = false;
+
+  if(r.error){ atualizarModoPedido(); mostrarMsgPedido('Não deu certo: ' + esc(r.error.message), 'erro'); return; }
+
+  mostrarMsgPedido('Alterações salvas.', 'ok');
+  pedidoEditando = null;
+  atualizarModoPedido();
+  limparFormPedido();
+  await carregarPedidos(true);
+}
+
+async function excluirPedido(id, confirmado){
+  if(!confirmado){ window.__pedidoExcluir = id; carregarMeusServicos(true); return; }
+  window.__pedidoExcluir = null;
+  await sb.from('pedidos').delete().eq('id', id);
+  await carregarMeusServicos(true);
+  await carregarPedidos(true);
+}
+
+
+/* ---------------- a tela de um pedido ---------------- */
+function verPedido(id){
+  pedidoAberto = id;
+  go('pedido');
+  if(history.replaceState) history.replaceState(null, '', '#pedido/' + id);
+  carregarPedido();
+}
+
+async function carregarPedido(){
+  if(!sb || !pedidoAberto) return;
+
+  var r;
+  try {
+    r = await sb.from('pedidos')
+      .select('id, titulo, categoria, tipo_servico, descricao, orcamento_min, orcamento_max, ' +
+              'prazo_dias, status, criado_em, cliente_id, proposta_aceita, perfis:cliente_id(nome, cidade)')
+      .eq('id', pedidoAberto).maybeSingle();
+  } catch(e){ r = { error: { message: 'indisponivel' }, data: null }; }
+
+  var titulo = document.getElementById('pe-titulo');
+  var sub    = document.getElementById('pe-sub');
+  var corpo  = document.getElementById('pe-corpo');
+  var acao   = document.getElementById('pe-acao');
+
+  if(r.error || !r.data){
+    if(titulo) titulo.textContent = 'Pedido não encontrado';
+    if(sub) sub.textContent = 'Ele pode ter sido apagado, ou já está fechado.';
+    if(corpo) corpo.innerHTML = '';
+    if(acao) acao.innerHTML = '<button class="btn btn-ghost btn-block btn-sm" onclick="go(\'servicos\')">Voltar ao mural</button>';
+    document.getElementById('pe-propostas').innerHTML = '';
+    return;
+  }
+
+  var p = r.data;
+  var meu = !!(usuario && usuario.id === p.cliente_id);
+  var quem = (p.perfis && p.perfis.nome) || 'alguém';
+
+  titulo.textContent = p.titulo;
+  sub.textContent = p.categoria + ' · ' + p.tipo_servico + ' · publicado por ' + quem +
+                    (p.perfis && p.perfis.cidade ? ' · ' + p.perfis.cidade : '');
+
+  corpo.innerHTML =
+    '<p style="font-size:.95rem;line-height:1.7;white-space:pre-wrap;">' + esc(p.descricao || 'Sem descrição.') + '</p>' +
+    '<div class="job-meta" style="margin-top:18px;">' +
+      '<span>💰 ' + esc(orcamentoTexto(p)) + '</span>' +
+      (p.prazo_dias ? '<span>⏱ ' + p.prazo_dias + ' dias</span>' : '') +
+      '<span>🕐 ' + esc(dataBR(p.criado_em)) + '</span>' +
+      '<span>' + (p.status === 'aberto' ? '🟢 aberto' : '⚪ fechado') + '</span>' +
+    '</div>';
+
+  pintarAcaoPedido(p, meu);
+  await pintarPropostas(p, meu);
+}
+
+function pintarAcaoPedido(p, meu){
+  var acao = document.getElementById('pe-acao');
+  if(!acao) return;
+
+  if(p.status !== 'aberto'){
+    acao.innerHTML =
+      '<h4 style="margin-bottom:10px;">Pedido fechado</h4>' +
+      '<p class="muted" style="font-size:.88rem;line-height:1.6;">Este pedido já tem alguém escolhido.</p>' +
+      (meu || (usuario && p.__souEscolhido)
+        ? '<button class="btn btn-accent btn-block btn-sm" style="margin-top:14px;" onclick="verTrabalho(\'' + p.id + '\')">Abrir o trabalho</button>'
+        : '') +
+      '<button class="btn btn-ghost btn-block btn-sm" style="margin-top:10px;" onclick="go(\'servicos\')">Ver outros pedidos</button>';
+    return;
+  }
+
+  if(meu){
+    acao.innerHTML =
+      '<h4 style="margin-bottom:10px;">Este pedido é seu</h4>' +
+      '<p class="muted" style="font-size:.88rem;line-height:1.6;">Compare as propostas ao lado e escolha uma. Depois de escolher, vocês trocam os arquivos por aqui.</p>' +
+      '<button class="btn btn-ghost btn-block btn-sm" style="margin-top:14px;" onclick="editarPedido(\'' + p.id + '\')">Editar pedido</button>';
+    return;
+  }
+
+  if(!usuario){
+    acao.innerHTML =
+      '<h4 style="margin-bottom:10px;">Quer fazer este trabalho?</h4>' +
+      '<p class="muted" style="font-size:.88rem;line-height:1.6;">Entre na sua conta para enviar uma proposta.</p>' +
+      '<button class="btn btn-primary btn-block btn-sm" style="margin-top:14px;" onclick="irParaEntrar(\'criar\')">Entrar ou criar conta</button>';
+    return;
+  }
+
+  acao.innerHTML =
+    '<h4 style="margin-bottom:12px;">Enviar proposta</h4>' +
+    '<div class="field"><label>Quanto você cobra (R$)</label>' +
+      '<input type="number" id="pp-valor" min="0" step="0.01" placeholder="350">' +
+      '<small>Coloque <b>0</b> se for fazer de graça.</small></div>' +
+    '<div class="field"><label>Em quantos dias</label>' +
+      '<input type="number" id="pp-prazo" min="1" step="1" placeholder="10"></div>' +
+    '<div class="field"><label>Mensagem</label>' +
+      '<textarea rows="4" id="pp-msg" placeholder="Conte como você faria e o que está incluído."></textarea></div>' +
+    '<div id="pp-aviso" style="display:none;padding:12px 14px;border-radius:10px;font-size:.86rem;line-height:1.5;margin-bottom:12px;"></div>' +
+    '<button class="btn btn-accent btn-block btn-sm" id="pp-enviar" onclick="enviarProposta()">Enviar proposta</button>';
+}
+
+function mostrarAvisoProposta(texto, tipo){
+  var c = { ok:['#DCFCE7','#166534'], erro:['#FEE2E2','#991B1B'], aviso:['#FEF3C7','#92400E'] }[tipo || 'aviso'];
+  var el = document.getElementById('pp-aviso');
+  if(!el) return;
+  el.style.background = c[0]; el.style.color = c[1];
+  el.innerHTML = texto; el.style.display = 'block';
+}
+
+async function enviarProposta(){
+  if(!sb || !usuario || !pedidoAberto) return;
+
+  var valor = document.getElementById('pp-valor').value;
+  var prazo = document.getElementById('pp-prazo').value;
+  var msg   = (document.getElementById('pp-msg').value || '').trim();
+
+  if(valor === '' || !(Number(valor) >= 0)){ mostrarAvisoProposta('Informe quanto você cobra. Use 0 se for de graça.', 'erro'); return; }
+  if(msg.length < 10){ mostrarAvisoProposta('Escreva uma mensagem — quem publicou vai escolher pelo que você disser aqui.', 'erro'); return; }
+
+  var btn = document.getElementById('pp-enviar');
+  btn.disabled = true; btn.textContent = 'Enviando…';
+
+  var r = await sb.from('propostas').insert({
+    pedido_id:       pedidoAberto,
+    profissional_id: usuario.id,
+    valor:           Number(valor),
+    prazo_dias:      prazo === '' ? null : Number(prazo),
+    mensagem:        msg
+  });
+
+  btn.disabled = false; btn.textContent = 'Enviar proposta';
+
+  if(r.error){
+    var m = r.error.message || '';
+    mostrarAvisoProposta(
+      /uma_proposta_por_pessoa|duplicate/i.test(m) ? 'Você já enviou uma proposta para este pedido.' :
+      /row-level security/i.test(m) ? 'Não foi possível enviar. O pedido pode ter sido fechado agora há pouco.' :
+      'Não deu certo: ' + esc(m), 'erro');
+    return;
+  }
+
+  mostrarAvisoProposta('Proposta enviada. Se for escolhida, o trabalho abre aqui mesmo.', 'ok');
+  await carregarPedido();
+}
+
+async function pintarPropostas(p, meu){
+  var caixa = document.getElementById('pe-propostas');
+  var tit   = document.getElementById('pe-titulo-propostas');
+  if(!caixa) return;
+
+  if(!usuario){
+    tit.textContent = 'Propostas';
+    caixa.innerHTML = '<p class="muted" style="font-size:.88rem;line-height:1.6;">As propostas são privadas: só quem publicou o pedido e quem enviou cada uma conseguem ver.</p>';
+    return;
+  }
+
+  var r;
+  try {
+    r = await sb.from('propostas')
+      .select('id, valor, prazo_dias, mensagem, status, criado_em, profissional_id, perfis:profissional_id(nome, cidade, titulo_profissional)')
+      .eq('pedido_id', p.id)
+      .order('criado_em', { ascending: true });
+  } catch(e){ r = { error: { message: 'indisponivel' }, data: [] }; }
+
+  if(r.error){ caixa.innerHTML = '<p class="muted">Não consegui carregar as propostas.</p>'; return; }
+
+  var props = r.data || [];
+  p.__souEscolhido = props.some(function(x){
+    return x.status === 'aceita' && x.profissional_id === usuario.id;
+  });
+
+  if(meu){
+    tit.textContent = props.length === 1 ? '1 proposta recebida' : props.length + ' propostas recebidas';
+    caixa.innerHTML = props.length
+      ? props.map(function(x){ return blocoProposta(x, p, true); }).join('')
+      : '<p class="muted" style="font-size:.88rem;line-height:1.6;">Ainda não chegou nenhuma proposta. Assim que chegar, aparece aqui.</p>';
+    return;
+  }
+
+  tit.textContent = 'Minha proposta';
+  var minha = props.filter(function(x){ return x.profissional_id === usuario.id; })[0];
+  caixa.innerHTML = minha
+    ? blocoProposta(minha, p, false)
+    : '<p class="muted" style="font-size:.88rem;line-height:1.6;">Você ainda não enviou proposta para este pedido. As propostas das outras pessoas são privadas — nem você vê as delas, nem elas veem a sua.</p>';
+
+  /* já mandou? então o lugar do formulário é o aviso de que mandou.
+     Sem isso a pessoa vê um formulário em branco de novo e acha que
+     não foi — e manda outra vez, que o banco recusa. */
+  if(minha) pintarAcaoJaProposta(p, minha);
+}
+
+function pintarAcaoJaProposta(p, minha){
+  var acao = document.getElementById('pe-acao');
+  if(!acao) return;
+
+  if(minha.status === 'aceita'){
+    acao.innerHTML =
+      '<div style="background:#DCFCE7;color:#166534;padding:14px 16px;border-radius:11px;font-size:.9rem;line-height:1.55;">' +
+        '<b>Sua proposta foi escolhida.</b> O trabalho já está aberto.</div>' +
+      '<button class="btn btn-accent btn-block btn-sm" style="margin-top:14px;" onclick="verTrabalho(\'' + p.id + '\')">Abrir o trabalho</button>';
+    return;
+  }
+
+  if(minha.status === 'recusada'){
+    acao.innerHTML =
+      '<div style="background:#F3F4F6;color:#374151;padding:14px 16px;border-radius:11px;font-size:.9rem;line-height:1.55;">' +
+        'Desta vez escolheram outra proposta.</div>' +
+      '<button class="btn btn-ghost btn-block btn-sm" style="margin-top:14px;" onclick="go(\'servicos\')">Ver outros pedidos</button>';
+    return;
+  }
+
+  acao.innerHTML =
+    '<div style="background:#DCFCE7;color:#166534;padding:14px 16px;border-radius:11px;font-size:.9rem;line-height:1.55;">' +
+      '<b>Proposta enviada.</b> Agora é esperar. Se for escolhida, o trabalho abre aqui.</div>' +
+    '<p class="muted" style="font-size:.86rem;line-height:1.6;margin-top:14px;">Você propôs <b>' +
+      (Number(minha.valor) > 0 ? esc(moeda(minha.valor)) : 'fazer de graça') + '</b>' +
+      (minha.prazo_dias ? ', em ' + minha.prazo_dias + ' dias' : '') + '.</p>' +
+    '<button class="btn btn-ghost btn-block btn-sm" style="margin-top:14px;" onclick="retirarProposta(\'' + minha.id + '\')">Retirar minha proposta</button>';
+}
+
+async function retirarProposta(id){
+  if(!sb) return;
+  var r = await sb.from('propostas').delete().eq('id', id);
+  if(r.error){ alert('Não consegui retirar: ' + r.error.message); return; }
+  await carregarPedido();
+}
+
+function blocoProposta(x, p, souDono){
+  var quem = (x.perfis && x.perfis.nome) || 'profissional';
+  var titulo = (x.perfis && x.perfis.titulo_profissional) || '';
+  var cores = { enviada:['#EFF6FF','#1D4ED8','aguardando'], aceita:['#DCFCE7','#166534','aceita'], recusada:['#F3F4F6','#6B7280','não escolhida'] };
+  var e = cores[x.status] || cores.enviada;
+  var gratis = !(Number(x.valor) > 0);
+
+  var botao = '';
+  if(souDono && p.status === 'aberto' && x.status === 'enviada'){
+    botao = gratis
+      ? '<button class="btn btn-accent btn-sm" onclick="aceitarPropostaGratis(\'' + x.id + '\')">Aceitar</button>'
+      : '<button class="btn btn-accent btn-sm" onclick="aceitarPropostaPaga(\'' + x.id + '\')">Aceitar e pagar</button>';
+  }
+  if(x.status === 'aceita'){
+    botao = '<button class="btn btn-primary btn-sm" onclick="verTrabalho(\'' + p.id + '\')">Abrir o trabalho</button>';
+  }
+
+  return '<div class="list-item" style="align-items:flex-start;">' +
+    '<div class="g">' +
+      '<b class="link-auth" onclick="verPerfil(\'' + x.profissional_id + '\')">' + esc(quem) + '</b>' +
+      (titulo ? '<small>' + esc(titulo) + '</small>' : '') +
+      '<p class="muted" style="font-size:.88rem;line-height:1.6;margin-top:8px;white-space:pre-wrap;">' + esc(x.mensagem || '') + '</p>' +
+      '<small style="margin-top:8px;display:block;">' +
+        '<b style="color:' + (gratis ? 'var(--green-600)' : 'var(--brand-600)') + ';">' +
+          (gratis ? 'Gratuito' : moeda(x.valor)) + '</b>' +
+        (x.prazo_dias ? ' · ' + x.prazo_dias + ' dias' : '') +
+        ' · ' + esc(dataBR(x.criado_em)) +
+      '</small>' +
+    '</div>' +
+    '<span style="display:flex;flex-direction:column;gap:8px;align-items:flex-end;">' +
+      '<span class="tag" style="background:' + e[0] + ';color:' + e[1] + ';border:0;">' + e[2] + '</span>' +
+      botao +
+    '</span>' +
+  '</div>';
+}
+
+async function aceitarPropostaGratis(propId){
+  if(!sb) return;
+  var r = await sb.rpc('aceitar_proposta', { prop: propId });
+  if(r.error || r.data !== true){
+    alert('Não consegui aceitar. Recarregue a página e tente de novo.');
+    return;
+  }
+  await carregarPedido();
+  verTrabalho(pedidoAberto);
+}
+
+function aceitarPropostaPaga(propId){
+  /* daqui vai para o Mercado Pago. O pedido só fecha quando o
+     pagamento é confirmado — quem fecha é o servidor, não esta tela. */
+  comprar('servico', propId);
+}
+
+
+/* ---------------- a área do trabalho ---------------- */
+function verTrabalho(pedidoId){
+  trabalhoAberto = pedidoId;
+  go('trabalho');
+  if(history.replaceState) history.replaceState(null, '', '#trabalho/' + pedidoId);
+  carregarTrabalho();
+}
+
+async function carregarTrabalho(){
+  if(!sb || !trabalhoAberto) return;
+
+  var titulo = document.getElementById('tr-titulo');
+  var sub    = document.getElementById('tr-sub');
+  var lado   = document.getElementById('tr-lado');
+
+  if(!usuario){
+    titulo.textContent = 'Entre na sua conta';
+    sub.textContent = 'Esta área é fechada entre as duas pessoas do trabalho.';
+    return;
+  }
+
+  var r;
+  try {
+    r = await sb.from('pedidos')
+      .select('id, titulo, categoria, tipo_servico, status, cliente_id, proposta_aceita, ' +
+              'perfis:cliente_id(nome, telefone), propostas:proposta_aceita(id, valor, prazo_dias, profissional_id, perfis:profissional_id(nome, telefone))')
+      .eq('id', trabalhoAberto).maybeSingle();
+  } catch(e){ r = { error: { message: 'indisponivel' }, data: null }; }
+
+  if(r.error || !r.data){
+    titulo.textContent = 'Trabalho não encontrado';
+    sub.textContent = 'Ou ele não existe, ou você não faz parte dele.';
+    if(lado) lado.innerHTML = '<button class="btn btn-ghost btn-block btn-sm" onclick="go(\'servicos\')">Voltar ao mural</button>';
+    document.getElementById('tr-lista').innerHTML = '';
+    return;
+  }
+
+  var p = r.data;
+  var prof = p.propostas || null;
+  var souCliente = usuario.id === p.cliente_id;
+  var souProf = !!(prof && prof.profissional_id === usuario.id);
+
+  if(!souCliente && !souProf){
+    titulo.textContent = 'Trabalho fechado';
+    sub.textContent = 'Só as duas pessoas deste trabalho têm acesso.';
+    if(lado) lado.innerHTML = '<button class="btn btn-ghost btn-block btn-sm" onclick="go(\'servicos\')">Voltar ao mural</button>';
+    document.getElementById('tr-lista').innerHTML = '';
+    return;
+  }
+
+  var outro = souCliente
+    ? (prof && prof.perfis ? prof.perfis : null)
+    : (p.perfis || null);
+
+  titulo.textContent = p.titulo;
+  sub.textContent = p.categoria + ' · ' + p.tipo_servico +
+                    (outro && outro.nome ? ' · com ' + outro.nome : '');
+
+  if(lado){
+    lado.innerHTML =
+      '<h4 style="margin-bottom:10px;">' + (souCliente ? 'Quem está fazendo' : 'Quem pediu') + '</h4>' +
+      '<p style="font-size:.95rem;font-weight:700;">' + esc((outro && outro.nome) || '—') + '</p>' +
+      (prof ? '<p class="muted" style="font-size:.88rem;margin-top:8px;">Combinado: <b>' +
+        (Number(prof.valor) > 0 ? esc(moeda(prof.valor)) : 'gratuito') + '</b>' +
+        (prof.prazo_dias ? ' · ' + prof.prazo_dias + ' dias' : '') + '</p>' : '') +
+      (outro && outro.telefone
+        ? '<a class="btn btn-accent btn-block btn-sm" style="margin-top:14px;" target="_blank" rel="noopener" href="' +
+          esc(linkWhatsapp(outro.telefone, outro.nome, p.titulo)) + '">Chamar no WhatsApp</a>'
+        : '<p class="muted" style="font-size:.82rem;margin-top:12px;">Sem WhatsApp no perfil.</p>') +
+      '<button class="btn btn-ghost btn-block btn-sm" style="margin-top:10px;" onclick="go(\'meus-servicos\')">Meus serviços</button>';
+  }
+
+  await carregarArquivosTrabalho();
+}
+
+function arquivoTrabalhoEscolhido(){
+  var f = document.getElementById('tr-arquivo').files[0];
+  arquivoTrabalho = f || null;
+  document.getElementById('tr-msg').style.display = 'none';
+  if(f && f.size > MAX_TRABALHO){
+    mostrarMsgTrabalho('O arquivo tem ' + tamanhoLegivel(f.size) + ' e o limite é 50 MB.', 'erro');
+    document.getElementById('tr-arquivo').value = '';
+    arquivoTrabalho = null;
+  }
+}
+
+function mostrarMsgTrabalho(texto, tipo){
+  var c = { ok:['#DCFCE7','#166534'], erro:['#FEE2E2','#991B1B'], aviso:['#FEF3C7','#92400E'] }[tipo || 'aviso'];
+  var el = document.getElementById('tr-msg');
+  if(!el) return;
+  el.style.background = c[0]; el.style.color = c[1];
+  el.innerHTML = texto; el.style.display = 'block';
+}
+
+async function enviarArquivoTrabalho(){
+  if(!sb || !usuario || !trabalhoAberto) return;
+  var f = arquivoTrabalho;
+  if(!f){ mostrarMsgTrabalho('Escolha um arquivo primeiro.', 'erro'); return; }
+
+  var btn = document.getElementById('tr-enviar');
+  btn.disabled = true; btn.textContent = 'Enviando…';
+  document.getElementById('tr-barra').style.display = 'block';
+  document.getElementById('tr-barra-fill').style.width = '40%';
+
+  var nomeSeguro = String(f.name).normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-zA-Z0-9._-]/g, '_');
+  var caminho = trabalhoAberto + '/' + Date.now() + '-' + nomeSeguro;
+
+  var up = await sb.storage.from('trabalhos').upload(caminho, f, { contentType: f.type || undefined });
+
+  if(up.error){
+    document.getElementById('tr-barra').style.display = 'none';
+    btn.disabled = false; btn.textContent = 'Enviar arquivo';
+    var m = up.error.message || '';
+    mostrarMsgTrabalho(
+      /Bucket not found/i.test(m) ? 'Falta rodar o <b>banco-etapa8.sql</b> — a pasta dos trabalhos ainda não existe.' :
+      /mime|not allowed/i.test(m) ? 'Esse tipo de arquivo não é aceito.' :
+      /row-level security|Unauthorized/i.test(m) ? 'O servidor recusou: você não faz parte deste trabalho.' :
+      'Não consegui enviar: ' + esc(m), 'erro');
+    return;
+  }
+
+  document.getElementById('tr-barra-fill').style.width = '85%';
+
+  var r = await sb.from('trabalho_arquivos').insert({
+    pedido_id:     trabalhoAberto,
+    autor_id:      usuario.id,
+    arquivo_path:  caminho,
+    arquivo_nome:  f.name,
+    tamanho_bytes: f.size,
+    observacao:    (document.getElementById('tr-obs').value || '').trim() || null
+  });
+
+  document.getElementById('tr-barra').style.display = 'none';
+  btn.disabled = false; btn.textContent = 'Enviar arquivo';
+
+  if(r.error){
+    await sb.storage.from('trabalhos').remove([caminho]);
+    mostrarMsgTrabalho('Não consegui registrar o arquivo: ' + esc(r.error.message), 'erro');
+    return;
+  }
+
+  mostrarMsgTrabalho('Arquivo enviado. A outra pessoa já consegue baixar.', 'ok');
+  document.getElementById('tr-arquivo').value = '';
+  document.getElementById('tr-obs').value = '';
+  arquivoTrabalho = null;
+  await carregarArquivosTrabalho();
+}
+
+async function carregarArquivosTrabalho(){
+  var caixa = document.getElementById('tr-lista');
+  if(!caixa || !sb || !trabalhoAberto) return;
+
+  var r;
+  try {
+    r = await sb.from('trabalho_arquivos')
+      .select('id, arquivo_path, arquivo_nome, tamanho_bytes, observacao, criado_em, autor_id, perfis:autor_id(nome)')
+      .eq('pedido_id', trabalhoAberto)
+      .order('criado_em', { ascending: false });
+  } catch(e){ r = { error: { message: 'indisponivel' }, data: [] }; }
+
+  if(r.error){ caixa.innerHTML = '<p class="muted" style="font-size:.88rem;">Não consegui carregar os arquivos.</p>'; return; }
+
+  var arqs = r.data || [];
+  if(arqs.length === 0){
+    caixa.innerHTML = '<p class="muted" style="font-size:.88rem;line-height:1.6;">Nenhum arquivo ainda. ' +
+      'Quem pediu costuma mandar o documento primeiro; quem faz devolve o trabalho pronto aqui mesmo.</p>';
+    return;
+  }
+
+  caixa.innerHTML = '<h4 style="margin-bottom:14px;">' +
+    (arqs.length === 1 ? '1 arquivo' : arqs.length + ' arquivos') + '</h4>' +
+    arqs.map(blocoArquivoTrabalho).join('');
+}
+
+function blocoArquivoTrabalho(a){
+  var quem = (a.perfis && a.perfis.nome) || 'alguém';
+  var meu = !!(usuario && usuario.id === a.autor_id);
+  return '<div class="list-item">' +
+    '<div class="g"><b>' + iconeArquivo(a.arquivo_nome) + ' ' + esc(a.arquivo_nome) + '</b>' +
+      '<small>' + esc(quem) + ' · ' + esc(dataBR(a.criado_em)) +
+      (a.tamanho_bytes ? ' · ' + esc(tamanhoLegivel(a.tamanho_bytes)) : '') + '</small>' +
+      (a.observacao ? '<small style="display:block;margin-top:6px;color:var(--ink-2);">' + esc(a.observacao) + '</small>' : '') +
+    '</div>' +
+    '<span style="display:flex;gap:6px;">' +
+      '<button class="btn btn-primary btn-sm" onclick="baixarArquivoTrabalho(\'' + a.arquivo_path.replace(/'/g, "\\'") + '\')">Baixar</button>' +
+      (meu ? '<button class="btn btn-ghost btn-sm" onclick="apagarArquivoTrabalho(\'' + a.id + '\', \'' + a.arquivo_path.replace(/'/g, "\\'") + '\')">Apagar</button>' : '') +
+    '</span>' +
+  '</div>';
+}
+
+async function baixarArquivoTrabalho(caminho){
+  var ass = await sb.storage.from('trabalhos').createSignedUrl(caminho, 300);
+  if(ass.error || !ass.data || !ass.data.signedUrl){
+    alert('Não consegui liberar o arquivo. Recarregue a página e tente de novo.');
+    return;
+  }
+  window.open(ass.data.signedUrl, '_blank');
+}
+
+async function apagarArquivoTrabalho(id, caminho){
+  await sb.from('trabalho_arquivos').delete().eq('id', id);
+  await sb.storage.from('trabalhos').remove([caminho]);
+  await carregarArquivosTrabalho();
+}
+
+
+/* ---------------- meus serviços ---------------- */
+async function carregarMeusServicos(forcar){
+  if(!sb || !usuario) return;
+
+  /* pedidos que eu publiquei */
+  var rp;
+  try {
+    rp = await sb.from('pedidos')
+      .select('id, titulo, categoria, status, criado_em, proposta_aceita')
+      .eq('cliente_id', usuario.id)
+      .order('criado_em', { ascending: false });
+  } catch(e){ rp = { error: { message: 'relation does not exist' }, data: [] }; }
+
+  var cxP = document.getElementById('meus-pedidos');
+  if(cxP){
+    if(rp.error){
+      cxP.innerHTML = /relation|does not exist/i.test(rp.error.message || '')
+        ? '<p class="muted" style="font-size:.88rem;">Falta rodar o <b>banco-etapa8.sql</b>.</p>'
+        : '<p class="muted" style="font-size:.88rem;">Erro: ' + esc(rp.error.message) + '</p>';
+    } else if((rp.data || []).length === 0){
+      cxP.innerHTML = '<p class="muted" style="font-size:.88rem;line-height:1.6;">Você ainda não publicou nenhum pedido.</p>';
+    } else {
+      cxP.innerHTML = rp.data.map(function(p){
+        var confirmando = (window.__pedidoExcluir === p.id);
+        return '<div class="list-item">' +
+          '<div class="g"><b class="link-auth" onclick="verPedido(\'' + p.id + '\')">' + esc(p.titulo) + '</b>' +
+          '<small>' + esc(p.categoria) + ' · ' + esc(dataBR(p.criado_em)) +
+          ' · ' + (p.status === 'aberto' ? 'aberto' : 'fechado') + '</small></div>' +
+          (confirmando
+            ? '<span style="display:flex;gap:6px;"><button class="btn btn-sm" style="background:#DC2626;color:#fff;" onclick="excluirPedido(\'' + p.id + '\', true)">Confirmar</button>' +
+              '<button class="btn btn-ghost btn-sm" onclick="window.__pedidoExcluir=null;carregarMeusServicos(true)">Cancelar</button></span>'
+            : '<span style="display:flex;gap:6px;">' +
+              (p.status === 'fechado'
+                ? '<button class="btn btn-primary btn-sm" onclick="verTrabalho(\'' + p.id + '\')">Trabalho</button>'
+                : '<button class="btn btn-ghost btn-sm" onclick="editarPedido(\'' + p.id + '\')">Editar</button>') +
+              '<button class="btn btn-ghost btn-sm" onclick="excluirPedido(\'' + p.id + '\')">Excluir</button></span>') +
+        '</div>';
+      }).join('');
+    }
+  }
+
+  /* propostas que eu enviei */
+  var rq;
+  try {
+    rq = await sb.from('propostas')
+      .select('id, valor, prazo_dias, status, criado_em, pedido_id, pedidos:pedido_id(id, titulo, status)')
+      .eq('profissional_id', usuario.id)
+      .order('criado_em', { ascending: false });
+  } catch(e){ rq = { error: { message: 'relation does not exist' }, data: [] }; }
+
+  var cxQ = document.getElementById('minhas-propostas');
+  if(cxQ){
+    if(rq.error || (rq.data || []).length === 0){
+      cxQ.innerHTML = '<p class="muted" style="font-size:.88rem;line-height:1.6;">Você ainda não enviou nenhuma proposta. ' +
+        '<b class="link-auth" onclick="go(\'servicos\')">Veja o mural</b> — é de graça propor.</p>';
+    } else {
+      var cores = { enviada:['#EFF6FF','#1D4ED8','aguardando'], aceita:['#DCFCE7','#166534','aceita'], recusada:['#F3F4F6','#6B7280','não escolhida'] };
+      cxQ.innerHTML = rq.data.map(function(x){
+        var ped = x.pedidos || {};
+        var e = cores[x.status] || cores.enviada;
+        return '<div class="list-item">' +
+          '<div class="g"><b class="link-auth" onclick="verPedido(\'' + (ped.id || x.pedido_id) + '\')">' + esc(ped.titulo || 'pedido') + '</b>' +
+          '<small>' + (Number(x.valor) > 0 ? esc(moeda(x.valor)) : 'gratuito') +
+          (x.prazo_dias ? ' · ' + x.prazo_dias + ' dias' : '') + ' · ' + esc(dataBR(x.criado_em)) + '</small></div>' +
+          '<span style="display:flex;gap:8px;align-items:center;">' +
+            '<span class="tag" style="background:' + e[0] + ';color:' + e[1] + ';border:0;">' + e[2] + '</span>' +
+            (x.status === 'aceita' ? '<button class="btn btn-primary btn-sm" onclick="verTrabalho(\'' + (ped.id || x.pedido_id) + '\')">Trabalho</button>' : '') +
+          '</span>' +
+        '</div>';
+      }).join('');
+    }
+  }
+
+  /* trabalhos em andamento: pedidos meus fechados + propostas minhas aceitas */
+  var cxT = document.getElementById('meus-trabalhos');
+  if(cxT){
+    var trabalhos = [];
+    (rp.data || []).forEach(function(p){
+      if(p.status === 'fechado') trabalhos.push({ id: p.id, titulo: p.titulo, papel: 'você pediu' });
+    });
+    (rq.data || []).forEach(function(x){
+      if(x.status === 'aceita' && x.pedidos) trabalhos.push({ id: x.pedidos.id, titulo: x.pedidos.titulo, papel: 'você está fazendo' });
+    });
+
+    cxT.innerHTML = trabalhos.length
+      ? trabalhos.map(function(t){
+          return '<div class="list-item"><div class="g"><b>' + esc(t.titulo) + '</b><small>' + t.papel + '</small></div>' +
+                 '<button class="btn btn-primary btn-sm" onclick="verTrabalho(\'' + t.id + '\')">Abrir</button></div>';
+        }).join('')
+      : '<p class="muted" style="font-size:.88rem;line-height:1.6;">Nenhum trabalho em andamento. Assim que uma proposta for aceita, ele aparece aqui com a área de arquivos.</p>';
+  }
+}
+
+
 window.addEventListener('DOMContentLoaded', async function(){
   montarListas();
+  montarListasServicos();
   modoAuth('criar');
   if(sb){
     await carregarConfig();
