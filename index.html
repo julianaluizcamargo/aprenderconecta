@@ -4819,9 +4819,20 @@ async function comprar(tipo, id){
   var dados = r && r.data;
   if(dados && dados.url){ location.href = dados.url; return; }
 
-  var recado = (dados && dados.erro) || 'Não consegui abrir a cobrança. Tente de novo.';
-  if(r && r.error && !dados){
-    recado = 'O servidor de pagamento não respondeu. Verifique se as funções do Mercado Pago foram publicadas.';
+  var recado = (dados && dados.erro) || '';
+
+  /* Se o servidor respondeu com código de erro, a biblioteca guarda o
+     corpo aqui dentro. Vale tentar ler: é onde está o motivo de verdade. */
+  if(!recado && r && r.error && r.error.context && typeof r.error.context.json === 'function'){
+    try {
+      var corpo = await r.error.context.json();
+      if(corpo && corpo.erro) recado = corpo.erro;
+    } catch(e){}
+  }
+
+  if(!recado){
+    recado = 'O servidor de pagamento não respondeu. Se isso continuar, me avise — ' +
+             'pode ser que as funções do Mercado Pago precisem ser republicadas.';
   }
   alert(recado);
 }
