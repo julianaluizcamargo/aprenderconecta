@@ -440,6 +440,18 @@ ul{margin:0;padding:0;list-style:none;}
 .prod-img.com-capa img{width:100%;height:100%;object-fit:cover;display:block;}
 
 /* caixa de diálogo (denúncia) */
+/* botão flutuante de ajuda por WhatsApp */
+.zap-ajuda{position:fixed;right:20px;bottom:20px;z-index:55;display:flex;align-items:center;gap:10px;
+  background:#25D366;color:#fff;border-radius:999px;padding:14px 18px;font-weight:700;font-size:.92rem;
+  box-shadow:0 6px 20px rgba(37,211,102,.38);text-decoration:none;transition:transform .15s, box-shadow .15s;}
+.zap-ajuda:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(37,211,102,.5);color:#fff;}
+.zap-ajuda svg{width:26px;height:26px;flex:none;fill:#fff;}
+.zap-ajuda span{white-space:nowrap;}
+@media(max-width:900px){
+  .zap-ajuda{padding:14px;right:16px;bottom:16px;}
+  .zap-ajuda span{display:none;}
+}
+
 .modal-fundo{position:fixed;inset:0;background:rgba(11,37,69,.55);z-index:60;
   display:flex;align-items:center;justify-content:center;padding:20px;}
 .modal-caixa{background:var(--card);border-radius:var(--r-lg);max-width:460px;width:100%;
@@ -473,7 +485,7 @@ ul{margin:0;padding:0;list-style:none;}
 </head>
 <body>
 
-<div class="proto">🔎 <b>Contas e ofertas já funcionam de verdade.</b> Serviços, materiais e pagamentos ainda são telas de exemplo.</div>
+<div class="proto">🔎 <b>Contas, ofertas, materiais e pagamentos já funcionam de verdade.</b> Só a aba Serviços ainda é uma tela de exemplo.</div>
 
 <!-- ========================= HEADER ========================= -->
 <header class="topbar">
@@ -561,9 +573,9 @@ ul{margin:0;padding:0;list-style:none;}
       </a>
       <a href="#" class="path" onclick="go('servicos');return false;">
         <div class="path-ico i-amber">💼</div>
-        <h3>Quero contratar</h3>
-        <p>Publique sua necessidade e receba propostas de profissionais qualificados e avaliados.</p>
-        <div class="path-go">Publicar pedido →</div>
+        <h3>Serviços</h3>
+        <p>Correção de trabalhos, revisão de tese, planos de aula, tradução. Contrate ou ofereça o seu.</p>
+        <div class="path-go">Ver serviços →</div>
       </a>
       <a href="#" class="path" onclick="go('loja');return false;">
         <div class="path-ico i-purple">📚</div>
@@ -832,12 +844,22 @@ ul{margin:0;padding:0;list-style:none;}
             <div class="field">
               <label>Valor (R$)</label>
               <input type="number" id="of-valor" min="0" step="0.01" placeholder="40" oninput="atualizarPrevia()">
-              <small id="of-liquido">A plataforma fica com 10% de comissão.</small>
+              <small id="of-liquido">Combinado direto com o aluno, por WhatsApp.</small>
             </div>
             <div class="field">
               <label>Cobrança por</label>
               <select id="of-cobranca" onchange="atualizarPrevia()"><option>Hora</option><option>Aula</option><option>Pacote mensal</option><option>Curso completo</option></select>
             </div>
+          </div>
+
+          <div class="field" id="of-campo-pagamento" style="display:none;">
+            <label>Como o aluno paga</label>
+            <div class="pill-row" id="of-pagamento" style="margin-bottom:0;">
+              <button class="pill on" onclick="escolherPagamentoOferta(this, false)">Combina comigo</button>
+              <button class="pill" onclick="escolherPagamentoOferta(this, true)">Paga pelo site</button>
+            </div>
+            <small style="display:block;margin-top:10px;">Pagando pelo site, o dinheiro cai na sua conta do Mercado Pago já com a comissão da plataforma descontada. Combinando com você, o site não entra no meio.</small>
+            <div id="of-aviso-mp" style="display:none;padding:14px 16px;border-radius:11px;font-size:.88rem;line-height:1.55;margin-top:14px;"></div>
           </div>
 
           <div class="field">
@@ -899,181 +921,284 @@ ul{margin:0;padding:0;list-style:none;}
 
 <!-- ========================= SERVIÇOS ========================= -->
 <section class="view" id="v-servicos">
-  <div style="background:#FEF3C7;color:#92400E;padding:12px 16px;text-align:center;font-size:.9rem;line-height:1.5;">🚧 <b>Em construção.</b> Esta área ainda é uma demonstração — os itens mostrados são exemplos e nada é gravado. Por enquanto o que funciona de verdade é <b onclick="go('aprender')" class="link-auth">Aprender</b> e <b onclick="go('ensinar')" class="link-auth">Ensinar</b>.</div>
   <div class="page-head">
     <div class="wrap">
-      <div class="crumb">Início › Contratar serviços</div>
-      <h1>Publique sua necessidade. Receba propostas.</h1>
-      <p>Orientação de TCC, revisão, formatação ABNT, projetos, diagramação de livros e materiais didáticos. Esta área ainda está em construção.</p>
-      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:22px;">
-        <button class="btn btn-accent" onclick="document.getElementById('novo-pedido').scrollIntoView({behavior:'smooth'})">＋ Publicar um pedido</button>
-        <button class="btn btn-ghost">Sou profissional, quero propor</button>
+      <div class="crumb">Início › Serviços</div>
+      <h1>Trabalhos sob encomenda</h1>
+      <p>Revisão, formatação ABNT, diagramação, material didático, projetos. Quem faz publica o serviço; quem precisa contrata e paga pelo site.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:20px;">
+        <button class="btn btn-accent" onclick="go('publicar-servico')">＋ Publicar um serviço</button>
+        <button class="btn btn-ghost" onclick="go('meus-servicos')">Meus serviços</button>
       </div>
     </div>
   </div>
 
   <div class="section-sm">
-    <div class="wrap split">
+    <div class="wrap split" style="grid-template-columns:280px 1fr;">
 
       <aside>
-        <div class="panel">
-          <h4>Categoria</h4>
-          <label class="filter"><input type="checkbox" checked>📑 Acadêmico</label>
-          <label class="filter"><input type="checkbox" checked>📚 Escolar</label>
-          <label class="filter"><input type="checkbox">📊 Projetos</label>
-          <label class="filter"><input type="checkbox">📖 Livros</label>
-          <label class="filter"><input type="checkbox">🖥️ Design educacional</label>
+        <div class="panel" style="padding:22px;">
+          <h4 style="margin-bottom:14px;">Categoria</h4>
+          <div id="filtros-categoria" style="display:grid;gap:10px;font-size:.9rem;"></div>
+
+          <h4 style="margin:22px 0 14px;">Preço</h4>
+          <select id="filtro-preco-servico" onchange="filtrarServicos()">
+            <option value="0">Qualquer valor</option>
+            <option value="gratis">Só os gratuitos</option>
+            <option value="200">Até R$ 200</option>
+            <option value="500">Até R$ 500</option>
+          </select>
+
+          <h4 style="margin:22px 0 12px;">Busca</h4>
+          <input type="text" id="busca-servicos" placeholder="palavra no serviço" oninput="filtrarServicos()">
         </div>
-        <div class="panel">
-          <h4>Tipo de serviço</h4>
-          <label class="filter"><input type="checkbox">Orientação de TCC</label>
-          <label class="filter"><input type="checkbox">Revisão textual</label>
-          <label class="filter"><input type="checkbox">Formatação ABNT</label>
-          <label class="filter"><input type="checkbox">Revisão bibliográfica</label>
-          <label class="filter"><input type="checkbox">Metodologia</label>
-          <label class="filter"><input type="checkbox">Diagramação</label>
-        </div>
-        <div class="panel">
-          <h4>Orçamento</h4>
-          <label class="filter"><input type="radio" name="orc" checked>Qualquer valor</label>
-          <label class="filter"><input type="radio" name="orc">Até R$ 200</label>
-          <label class="filter"><input type="radio" name="orc">R$ 200 a R$ 500</label>
-          <label class="filter"><input type="radio" name="orc">Acima de R$ 500</label>
-        </div>
-        <div class="panel" style="background:var(--brand-50);border-color:var(--brand-100);">
-          <h4 style="color:var(--brand-700);">⚖️ Ética acadêmica</h4>
-          <p style="font-size:.85rem;color:var(--ink-2);line-height:1.6;">A plataforma <b>não permite</b> a venda de trabalhos acadêmicos para entrega como autoria de terceiros. São permitidos orientação, tutoria, revisão, formatação e consultoria.</p>
+
+        <div class="panel" style="padding:22px;margin-top:18px;background:#FEF3C7;border:0;">
+          <h4 style="margin-bottom:10px;color:#92400E;">⚖️ Ética acadêmica</h4>
+          <p style="font-size:.86rem;line-height:1.6;color:#92400E;">
+            Não é permitido vender trabalho acadêmico pronto para ser entregue como se fosse de outra pessoa.
+            <b>Orientação, revisão, formatação, tutoria e consultoria são bem-vindas</b> — fazer o trabalho no lugar do aluno, não.
+          </p>
+          <p style="font-size:.82rem;line-height:1.6;color:#92400E;margin-top:10px;">
+            Serviço que ofereça isso sai do ar.
+          </p>
         </div>
       </aside>
 
       <div>
-        <div class="toolbar">
-          <span class="count"><b>342</b> pedidos abertos</span>
-          <select style="margin-left:auto;"><option>Mais recentes</option><option>Maior orçamento</option><option>Prazo mais curto</option><option>Menos propostas</option></select>
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:18px;">
+          <p class="muted" id="contador-servicos" style="font-weight:600;">Carregando…</p>
+          <button class="btn btn-ghost btn-sm" onclick="carregarServicos(true)">Atualizar</button>
         </div>
 
-        <div class="grid" style="gap:16px;">
+        <div class="grid" style="gap:16px;" id="lista-servicos"></div>
 
-          <article class="card job">
-            <div class="job-head">
-              <div>
-                <h4>Revisão e formatação ABNT do meu TCC (Pedagogia)</h4>
-                <div class="tags" style="margin-top:8px;"><span class="tag tag-b">📑 Acadêmico</span><span class="tag">Formatação ABNT</span><span class="tag">Revisão textual</span></div>
-              </div>
-              <div class="budget"><b>R$ 350 – 500</b><small>orçamento</small></div>
-            </div>
-            <div class="job-meta"><span>📄 68 páginas</span><span>⏱ Prazo: 12 dias</span><span>📍 Remoto</span><span>🕐 Publicado há 2 horas</span></div>
-            <p class="muted" style="font-size:.9rem;">Preciso de revisão gramatical, ajuste de coesão e normalização completa nas normas ABNT, incluindo sumário automático, citações e referências.</p>
-            <div class="job-foot">
-              <div style="display:flex;align-items:center;gap:14px;">
-                <div class="props"><span class="ava ava-sm a1">MS</span><span class="ava ava-sm a3">JP</span><span class="ava ava-sm a4">AL</span></div>
-                <span class="muted" style="font-size:.85rem;font-weight:600;margin-left:6px;">7 propostas recebidas</span>
-              </div>
-              <button class="btn btn-primary btn-sm">Enviar proposta</button>
-            </div>
-          </article>
-
-          <article class="card job">
-            <div class="job-head">
-              <div>
-                <h4>Diagramação e capa para e-book infantil (32 páginas)</h4>
-                <div class="tags" style="margin-top:8px;"><span class="tag tag-a">📖 Livros</span><span class="tag">Diagramação</span><span class="tag">Design de capa</span></div>
-              </div>
-              <div class="budget"><b>R$ 800 – 1.200</b><small>orçamento</small></div>
-            </div>
-            <div class="job-meta"><span>📄 32 páginas</span><span>⏱ Prazo: 20 dias</span><span>📍 Remoto</span><span>🕐 Publicado ontem</span></div>
-            <p class="muted" style="font-size:.9rem;">Livro já escrito e ilustrado. Preciso de diagramação para impressão e versão e-book, além do design da capa em dois formatos.</p>
-            <div class="job-foot">
-              <div style="display:flex;align-items:center;gap:14px;">
-                <div class="props"><span class="ava ava-sm a5">RC</span><span class="ava ava-sm a6">DF</span></div>
-                <span class="muted" style="font-size:.85rem;font-weight:600;margin-left:6px;">4 propostas recebidas</span>
-              </div>
-              <button class="btn btn-primary btn-sm">Enviar proposta</button>
-            </div>
-          </article>
-
-          <article class="card job">
-            <div class="job-head">
-              <div>
-                <h4>Orientação metodológica para projeto de pesquisa (Mestrado)</h4>
-                <div class="tags" style="margin-top:8px;"><span class="tag tag-b">📑 Acadêmico</span><span class="tag">Metodologia</span><span class="tag">Consultoria</span></div>
-              </div>
-              <div class="budget"><b>R$ 600</b><small>valor fixo</small></div>
-            </div>
-            <div class="job-meta"><span>🎓 Mestrado em Educação</span><span>⏱ Prazo: 30 dias</span><span>📍 Remoto</span><span>🕐 Publicado há 3 dias</span></div>
-            <p class="muted" style="font-size:.9rem;">Preciso de apoio na definição do desenho metodológico, escolha dos instrumentos e estruturação do capítulo de metodologia. 4 encontros online.</p>
-            <div class="job-foot">
-              <div style="display:flex;align-items:center;gap:14px;">
-                <div class="props"><span class="ava ava-sm a2">TG</span><span class="ava ava-sm a4">AL</span><span class="ava ava-sm a1">MS</span><span class="ava ava-sm a3">BM</span></div>
-                <span class="muted" style="font-size:.85rem;font-weight:600;margin-left:6px;">11 propostas recebidas</span>
-              </div>
-              <button class="btn btn-primary btn-sm">Enviar proposta</button>
-            </div>
-          </article>
-
-          <article class="card job">
-            <div class="job-head">
-              <div>
-                <h4>Sequência didática de Ciências para 5º ano (bimestre completo)</h4>
-                <div class="tags" style="margin-top:8px;"><span class="tag tag-g">📚 Escolar</span><span class="tag">Material didático</span><span class="tag">BNCC</span></div>
-              </div>
-              <div class="budget"><b>R$ 400</b><small>valor fixo</small></div>
-            </div>
-            <div class="job-meta"><span>📚 5º ano · Fundamental I</span><span>⏱ Prazo: 15 dias</span><span>📍 Remoto</span><span>🕐 Publicado há 5 horas</span></div>
-            <p class="muted" style="font-size:.9rem;">Escola particular busca sequência didática alinhada à BNCC, com plano de aula, atividades e avaliação para um bimestre.</p>
-            <div class="job-foot">
-              <div style="display:flex;align-items:center;gap:14px;">
-                <div class="props"><span class="ava ava-sm a1">MS</span><span class="ava ava-sm a5">LC</span></div>
-                <span class="muted" style="font-size:.85rem;font-weight:600;margin-left:6px;">3 propostas recebidas</span>
-              </div>
-              <button class="btn btn-primary btn-sm">Enviar proposta</button>
-            </div>
-          </article>
-
+        <div id="vazio-servicos" class="panel" style="padding:40px;text-align:center;display:none;">
+          <h3 class="h3" style="margin-bottom:8px;">Nenhum serviço publicado ainda</h3>
+          <p class="muted" style="line-height:1.6;max-width:460px;margin:0 auto;">
+            Esta área acabou de abrir. Se você revisa, formata, diagrama ou monta material,
+            publique o primeiro serviço — é de graça e leva dois minutos.
+          </p>
+          <button class="btn btn-accent" style="margin-top:18px;" onclick="go('publicar-servico')">＋ Publicar um serviço</button>
         </div>
-
-        <!-- NOVO PEDIDO -->
-        <div class="panel" id="novo-pedido" style="padding:30px;margin-top:34px;">
-          <div class="eyebrow">Publicar</div>
-          <h3 class="h3" style="margin-bottom:6px;">Descreva o que você precisa</h3>
-          <p class="muted" style="font-size:.9rem;margin-bottom:24px;">Quanto mais detalhes, melhores as propostas que você recebe.</p>
-
-          <div class="field">
-            <label>Título do pedido</label>
-            <input type="text" placeholder="Ex.: Preciso de revisão e formatação do meu TCC">
-          </div>
-          <div class="grid g3" style="gap:16px;">
-            <div class="field"><label>Categoria</label>
-              <select><option>📑 Acadêmico</option><option>📚 Escolar</option><option>📊 Projetos</option><option>📖 Livros</option><option>🖥️ Design educacional</option></select></div>
-            <div class="field"><label>Tipo de serviço</label>
-              <select><option>Revisão textual</option><option>Formatação ABNT</option><option>Orientação de TCC</option><option>Metodologia</option><option>Diagramação</option></select></div>
-            <div class="field"><label>Área do conhecimento</label>
-              <select><option>Educação / Pedagogia</option><option>Saúde</option><option>Direito</option><option>Engenharias</option><option>Ciências Humanas</option></select></div>
-          </div>
-          <div class="field">
-            <label>Detalhes do serviço</label>
-            <textarea rows="4" placeholder="Explique o que precisa, o que já está pronto e o que espera receber ao final."></textarea>
-          </div>
-          <div class="grid g3" style="gap:16px;">
-            <div class="field"><label>Quantidade de páginas</label><input type="text" placeholder="Ex.: 68"></div>
-            <div class="field"><label>Prazo desejado</label><input type="text" placeholder="Ex.: 12 dias"></div>
-            <div class="field"><label>Orçamento estimado</label><input type="text" placeholder="Ex.: R$ 350 a R$ 500"></div>
-          </div>
-          <div class="field">
-            <label>Anexos</label>
-            <div style="border:1.5px dashed var(--line);border-radius:12px;padding:26px;text-align:center;color:var(--muted);font-size:.9rem;">
-              📎 Arraste arquivos aqui ou <b style="color:var(--brand-600);">selecione do computador</b><br>
-              <small style="color:var(--muted);">PDF, DOCX ou imagens · até 20 MB</small>
-            </div>
-          </div>
-          <label class="filter" style="margin:6px 0 18px;"><input type="checkbox" checked>Declaro que o serviço solicitado respeita a política de ética acadêmica da plataforma.</label>
-          <div style="display:flex;gap:10px;flex-wrap:wrap;">
-            <button class="btn btn-accent" onclick="go('painel')">Publicar pedido</button>
-            <button class="btn btn-ghost">Salvar rascunho</button>
-          </div>
-        </div>
-
       </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ========================= PUBLICAR SERVIÇO ========================= -->
+<section class="view" id="v-publicar-servico">
+  <div class="page-head">
+    <div class="wrap">
+      <div class="crumb" id="sv-crumb">Serviços › Publicar</div>
+      <h1 id="sv-titulo-tela">Publique o que você faz</h1>
+      <p id="sv-sub-tela">Descreva o serviço, o que está incluído e por quanto. Quem precisar contrata por aqui.</p>
+    </div>
+  </div>
+
+  <div class="section-sm">
+    <div class="wrap split" style="grid-template-columns:1fr 340px;">
+
+      <div class="panel" style="padding:30px;">
+        <div id="portao-servico" style="display:none;padding:18px 20px;border-radius:12px;margin-bottom:24px;"></div>
+
+        <div id="form-servico">
+          <div class="field">
+            <label>O que você faz</label>
+            <input type="text" id="sv-titulo" placeholder="Ex.: Revisão e formatação ABNT de TCC, até 80 páginas" oninput="previaServico()">
+            <small>Diga o serviço e o tamanho dele. É o que evita proposta fora do alvo.</small>
+          </div>
+
+          <div class="grid g2" style="gap:16px;">
+            <div class="field">
+              <label>Categoria</label>
+              <select id="sv-categoria" onchange="montarTiposServico();previaServico()"></select>
+            </div>
+            <div class="field">
+              <label>Tipo de serviço</label>
+              <select id="sv-tipo" onchange="previaServico()"></select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Descrição</label>
+            <textarea rows="6" id="sv-desc" placeholder="O que está incluído, o que não está, como você trabalha, o que precisa receber do cliente." oninput="previaServico()"></textarea>
+          </div>
+
+          <div class="field">
+            <label>Como você quer receber</label>
+            <div class="pill-row" id="sv-cobranca" style="margin-bottom:0;">
+              <button class="pill on" onclick="escolherCobrancaServico(this, 'site')">Preço fixo, pago pelo site</button>
+              <button class="pill" onclick="escolherCobrancaServico(this, 'gratis')">Gratuito</button>
+              <button class="pill" onclick="escolherCobrancaServico(this, 'combinar')">A combinar por WhatsApp</button>
+            </div>
+            <small id="sv-nota-cobranca" style="display:block;margin-top:10px;"></small>
+          </div>
+
+          <div class="grid g2" style="gap:16px;" id="sv-caixa-valor">
+            <div class="field">
+              <label>Preço (R$)</label>
+              <input type="number" id="sv-valor" min="0" step="0.01" placeholder="350" oninput="previaServico()">
+            </div>
+            <div class="field">
+              <label>Prazo de entrega (dias)</label>
+              <input type="number" id="sv-prazo" min="1" step="1" placeholder="10" oninput="previaServico()">
+            </div>
+          </div>
+
+          <div id="sv-aviso-mp" style="display:none;padding:14px 16px;border-radius:11px;font-size:.88rem;line-height:1.55;margin-bottom:16px;"></div>
+          <div id="sv-msg" style="display:none;padding:12px 14px;border-radius:10px;font-size:.88rem;line-height:1.45;margin-bottom:14px;"></div>
+
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <button class="btn btn-accent" id="sv-publicar" onclick="publicarServico()">Publicar serviço</button>
+            <button class="btn btn-ghost" id="sv-cancelar" style="display:none;" onclick="cancelarEdicaoServico()">Cancelar edição</button>
+            <button class="btn btn-ghost" onclick="go('servicos')">Ver os serviços</button>
+          </div>
+        </div>
+      </div>
+
+      <aside>
+        <div class="panel" style="padding:24px;">
+          <h4 style="margin-bottom:14px;">Como vai aparecer</h4>
+          <div class="card job" style="box-shadow:none;border:1px solid var(--line);">
+            <div class="job-head">
+              <div>
+                <h4 id="sv-pv-titulo">O que você faz</h4>
+                <div class="tags" style="margin-top:8px;">
+                  <span class="tag" id="sv-pv-cat">Categoria</span>
+                  <span class="tag" id="sv-pv-tipo">Tipo</span>
+                </div>
+              </div>
+              <div class="budget"><b id="sv-pv-valor">a combinar</b><small>preço</small></div>
+            </div>
+            <p class="muted" style="font-size:.86rem;line-height:1.6;" id="sv-pv-desc">A descrição aparece aqui.</p>
+            <div class="job-meta"><span id="sv-pv-prazo">sem prazo definido</span></div>
+          </div>
+        </div>
+
+        <div class="panel" style="padding:24px;margin-top:18px;">
+          <h4 style="margin-bottom:10px;">Como o dinheiro chega</h4>
+          <p class="muted" style="font-size:.85rem;line-height:1.65;">
+            Com <b>preço fixo</b>, quem contrata paga pelo site e o valor cai direto na sua conta do Mercado Pago,
+            já com a comissão da plataforma descontada. A área de arquivos abre no momento do pagamento.
+          </p>
+          <p class="muted" style="font-size:.85rem;line-height:1.65;margin-top:10px;">
+            Com <b>a combinar</b>, o site só apresenta vocês dois — não há pagamento nem área de arquivos.
+          </p>
+        </div>
+      </aside>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ========================= UM SERVIÇO ========================= -->
+<section class="view" id="v-servico">
+  <div class="page-head">
+    <div class="wrap">
+      <div class="crumb">Serviços › Detalhe</div>
+      <h1 id="se-titulo">Carregando…</h1>
+      <p id="se-sub"></p>
+    </div>
+  </div>
+
+  <div class="section-sm">
+    <div class="wrap split" style="grid-template-columns:1fr 340px;">
+      <div class="panel" style="padding:28px;">
+        <h4 style="margin-bottom:14px;">O serviço</h4>
+        <div id="se-corpo"></div>
+      </div>
+      <aside>
+        <div class="panel" style="padding:24px;" id="se-acao"></div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+
+<section class="view" id="v-meus-servicos">
+  <div class="page-head">
+    <div class="wrap" style="display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;">
+      <div>
+        <div class="crumb">Minha conta › Serviços</div>
+        <h1>Meus serviços</h1>
+        <p>Os serviços que você publica, e os trabalhos em andamento — dos dois lados.</p>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn btn-ghost" onclick="carregarMeusServicos(true)">Atualizar</button>
+        <button class="btn btn-accent" onclick="go('publicar-servico')">＋ Publicar serviço</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-sm">
+    <div class="wrap">
+      <div class="panel" style="padding:28px;">
+        <h4 style="margin-bottom:14px;">Trabalhos em andamento</h4>
+        <div id="meus-trabalhos"><p class="muted" style="font-size:.88rem;">Carregando…</p></div>
+      </div>
+
+      <div class="panel" style="padding:28px;">
+        <h4 style="margin-bottom:14px;">Serviços que publiquei</h4>
+        <div id="meus-servicos-lista"><p class="muted" style="font-size:.88rem;">Carregando…</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ========================= ÁREA DO TRABALHO ========================= -->
+<section class="view" id="v-trabalho">
+  <div class="page-head">
+    <div class="wrap">
+      <div class="crumb">Serviços › Trabalho</div>
+      <h1 id="tr-titulo">Carregando…</h1>
+      <p id="tr-sub"></p>
+    </div>
+  </div>
+
+  <div class="section-sm">
+    <div class="wrap split" style="grid-template-columns:1fr 340px;">
+      <div>
+        <div class="panel" style="padding:28px;">
+          <h4 style="margin-bottom:6px;">Arquivos deste trabalho</h4>
+          <p class="muted" style="font-size:.86rem;line-height:1.6;margin-bottom:18px;">
+            Só você e a outra pessoa deste trabalho enxergam o que está aqui. Nem a plataforma mostra isso para mais ninguém.
+          </p>
+
+          <div class="field">
+            <label>Enviar um arquivo</label>
+            <input type="file" id="tr-arquivo" onchange="arquivoTrabalhoEscolhido()">
+            <small>Word, PDF, planilha, apresentação, zip ou imagem. Até <b>50 MB</b>.</small>
+          </div>
+          <div class="field">
+            <label>Recado junto ao arquivo <span class="muted" style="font-weight:600;">(opcional)</span></label>
+            <input type="text" id="tr-obs" placeholder="Ex.: versão revisada, com marcações no capítulo 3">
+          </div>
+
+          <div id="tr-barra" style="display:none;margin-bottom:16px;">
+            <div style="height:8px;background:var(--line);border-radius:99px;overflow:hidden;">
+              <div id="tr-barra-fill" style="height:100%;width:0;background:var(--brand-500);transition:width .2s;"></div>
+            </div>
+            <small class="muted" id="tr-barra-txt">Enviando…</small>
+          </div>
+
+          <div id="tr-msg" style="display:none;padding:12px 14px;border-radius:10px;font-size:.88rem;line-height:1.45;margin-bottom:14px;"></div>
+
+          <button class="btn btn-accent" id="tr-enviar" onclick="enviarArquivoTrabalho()">Enviar arquivo</button>
+
+          <div style="border-top:1px solid var(--line-2);margin:24px 0 0;padding-top:20px;">
+            <div id="tr-lista"></div>
+          </div>
+        </div>
+      </div>
+
+      <aside>
+        <div class="panel" style="padding:24px;" id="tr-lado"></div>
+      </aside>
     </div>
   </div>
 </section>
@@ -1178,6 +1303,20 @@ ul{margin:0;padding:0;list-style:none;}
           <div class="field">
             <label>Descrição</label>
             <textarea rows="5" id="mt-desc" placeholder="O que tem dentro, quantas páginas, como usar em sala." oninput="previaMaterial()"></textarea>
+          </div>
+
+          <div class="field" id="mt-campo-preco" style="display:none;">
+            <label>Este material é</label>
+            <div class="pill-row" id="mt-tipo" style="margin-bottom:0;">
+              <button class="pill on" onclick="escolherTipoMaterial(this, false)">Gratuito</button>
+              <button class="pill" onclick="escolherTipoMaterial(this, true)">Pago</button>
+            </div>
+            <div id="mt-caixa-preco" style="display:none;margin-top:14px;">
+              <label>Preço (R$)</label>
+              <input type="number" id="mt-preco" min="1" step="0.01" placeholder="19,90" oninput="previaMaterial()">
+              <small id="mt-nota-preco">O aluno paga pelo site, com Pix, cartão de crédito ou débito.</small>
+            </div>
+            <div id="mt-aviso-mp" style="display:none;padding:14px 16px;border-radius:11px;font-size:.88rem;line-height:1.55;margin-top:14px;"></div>
           </div>
 
           <div class="field">
@@ -1340,6 +1479,8 @@ ul{margin:0;padding:0;list-style:none;}
           <h4>Meu cadastro</h4>
           <div id="resumo-aluno"></div>
           <button class="btn btn-ghost btn-block btn-sm" style="margin-top:14px;" onclick="go('editar-perfil')">Editar meu perfil</button>
+          <button class="btn btn-ghost btn-block btn-sm" style="margin-top:10px;" onclick="go('compras')">Minhas compras</button>
+          <button class="btn btn-ghost btn-block btn-sm" style="margin-top:10px;" onclick="go('meus-servicos')">Meus serviços</button>
         </div>
 
         <div class="panel">
@@ -1362,6 +1503,8 @@ ul{margin:0;padding:0;list-style:none;}
         <p id="sub-painel-prof">Publique suas ofertas e receba contatos de alunos.</p>
       </div>
       <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn btn-ghost" onclick="go('meus-servicos')">Meus serviços</button>
+        <button class="btn btn-ghost" onclick="go('compras')">Minhas compras</button>
         <button class="btn btn-ghost" onclick="go('editar-perfil')">Editar meu perfil</button>
         <button class="btn btn-accent" onclick="go('ensinar')">＋ Criar nova oferta</button>
       </div>
@@ -1375,6 +1518,11 @@ ul{margin:0;padding:0;list-style:none;}
 
       <div class="split" style="grid-template-columns:1fr 340px;">
         <div>
+          <div class="panel" id="painel-mp" style="padding:28px;display:none;">
+            <h4 style="margin-bottom:14px;">Receber pagamentos</h4>
+            <div id="mp-corpo"></div>
+          </div>
+
           <div class="panel" style="padding:28px;">
             <h4 style="margin-bottom:14px;">Minhas ofertas <span class="tag tag-g" style="margin-left:6px;">dados reais</span></h4>
             <div id="minhas-ofertas"><p class="muted" style="font-size:.88rem;">Carregando…</p></div>
@@ -1382,9 +1530,14 @@ ul{margin:0;padding:0;list-style:none;}
           </div>
 
           <div class="panel" style="padding:28px;">
-            <h4 style="margin-bottom:14px;">Meus materiais <span class="tag tag-g" style="margin-left:6px;">gratuitos</span></h4>
+            <h4 style="margin-bottom:14px;">Meus materiais</h4>
             <div id="meus-materiais"><p class="muted" style="font-size:.88rem;">Carregando…</p></div>
             <button class="btn btn-accent btn-block btn-sm" style="margin-top:16px;" onclick="go('publicar-material')">＋ Publicar material</button>
+          </div>
+
+          <div class="panel" id="painel-vendas" style="padding:28px;display:none;">
+            <h4 style="margin-bottom:14px;">Minhas vendas</h4>
+            <div id="lista-vendas"></div>
           </div>
 
           <div class="panel" style="padding:28px;">
@@ -1440,95 +1593,103 @@ ul{margin:0;padding:0;list-style:none;}
   <div class="section-sm">
     <div class="wrap">
       <div class="panel legal" style="padding:34px;">
-        <p class="data">Última atualização: 22 de agosto de 2026</p>
+        <p class="data">Última atualização: 24 de agosto de 2026</p>
 
         <h2>1. Quem somos</h2>
         <p>O AprenderConecta é uma plataforma online operada por <b>Juliana Luiz Camargo</b>, pessoa física, que pode ser contatada pelo e-mail <a href="mailto:julianaluizcamargo@gmail.com">julianaluizcamargo@gmail.com</a>.</p>
         <p>Ao criar uma conta ou usar o site, você concorda com estes Termos. Se não concordar, não use a plataforma.</p>
 
         <h2>2. O que a plataforma é — e o que ela não é</h2>
-        <p><b>O AprenderConecta é um espaço de encontro.</b> Professores e profissionais da educação publicam suas ofertas de aulas, cursos e mentorias; quem procura por esses serviços encontra essas ofertas e entra em contato diretamente com quem as publicou.</p>
+        <p><b>O AprenderConecta aproxima quem ensina de quem quer aprender.</b> Professores e profissionais da educação publicam aulas, mentorias e materiais de estudo; quem procura encontra essas ofertas, entra em contato e, quando o item é pago, pode pagar pelo próprio site.</p>
         <div class="destaque">
-          <p><b>O AprenderConecta não é parte da relação entre você e a outra pessoa.</b> De forma clara:</p>
-          <p>· <b>Não intermediamos pagamentos.</b> Valores, formas de pagamento e prazos são combinados diretamente entre aluno e professor, fora da plataforma. Não recebemos, retemos nem repassamos dinheiro.</p>
-          <p>· <b>Não somos empregadores dos professores</b> nem prestadores dos serviços anunciados. Cada profissional atua por conta própria.</p>
+          <p><b>Quem vende é o professor, não a plataforma.</b> De forma clara:</p>
+          <p>· <b>Não somos a vendedora do material nem a prestadora da aula.</b> Cada profissional atua por conta própria, define o que oferece e por quanto.</p>
+          <p>· <b>Não guardamos o dinheiro das vendas.</b> O pagamento é processado pelo Mercado Pago e o valor cai direto na conta de quem vendeu. A plataforma retém apenas a sua comissão, descrita na seção 6.</p>
           <p>· <b>Não verificamos formação, diplomas ou antecedentes.</b> As informações de perfil são declaradas pelos próprios usuários.</p>
-          <p>· <b>Não garantimos</b> a qualidade, a pontualidade, o resultado ou a realização de nenhuma aula ou serviço contratado.</p>
-          <p>· <b>Não mediamos conflitos</b> entre usuários.</p>
+          <p>· <b>Não garantimos</b> a qualidade, a pontualidade ou o resultado de nenhuma aula, mentoria ou material.</p>
+          <p>· <b>Não conseguimos devolver dinheiro por conta própria</b>, porque ele não passa por nós. O que fazemos em caso de problema está na seção 7.</p>
         </div>
-        <p>Estamos começando, e esses limites são reais. À medida que a plataforma evoluir, estes Termos serão atualizados para refletir novas funcionalidades.</p>
+        <p>Estamos começando, e esses limites são reais. À medida que a plataforma evoluir, estes Termos serão atualizados.</p>
 
         <h2>3. Quem pode usar</h2>
         <p>Para criar uma conta você precisa:</p>
-        <ul>
-          <li>ter <b>18 anos completos</b> ou mais;</li>
-          <li>fornecer informações verdadeiras e mantê-las atualizadas;</li>
-          <li>ser responsável por manter sua senha em sigilo.</li>
-        </ul>
+        <p>· ter <b>18 anos completos</b> ou mais;<br>· fornecer informações verdadeiras e mantê-las atualizadas;<br>· ser responsável por manter sua senha em sigilo.</p>
         <p><b>Menores de 18 anos não podem criar conta.</b> Se o serviço se destina a uma criança ou adolescente, quem cria a conta e faz a contratação deve ser o pai, a mãe ou o responsável legal — que assume a responsabilidade pela contratação e pelo acompanhamento.</p>
         <p>Você é responsável por tudo o que acontece na sua conta. Se suspeitar de acesso não autorizado, avise-nos e troque sua senha.</p>
 
         <h2>4. Papéis na plataforma</h2>
         <p>A mesma conta pode assumir papéis diferentes:</p>
-        <ul>
-          <li><b>Quem aprende</b> — busca e contrata aulas e serviços.</li>
-          <li><b>Quem ensina</b> — publica ofertas. Somente contas com este papel podem publicar.</li>
-          <li><b>Quem contrata serviços</b> e <b>quem vende materiais</b> — papéis previstos para funcionalidades ainda em desenvolvimento.</li>
-        </ul>
+        <p>· <b>Quem aprende</b> — busca, contrata e compra.<br>· <b>Quem ensina</b> — publica ofertas e materiais. Somente contas com este papel podem publicar.<br>· <b>Quem contrata serviços</b> — publica e vende serviços sob encomenda, como revisão, formatação e material didático.</p>
         <p>Você pode alterar seu papel a qualquer momento no seu perfil.</p>
 
-        <h2>5. Ofertas publicadas</h2>
-        <p>Quem publica uma oferta é inteiramente responsável por ela: pelo conteúdo, pela veracidade do que descreve, pelo preço informado e pelo cumprimento do que foi combinado com o aluno.</p>
-        <p>Ao publicar, você declara que tem capacidade e conhecimento para prestar o serviço anunciado, que as informações do seu perfil são verdadeiras, e que cumprirá o combinado ou comunicará com antecedência qualquer impedimento.</p>
-        <p>Podemos remover ofertas que violem estes Termos, sem aviso prévio.</p>
+        <h2>5. O que é publicado</h2>
+        <p>Quem publica uma oferta ou um material é inteiramente responsável por ela: pelo conteúdo, pela veracidade do que descreve, pelo preço informado e pelo cumprimento do que foi combinado.</p>
+        <p>Ao publicar, você declara que tem capacidade e conhecimento para o que anuncia, que as informações do seu perfil são verdadeiras, e que <b>tem direito sobre o material que envia</b> — ele precisa ser seu, ou você precisa ter autorização de quem o criou. Material copiado de livro, apostila de curso pago ou de outro professor não pode ser publicado, muito menos vendido.</p>
+        <p>Podemos remover ofertas e materiais que violem estes Termos, sem aviso prévio.</p>
 
-        <h2>6. Conduta e conteúdo proibido</h2>
+        <h2>6. Compras e pagamentos</h2>
+        <p>Parte dos materiais e das aulas é gratuita; parte é paga. <b>O preço é definido por quem publica e aparece antes da compra</b>, sem taxa escondida para quem compra.</p>
+        <p>O pagamento é feito no ambiente do <b>Mercado Pago</b>, com Pix, cartão de crédito ou cartão de débito. <b>A plataforma não vê nem guarda os dados do seu cartão.</b></p>
+        <p>Confirmado o pagamento, o valor é dividido automaticamente pelo Mercado Pago: a maior parte vai para a conta de quem vendeu e <b>10% ficam com a plataforma</b>, como comissão pelo uso do site. Esse percentual é informado a quem publica no momento de definir o preço, e pode mudar mediante aviso prévio.</p>
+        <p><b>Material pago</b> fica disponível para download assim que o pagamento é confirmado, em <i>Minhas compras</i>. O acesso é pessoal: não é permitido repassar, revender ou publicar o arquivo em outro lugar.</p>
+        <p><b>Aula ou mentoria paga pelo site</b>: o pagamento garante a contratação. Data, horário e formato são combinados diretamente com quem ensina, fora da plataforma.</p>
+        <p><b>Serviço contratado pelo site</b>: quem publica o serviço é quem executa e recebe; quem contrata é quem paga. Assim que o pagamento é confirmado, abre-se uma área fechada entre as duas pessoas para a troca de arquivos. Serviço marcado como gratuito abre essa área na hora, sem pagamento.</p>
+        <p>A emissão de nota fiscal, quando devida, é responsabilidade de quem vendeu.</p>
+
+        <h2>7. Devolução e cancelamento</h2>
+        <div class="destaque">
+          <p><b>Arrependimento em 7 dias.</b> Você pode desistir de qualquer compra feita no site em até <b>7 dias corridos</b> contados do pagamento, e receber o valor de volta — inclusive se já tiver baixado o arquivo. É o direito previsto no artigo 49 do Código de Defesa do Consumidor, e nós o respeitamos sem discussão.</p>
+        </div>
+        <p><b>Aula não realizada.</b> Enquanto a aula ou mentoria não acontecer, você pode cancelar e receber o valor de volta, mesmo depois dos 7 dias.</p>
+        <p><b>Serviço não entregue.</b> Enquanto o trabalho contratado não for entregue no prazo combinado, você pode cancelar e receber o valor de volta, mesmo depois dos 7 dias. Se o trabalho já foi entregue, valem os 7 dias de arrependimento.</p>
+        <p><b>Como pedir:</b> escreva para <a href="mailto:julianaluizcamargo@gmail.com">julianaluizcamargo@gmail.com</a> dizendo o que comprou e quando. Avisamos quem vendeu, e a devolução é feita pelo Mercado Pago, normalmente em poucos dias úteis. <b>A comissão da plataforma é devolvida junto</b> — não ficamos com nada de uma compra desfeita.</p>
+        <p>Se quem vendeu não fizer a devolução, podemos tirar o conteúdo dele do ar e suspender a conta. Ainda assim, avise-nos: mesmo sem ter o dinheiro em mãos, é a nós que cabe resolver o que der errado dentro do site.</p>
+        <p>Se você contestar a compra junto ao seu banco ou operadora de cartão, o acesso ao material comprado é suspenso enquanto a contestação durar.</p>
+        <p>Nada nesta seção afasta direitos que o Código de Defesa do Consumidor garanta a você de forma inafastável.</p>
+
+        <h2>8. Conduta e conteúdo proibido</h2>
         <p>Não é permitido usar a plataforma para:</p>
-        <ul>
-          <li><b>Fraude acadêmica.</b> Vender, produzir ou entregar trabalhos acadêmicos prontos para serem apresentados como autoria de outra pessoa — TCC, monografia, dissertação, tese, artigo, redação, prova ou exercício avaliativo. Orientação, revisão, tutoria, correção comentada e ensino são bem-vindos; substituir o aluno na produção do trabalho dele, não.</li>
-          <li>Publicar informação falsa sobre formação, experiência ou identidade.</li>
-          <li>Assediar, ameaçar, discriminar ou constranger qualquer pessoa.</li>
-          <li>Publicar conteúdo ilegal, ofensivo, discriminatório ou que viole direitos de terceiros.</li>
-          <li>Anunciar serviços que não sejam educacionais.</li>
-          <li>Coletar dados de outros usuários para fins não relacionados à contratação, inclusive mensagens não solicitadas em massa.</li>
-          <li>Tentar burlar mecanismos de segurança, acessar contas alheias ou sobrecarregar o sistema.</li>
-        </ul>
+        <p>· <b>Fraude acadêmica.</b> Vender, produzir ou entregar trabalhos acadêmicos prontos para serem apresentados como autoria de outra pessoa — TCC, monografia, dissertação, tese, artigo, redação, prova ou exercício avaliativo. Orientação, revisão, tutoria, correção comentada e ensino são bem-vindos; substituir o aluno na produção do trabalho dele, não.</p>
+        <p>· Vender material do qual você não tem direito — cópia de livro, apostila de curso pago, conteúdo de outro professor.</p>
+        <p>· Publicar informação falsa sobre formação, experiência ou identidade.</p>
+        <p>· Assediar, ameaçar, discriminar ou constranger qualquer pessoa.</p>
+        <p>· Publicar conteúdo ilegal, ofensivo, discriminatório ou que viole direitos de terceiros.</p>
+        <p>· Anunciar serviços que não sejam educacionais.</p>
+        <p>· Combinar o pagamento por fora com o único fim de escapar da comissão, depois de ter usado a plataforma para encontrar a pessoa.</p>
+        <p>· Coletar dados de outros usuários para fins não relacionados à contratação, inclusive mensagens não solicitadas em massa.</p>
+        <p>· Tentar burlar mecanismos de segurança, acessar contas alheias ou sobrecarregar o sistema.</p>
+        <p>Qualquer pessoa pode denunciar conteúdo impróprio pelo botão <b>⚑</b>, inclusive sem ter conta.</p>
 
-        <h2>7. Contato entre usuários</h2>
-        <p>O contato entre aluno e professor acontece hoje por <b>WhatsApp</b>, a partir do número que o professor optou por informar no perfil.</p>
+        <h2>9. Contato entre usuários</h2>
+        <p><b>Arquivos da área de trabalho.</b> Os arquivos trocados dentro de um serviço contratado ficam guardados no site, em pasta fechada, e só as duas pessoas daquele trabalho conseguem abri-los. A administração da plataforma tem acesso técnico a eles e só o usa para apurar denúncia ou cumprir ordem judicial. Não envie por ali documento que você não queira que fique guardado — e não envie dado sensível de terceiros sem necessidade.</p>
+        <p>O contato entre aluno e professor acontece por <b>WhatsApp</b>, a partir do número que o professor optou por informar no perfil.</p>
         <p>Ao preencher esse campo, o professor está ciente de que <b>o número fica visível publicamente</b> para qualquer pessoa que abrir seu perfil. Preencher é opcional.</p>
         <p>Como a conversa acontece fora da plataforma, <b>não temos acesso ao seu conteúdo</b> e não conseguimos comprovar o que foi combinado entre as partes.</p>
 
-        <h2>8. Propriedade intelectual</h2>
+        <h2>10. Propriedade intelectual</h2>
         <p>O nome AprenderConecta, o logotipo, o layout e o código do site pertencem à operadora da plataforma.</p>
         <p>O conteúdo que você publica — textos de perfil, descrições de ofertas, materiais — continua sendo seu. Ao publicá-lo, você nos autoriza a exibi-lo no site e a divulgá-lo em materiais da plataforma, sem exclusividade e sem custo, enquanto sua conta existir.</p>
-        <p>Você garante que tem direito sobre o que publica.</p>
 
-        <h2>9. Disponibilidade e custo</h2>
+        <h2>11. Disponibilidade e custo</h2>
         <p>A plataforma é oferecida "como está". Não garantimos funcionamento ininterrupto nem ausência de falhas. Podemos alterar, suspender ou encerrar funcionalidades a qualquer momento.</p>
-        <p>O uso é <b>gratuito</b> neste momento. Se e quando houver cobrança de comissão ou mensalidade, avisaremos com antecedência e estes Termos serão atualizados.</p>
+        <p><b>Criar conta, publicar ofertas e publicar materiais é gratuito.</b> Não há mensalidade. A plataforma se sustenta pela comissão de 10% sobre as vendas feitas pelo site, descrita na seção 6.</p>
 
-        <h2>10. Limitação de responsabilidade</h2>
+        <h2>12. Limitação de responsabilidade</h2>
         <p>Na medida permitida pela legislação brasileira, não nos responsabilizamos por:</p>
-        <ul>
-          <li>prejuízos decorrentes de serviços contratados entre usuários, incluindo aulas não realizadas, pagamentos não honrados ou qualidade abaixo do esperado;</li>
-          <li>informações falsas ou imprecisas publicadas por usuários;</li>
-          <li>indisponibilidade temporária do site;</li>
-          <li>conteúdo de conversas realizadas fora da plataforma.</li>
-        </ul>
-        <p>Nada nesta cláusula afasta direitos que o Código de Defesa do Consumidor garanta a você de forma inafastável.</p>
+        <p>· a qualidade, o conteúdo ou o resultado das aulas e materiais publicados por usuários;<br>· informações falsas ou imprecisas publicadas por usuários;<br>· o que for combinado entre as partes fora da plataforma;<br>· indisponibilidade temporária do site.</p>
+        <p>Nada nesta cláusula afasta direitos que o Código de Defesa do Consumidor garanta a você de forma inafastável, nem nossa responsabilidade sobre o funcionamento do próprio site.</p>
 
-        <h2>11. Suspensão e encerramento</h2>
-        <p>Podemos suspender ou encerrar contas que violem estes Termos, especialmente a seção 6.</p>
+        <h2>13. Suspensão e encerramento</h2>
+        <p>Podemos suspender ou encerrar contas que violem estes Termos, especialmente a seção 8.</p>
         <p>Você pode encerrar sua conta quando quiser, pelo e-mail de contato. O tratamento dos seus dados após o encerramento está descrito na <b class="link-auth" onclick="go('privacidade')">Política de Privacidade</b>.</p>
 
-        <h2>12. Alterações destes Termos</h2>
+        <h2>14. Alterações destes Termos</h2>
         <p>Podemos atualizar estes Termos. Mudanças relevantes serão comunicadas pelo e-mail cadastrado ou por aviso no site, com antecedência razoável. O uso continuado após a mudança significa concordância.</p>
 
-        <h2>13. Lei aplicável e foro</h2>
+        <h2>15. Lei aplicável e foro</h2>
         <p>Estes Termos são regidos pelas leis brasileiras. Fica eleito o foro da comarca de Ji-Paraná/RO, sem prejuízo do direito do consumidor de demandar no foro do seu próprio domicílio.</p>
 
-        <h2>14. Contato</h2>
+        <h2>16. Contato</h2>
         <p>Dúvidas sobre estes Termos: <a href="mailto:julianaluizcamargo@gmail.com">julianaluizcamargo@gmail.com</a></p>
       </div>
     </div>
@@ -1584,6 +1745,7 @@ ul{margin:0;padding:0;list-style:none;}
           <tr><td>Texto de apresentação</td><td>No perfil</td><td>Não</td></tr>
           <tr><td>WhatsApp</td><td>No perfil</td><td>Não</td></tr>
           <tr><td>Conteúdo das ofertas</td><td>Ao publicar</td><td>Só se publicar</td></tr>
+          <tr><td>Arquivos enviados na área de um serviço contratado</td><td>Ao enviar</td><td>Só se contratar ou prestar um serviço</td></tr>
         </table>
         </div>
         <p>A senha é armazenada de forma criptografada pelo nosso provedor de autenticação. Nem nós conseguimos lê-la.</p>
@@ -1620,21 +1782,33 @@ ul{margin:0;padding:0;list-style:none;}
           <tr><td>Supabase</td><td>Banco de dados e autenticação</td><td>São Paulo, Brasil</td></tr>
           <tr><td>Vercel</td><td>Hospedagem do site</td><td>Servidores internacionais</td></tr>
           <tr><td>Resend</td><td>Envio dos e-mails do sistema</td><td>São Paulo, Brasil</td></tr>
+          <tr><td>Mercado Pago</td><td>Processamento dos pagamentos</td><td>Brasil</td></tr>
         </table>
         </div>
         <p>Esses fornecedores atuam como <b>operadores</b>: tratam os dados seguindo nossas instruções e não podem usá-los para finalidades próprias.</p>
         <p><b>Transferência internacional:</b> a Vercel opera fora do Brasil, o que significa que dados técnicos de acesso podem transitar por servidores em outros países. A LGPD permite isso quando necessário para a execução do contrato.</p>
         <p>Também podemos compartilhar dados se formos legalmente obrigados — por ordem judicial ou requisição de autoridade competente.</p>
 
-        <h2>6. Contato via WhatsApp</h2>
+        <h2>6. Pagamentos</h2>
+        <p>Quando você compra um material ou uma aula pelo site, o pagamento acontece <b>dentro do ambiente do Mercado Pago</b>.</p>
+        <div class="destaque">
+          <p><b>Não vemos e não guardamos os dados do seu cartão.</b> Número, validade e código de segurança são digitados no Mercado Pago e ficam com eles. Nós nunca temos acesso a essa informação.</p>
+        </div>
+        <p>O que fica guardado no nosso banco de dados sobre uma compra é: o que foi comprado, o valor, a data, o meio de pagamento usado (Pix, crédito ou débito) e um código de identificação do pagamento no Mercado Pago. Isso é necessário para liberar o seu acesso ao que você comprou e para o vendedor saber que vendeu.</p>
+        <p>Essas informações ficam visíveis para <b>você</b>, para <b>quem vendeu</b> e para a administração da plataforma. Nenhum outro usuário enxerga o que você comprou.</p>
+        <p>Quando um professor conecta a conta do Mercado Pago dele para receber, guardamos a autorização emitida pelo Mercado Pago — nunca a senha dele. Essa autorização fica fechada no banco, sem acesso pelo site, e pode ser cancelada por ele a qualquer momento no próprio Mercado Pago.</p>
+        <p>O tratamento que o Mercado Pago faz dos seus dados é regido pela política de privacidade deles.</p>
+
+        <h2>7. Contato via WhatsApp</h2>
         <p>Quando um aluno clica em "Chamar no WhatsApp" no perfil de um professor, ele sai da nossa plataforma e vai para o WhatsApp.</p>
         <p><b>Não temos acesso a essa conversa.</b> O que acontece a partir dali é regido pela política de privacidade do WhatsApp, não pela nossa.</p>
 
-        <h2>7. Por quanto tempo guardamos</h2>
+        <h2>8. Por quanto tempo guardamos</h2>
         <p>Enquanto sua conta existir, mantemos seus dados.</p>
         <p>Se você pedir a exclusão, apagamos seu perfil e suas ofertas. Alguns registros podem ser mantidos por prazo maior quando houver obrigação legal ou necessidade de defesa em processo.</p>
+        <p><b>Arquivos de serviços contratados</b> ficam guardados enquanto as duas pessoas do trabalho tiverem conta, e podem ser apagados por quem os enviou a qualquer momento, pelo próprio site.</p>
 
-        <h2>8. Seus direitos</h2>
+        <h2>9. Seus direitos</h2>
         <p>A LGPD garante a você o direito de:</p>
         <ul>
           <li><b>Confirmar</b> se tratamos seus dados e <b>acessar</b> o que temos</li>
@@ -1649,7 +1823,7 @@ ul{margin:0;padding:0;list-style:none;}
         <p><b>Boa parte disso você já faz sozinho:</b> nome, título, cidade, apresentação e WhatsApp podem ser alterados ou apagados a qualquer momento em <b class="link-auth" onclick="go('editar-perfil')">Editar meu perfil</b>, e suas ofertas podem ser excluídas no painel.</p>
         <p>Para os demais pedidos, escreva para <a href="mailto:julianaluizcamargo@gmail.com">julianaluizcamargo@gmail.com</a>. Responderemos no menor prazo possível, e em no máximo 15 dias.</p>
 
-        <h2>9. Segurança</h2>
+        <h2>10. Segurança</h2>
         <ul>
           <li>Senhas armazenadas de forma criptografada, ilegíveis inclusive para nós</li>
           <li>Conexão criptografada (HTTPS) em todo o site</li>
@@ -1658,17 +1832,37 @@ ul{margin:0;padding:0;list-style:none;}
         </ul>
         <p>Nenhum sistema é totalmente imune. Se houver incidente de segurança com risco relevante aos seus dados, comunicaremos você e a ANPD, conforme a LGPD.</p>
 
-        <h2>10. Menores de 18 anos</h2>
+        <h2>11. Menores de 18 anos</h2>
         <p><b>A plataforma é destinada exclusivamente a maiores de 18 anos.</b> Não coletamos intencionalmente dados de crianças ou adolescentes.</p>
         <p>Quando o serviço se destina a um menor — como aulas de reforço escolar —, quem cria a conta e faz a contratação deve ser o responsável legal, <b>usando os próprios dados</b>. Não peça nem publique dados do menor no perfil ou nas ofertas.</p>
         <p>Se identificarmos uma conta criada por menor de 18 anos, ela será excluída. Se você é responsável e acredita que um menor sob sua guarda criou conta, avise-nos pelo e-mail de contato.</p>
 
-        <h2>11. Alterações desta política</h2>
+        <h2>12. Alterações desta política</h2>
         <p>Podemos atualizar esta política. Mudanças relevantes serão comunicadas por e-mail ou aviso no site. A data no topo indica a última revisão.</p>
 
-        <h2>12. Reclamações</h2>
+        <h2>13. Reclamações</h2>
         <p>Se você achar que seus dados não estão sendo tratados corretamente, fale conosco primeiro. Você também pode reclamar à <b>Autoridade Nacional de Proteção de Dados (ANPD)</b>, em <a href="https://www.gov.br/anpd" target="_blank" rel="noopener">gov.br/anpd</a>.</p>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================= MINHAS COMPRAS ========================= -->
+<section class="view" id="v-compras">
+  <div class="page-head">
+    <div class="wrap" style="display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;">
+      <div>
+        <div class="crumb">Minha conta › Compras</div>
+        <h1>Minhas compras</h1>
+        <p>Tudo o que você comprou aqui, com o arquivo à mão.</p>
+      </div>
+      <button class="btn btn-primary" onclick="carregarCompras(true)">Atualizar</button>
+    </div>
+  </div>
+
+  <div class="section-sm">
+    <div class="wrap">
+      <div id="compras-lista"><p class="muted">Carregando…</p></div>
     </div>
   </div>
 </section>
@@ -1939,6 +2133,18 @@ ul{margin:0;padding:0;list-style:none;}
   </div>
 </footer>
 
+<!-- ================= AJUDA POR WHATSAPP ================= -->
+<!-- Fica em todas as telas, inclusive para quem não entrou.
+     É o suporte técnico de quem está se cadastrando pela primeira vez. -->
+<a class="zap-ajuda" id="zap-ajuda"
+   href="https://wa.me/5569993382997?text=Ol%C3%A1!%20Estou%20no%20AprenderConecta%20e%20preciso%20de%20ajuda."
+   target="_blank" rel="noopener"
+   aria-label="Falar com o suporte no WhatsApp"
+   title="Precisa de ajuda? Fale comigo no WhatsApp">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21h.01c5.46 0 9.91-4.45 9.91-9.91C21.96 6.45 17.5 2 12.04 2zm0 18.15h-.01c-1.52 0-3.01-.41-4.31-1.18l-.31-.18-3.2.84.85-3.12-.2-.32a8.2 8.2 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.25-8.24 2.2 0 4.27.86 5.83 2.42a8.19 8.19 0 0 1 2.41 5.83c0 4.54-3.7 8.33-8.05 8.33zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.15.16-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.42-.56-.43h-.48c-.16 0-.43.06-.65.31-.22.25-.85.83-.85 2.03s.87 2.35.99 2.51c.12.17 1.71 2.61 4.14 3.66.58.25 1.03.4 1.38.51.58.19 1.11.16 1.53.1.47-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.15-1.18-.06-.1-.23-.17-.48-.29z"/></svg>
+  <span>Precisa de ajuda?</span>
+</a>
+
 <!-- ========================= CAIXA DE DENÚNCIA ========================= -->
 <div id="caixa-denuncia" class="modal-fundo" style="display:none;">
   <div class="modal-caixa">
@@ -2027,7 +2233,8 @@ var usuario   = null;   // quem está logado (e-mail, id)
 var perfil    = null;   // nome e papel, vindos da tabela "perfis"
 var modoAtual = 'criar';
 
-var TELAS_PROTEGIDAS = ['painel', 'painel-prof', 'editar-perfil'];
+var TELAS_PROTEGIDAS = ['painel', 'painel-prof', 'editar-perfil', 'compras',
+                        'publicar-servico', 'meus-servicos', 'trabalho'];
 var perfilVisto = null;   // id do professor aberto na tela de perfil
 
 
@@ -2046,6 +2253,11 @@ function go(view){
     if(typeof limparOfertaSemMensagem === 'function') limparOfertaSemMensagem();
     if(typeof atualizarModoOferta === 'function') atualizarModoOferta();
   }
+  if(typeof servicoEditando !== 'undefined' && servicoEditando && view !== 'publicar-servico'){
+    servicoEditando = null;
+    if(typeof limparFormServico === 'function') limparFormServico();
+    if(typeof atualizarModoServico === 'function') atualizarModoServico();
+  }
 
   if(TELAS_PROTEGIDAS.indexOf(view) !== -1 && !usuario){
     view = 'entrar';
@@ -2061,16 +2273,20 @@ function go(view){
   if(history.replaceState) history.replaceState(null,'','#'+view);
 
   if(view === 'aprender')      carregarOfertas();
-  if(view === 'ensinar')       { atualizarPortaoEnsinar(); avisoAssinaturaEnsinar(); atualizarModoOferta(); atualizarPrevia(); }
+  if(view === 'ensinar')       { atualizarPortaoEnsinar(); avisoAssinaturaEnsinar(); atualizarModoOferta(); atualizarPrevia(); pintarCampoPagamentoOferta(); }
   if(view === 'painel')        { pintarResumoCadastro(); }
-  if(view === 'painel-prof')   { carregarMinhasOfertas(); carregarMeusMateriais(); pintarPainelAssinatura(); pintarResumoCadastro(); pintarStatsProf(); pintarPainelModeracao(); }
+  if(view === 'painel-prof')   { carregarMinhasOfertas(); carregarMeusMateriais(); pintarPainelAssinatura(); pintarResumoCadastro(); pintarStatsProf(); pintarPainelModeracao(); pintarPainelMP(); carregarMinhasVendas(); }
   if(view === 'home')          carregarHome();
   if(view === 'perfil')        carregarPerfilPublico(perfilVisto);
   if(view === 'editar-perfil') carregarFormPerfil();
   if(view === 'nova-senha')    prepararNovaSenha();
   if(view === 'loja')          carregarMateriais();
-  if(view === 'publicar-material') { atualizarPortaoMaterial(); atualizarModoMaterial(); previaMaterial(); }
+  if(view === 'publicar-material') { atualizarPortaoMaterial(); atualizarModoMaterial(); previaMaterial(); pintarCampoPrecoMaterial(); }
   if(view === 'moderacao')     carregarDenuncias(true);
+  if(view === 'compras')       carregarCompras(true);
+  if(view === 'servicos')      carregarServicos(true);
+  if(view === 'publicar-servico'){ atualizarModoServico(); previaServico(); }
+  if(view === 'meus-servicos') carregarMeusServicos(true);
 }
 function pick(el){
   var p = el.parentElement;
@@ -2079,9 +2295,19 @@ function pick(el){
 }
 function fromHash(){
   var bruto = (location.hash || '#home').slice(1);
+
+  /* o Mercado Pago devolve a pessoa em #painel-prof?mp=ok */
+  var corte = bruto.indexOf('?');
+  if(corte !== -1){
+    guardarRetornoMP(bruto.slice(corte + 1));
+    bruto = bruto.slice(0, corte);
+  }
+
   var partes = bruto.split('/');
   var h = partes[0];
-  if(h === 'perfil' && partes[1]){ verPerfil(partes[1]); return; }
+  if(h === 'perfil'   && partes[1]){ verPerfil(partes[1]);   return; }
+  if(h === 'servico'  && partes[1]){ verServico(partes[1]);  return; }
+  if(h === 'trabalho' && partes[1]){ verTrabalho(partes[1]); return; }
   if(!document.getElementById('v-'+h)) h = 'home';
   go(h);
 }
@@ -2220,11 +2446,22 @@ async function carregarSessao(){
   var s = await sb.auth.getSession();
   usuario = (s.data && s.data.session) ? s.data.session.user : null;
   perfil = null;
+  mpConectado = false;
+  minhasCompras = [];
+  comprasCarregadas = false;
+
   if(usuario){
     var p = await sb.from('perfis')
       .select('nome, papel, cidade, bio, telefone, titulo_profissional, assinatura_ate, admin, criado_em')
       .eq('id', usuario.id).maybeSingle();
     perfil = p.data || null;
+
+    /* A conta do Mercado Pago e as compras desta pessoa.
+       Se algo aqui falhar (banco-etapa7.sql ainda não rodado, por
+       exemplo), o login não pode cair junto: o site continua, só sem
+       a parte de vendas. */
+    try { await verificarMercadoPago(); } catch(e){ mpConectado = false; }
+    try { await carregarCompras(true); } catch(e){ minhasCompras = []; comprasCarregadas = false; }
   }
   atualizarInterface();
 }
@@ -2241,6 +2478,7 @@ function atualizarInterface(){
 
   atualizarPortaoEnsinar();
   atualizarPortaoMaterial();
+  if(typeof atualizarModoServico === 'function') atualizarModoServico();
   atualizarPrevia();
   carregarFormPerfil();
   pintarPainelAssinatura();
@@ -2366,6 +2604,8 @@ function atualizarPrevia(){
   var formato  = textoDoPillLigado('of-formato', 'Aula individual');
   var modo     = textoDoPillLigado('of-modalidade', 'Online');
 
+  if(typeof atualizarNotaLiquido === 'function') atualizarNotaLiquido();
+
   document.getElementById('pv-ini').textContent    = iniciais(nome);
   document.getElementById('pv-ini').className      = 'ava ' + corAvatar(nome);
   document.getElementById('pv-nome').textContent   = nome;
@@ -2419,7 +2659,9 @@ async function publicarOferta(){
     descricao:  desc,
     valor:      valor,
     cobranca:   document.getElementById('of-cobranca').value,
-    modalidade: textoDoPillLigado('of-modalidade', 'Online')
+    modalidade: textoDoPillLigado('of-modalidade', 'Online'),
+    pagar_pelo_site: !!ofertaPagaSite,
+    tipo:       'aula'
   });
 
   btn.disabled = false; btn.textContent = 'Publicar oferta';
@@ -2451,6 +2693,7 @@ function limparOfertaSemMensagem(){
   });
   marcarPill('of-formato', null);
   marcarPill('of-modalidade', null);
+  if(typeof aplicarPagamentoNoFormulario === 'function') aplicarPagamentoNoFormulario(false);
   atualizarPrevia();
 }
 
@@ -2459,9 +2702,10 @@ async function carregarOfertas(forcar){
   if(!sb) return;
   if(ofertasCarregadas && !forcar) { filtrarOfertas(); return; }
 
+  /* serviço também é oferta, mas não é aula: fora da aba Aprender */
   var r = await sb.from('ofertas')
     .select('id, titulo, area, nivel, formato, descricao, valor, cobranca, modalidade, criado_em, professor_id, perfis(nome, cidade)')
-    .eq('ativa', true)
+    .eq('ativa', true).neq('tipo', 'servico')
     .order('criado_em', { ascending: false })
     .limit(200);
 
@@ -2587,9 +2831,10 @@ async function carregarMinhasOfertas(){
   if(!caixa) return;
   if(!sb || !usuario){ caixa.innerHTML = '<p class="muted" style="font-size:.88rem;">Entre na sua conta para ver suas ofertas.</p>'; return; }
 
+  /* serviço aparece em Meus serviços, não aqui */
   var r = await sb.from('ofertas')
     .select('id, titulo, formato, valor, cobranca, ativa, criado_em')
-    .eq('professor_id', usuario.id)
+    .eq('professor_id', usuario.id).neq('tipo', 'servico')
     .order('criado_em', { ascending: false });
 
   if(r.error){ caixa.innerHTML = '<p class="muted" style="font-size:.88rem;">Erro ao carregar: ' + esc(r.error.message) + '</p>'; return; }
@@ -2933,8 +3178,19 @@ var config = null;
 
 async function carregarConfig(){
   if(!sb) return;
-  var r = await sb.from('config').select('cobranca_ativa, preco_mensal, chave_pix').maybeSingle();
-  config = (r && r.data) ? r.data : { cobranca_ativa: false, preco_mensal: 0, chave_pix: null };
+  var padrao = { cobranca_ativa: false, preco_mensal: 0, chave_pix: null,
+                 vendas_ativas: false, comissao_percentual: 0, mp_client_id: null };
+
+  var r = await sb.from('config')
+    .select('cobranca_ativa, preco_mensal, chave_pix, vendas_ativas, comissao_percentual, mp_client_id')
+    .maybeSingle();
+
+  /* ainda não rodou o banco-etapa7.sql? então lê só o que já existia */
+  if(r && r.error){
+    r = await sb.from('config').select('cobranca_ativa, preco_mensal, chave_pix').maybeSingle();
+  }
+
+  config = Object.assign({}, padrao, (r && r.data) ? r.data : {});
 }
 
 function hojeISO(){
@@ -3048,6 +3304,9 @@ function pintarResumoCadastro(){
   if(!perfil) return;
   var papeis = { professor:'Professor', aluno:'Aluno', contratante:'Contratante', vendedor:'Vende materiais' };
   var html =
+    /* o e-mail vem primeiro de propósito: é o que diz em QUAL conta
+       a pessoa está. Quem se cadastrou duas vezes só descobre por aqui. */
+    itemResumo('e-mail da conta', (usuario && usuario.email) || '—', !!(usuario && usuario.email)) +
     itemResumo('seu papel na plataforma', papeis[perfil.papel] || perfil.papel) +
     itemResumo('cidade', perfil.cidade || 'não informada', !!perfil.cidade) +
     itemResumo('WhatsApp no perfil', perfil.telefone ? 'informado' : 'não informado', !!perfil.telefone) +
@@ -3366,6 +3625,9 @@ function limparFormMaterial(){
   ['mt-info-arquivo','mt-info-capa','mt-barra'].forEach(function(id){
     var el = document.getElementById(id); if(el) el.style.display = 'none';
   });
+  /* a escolha entre gratuito e pago também volta ao começo — senão o
+     próximo material herda o preço do anterior */
+  if(typeof aplicarPrecoNoFormulario === 'function') aplicarPrecoNoFormulario(0);
   previaMaterial();
 }
 
@@ -3412,11 +3674,20 @@ async function publicarMaterial(){
   document.getElementById('mt-barra-fill').style.width = '35%';
   document.getElementById('mt-barra-txt').textContent = 'Enviando o arquivo…';
 
+  var precoDigitado = precoDoFormulario();
+  if(precoDigitado === false){
+    document.getElementById('mt-barra').style.display = 'none';
+    btn.disabled = false; btn.textContent = 'Publicar material';
+    mostrarMsgMaterial('Informe um preço de pelo menos R$ 1,00, ou marque o material como gratuito.', 'erro');
+    return;
+  }
+  var gaveta = precoDigitado > 0 ? 'materiais-pagos' : 'materiais';
+
   var nomeSeguro = String(f.name).normalize('NFD').replace(/[̀-ͯ]/g, '')
                      .replace(/[^a-zA-Z0-9._-]/g, '_');
   var caminho = usuario.id + '/' + Date.now() + '-' + nomeSeguro;
 
-  var up = await sb.storage.from('materiais').upload(caminho, f, { contentType: f.type || undefined });
+  var up = await sb.storage.from(gaveta).upload(caminho, f, { contentType: f.type || undefined });
 
   if(up.error){
     document.getElementById('mt-barra').style.display = 'none';
@@ -3448,6 +3719,8 @@ async function publicarMaterial(){
   var r = await sb.from('materiais').insert({
     professor_id:  usuario.id,
     capa_path:     caminhoCapa,
+    preco:         precoDigitado,
+    arquivo_bucket: gaveta,
     titulo:        titulo,
     descricao:     desc,
     area:          document.getElementById('mt-area').value,
@@ -3460,7 +3733,7 @@ async function publicarMaterial(){
 
   if(r.error){
     /* deu erro depois do upload: apaga o arquivo para não ficar lixo guardado */
-    await sb.storage.from('materiais').remove([caminho]);
+    await sb.storage.from(gaveta).remove([caminho]);
     document.getElementById('mt-barra').style.display = 'none';
     btn.disabled = false; btn.textContent = 'Publicar material';
     var m2 = r.error.message || '';
@@ -3496,11 +3769,25 @@ async function carregarMateriais(forcar){
   if(!sb) return;
   if(materiaisCarregados && !forcar){ filtrarMateriais(); return; }
 
+  var COLUNAS7 = 'id, titulo, descricao, area, nivel, arquivo_path, arquivo_nome, capa_path, ' +
+                 'tamanho_bytes, downloads, criado_em, professor_id, preco, arquivo_bucket, perfis(nome, cidade)';
+  var COLUNAS6 = 'id, titulo, descricao, area, nivel, arquivo_path, arquivo_nome, capa_path, ' +
+                 'tamanho_bytes, downloads, criado_em, professor_id, perfis(nome, cidade)';
+
   var r = await sb.from('materiais')
-    .select('id, titulo, descricao, area, nivel, arquivo_path, arquivo_nome, capa_path, tamanho_bytes, downloads, criado_em, professor_id, perfis(nome, cidade)')
+    .select(COLUNAS7)
     .eq('ativo', true)
     .order('criado_em', { ascending: false })
     .limit(200);
+
+  /* banco-etapa7.sql ainda não rodou? cai para as colunas antigas */
+  if(r.error && /preco|arquivo_bucket|column/i.test(r.error.message || '')){
+    r = await sb.from('materiais')
+      .select(COLUNAS6)
+      .eq('ativo', true)
+      .order('criado_em', { ascending: false })
+      .limit(200);
+  }
 
   if(r.error){
     var lista = document.getElementById('lista-materiais');
@@ -3598,18 +3885,32 @@ function cardMaterial(m){
         ((Number(m.downloads) === 1) ? ' download' : ' downloads') + '</span></div>' +
     '</div>' +
     '<div class="prod-foot">' +
-      '<span class="price" style="color:var(--green-600);">Gratuito</span>' +
+      precoDoCard(m) +
       '<span style="display:flex;gap:6px;align-items:center;">' +
         '<button class="btn btn-ghost btn-sm" title="Denunciar este material" ' +
           'onclick="abrirDenuncia(\'material\', \'' + m.id + '\', \'' + String(m.titulo).replace(/'/g, "\\'").replace(/"/g, '') + '\')">⚑</button>' +
-        '<button class="btn btn-primary btn-sm" onclick="baixarMaterial(\'' + m.id + '\', \'' + m.arquivo_path.replace(/'/g, "\\'") + '\')">Baixar</button>' +
+        botaoDoCard(m) +
       '</span>' +
     '</div>' +
   '</article>';
 }
 
-async function baixarMaterial(id, caminho){
-  var url = urlDoArquivo(caminho);
+async function baixarMaterial(id, caminho, gaveta){
+  var url;
+
+  if(gaveta === 'materiais-pagos'){
+    /* gaveta fechada: o Supabase só devolve o endereço se esta pessoa
+       comprou (ou é a dona). O endereço vale por 5 minutos. */
+    var ass = await sb.storage.from('materiais-pagos').createSignedUrl(caminho, 300);
+    if(ass.error || !ass.data || !ass.data.signedUrl){
+      alert('Não consegui liberar o arquivo. Se você comprou agora, espere alguns segundos e tente de novo.');
+      return;
+    }
+    url = ass.data.signedUrl;
+  } else {
+    url = urlDoArquivo(caminho);
+  }
+
   window.open(url, '_blank');
   if(sb){
     try { await sb.rpc('registrar_download', { material_id: id }); } catch(e){}
@@ -3626,7 +3927,7 @@ async function carregarMeusMateriais(){
   if(!sb || !usuario){ caixa.innerHTML = '<p class="muted" style="font-size:.88rem;">Entre para ver seus materiais.</p>'; return; }
 
   var r = await sb.from('materiais')
-    .select('id, titulo, arquivo_path, arquivo_nome, tamanho_bytes, downloads, criado_em')
+    .select('id, titulo, arquivo_path, arquivo_nome, tamanho_bytes, downloads, criado_em, preco, arquivo_bucket')
     .eq('professor_id', usuario.id)
     .order('criado_em', { ascending: false });
 
@@ -3642,9 +3943,11 @@ async function carregarMeusMateriais(){
     return '<div class="list-item">' +
       '<div class="g"><b>' + iconeArquivo(m.arquivo_nome) + ' ' + esc(m.titulo) + '</b>' +
       '<small>' + (Number(m.downloads) || 0) + ((Number(m.downloads) === 1) ? ' download' : ' downloads') +
-      ' · ' + esc(tamanhoLegivel(m.tamanho_bytes)) + '</small></div>' +
+      ' · ' + esc(tamanhoLegivel(m.tamanho_bytes)) +
+      (Number(m.preco) > 0 ? ' · <b style="color:var(--brand-600);">' + esc(moeda(m.preco)) + '</b>' : '') +
+      '</small></div>' +
       (confirmando
-        ? '<span style="display:flex;gap:6px;"><button class="btn btn-sm" style="background:#DC2626;color:#fff;" onclick="excluirMaterial(\'' + m.id + '\', \'' + m.arquivo_path.replace(/'/g, "\\'") + '\', true)">Confirmar</button>' +
+        ? '<span style="display:flex;gap:6px;"><button class="btn btn-sm" style="background:#DC2626;color:#fff;" onclick="excluirMaterial(\'' + m.id + '\', \'' + m.arquivo_path.replace(/'/g, "\\'") + '\', true, \'' + (m.arquivo_bucket || 'materiais') + '\')">Confirmar</button>' +
           '<button class="btn btn-ghost btn-sm" onclick="materialParaExcluir=null;carregarMeusMateriais()">Cancelar</button></span>'
         : '<span style="display:flex;gap:6px;">' +
           '<button class="btn btn-ghost btn-sm" onclick="editarMaterial(\'' + m.id + '\')">Editar</button>' +
@@ -3653,11 +3956,11 @@ async function carregarMeusMateriais(){
   }).join('');
 }
 
-async function excluirMaterial(id, caminho, confirmado){
+async function excluirMaterial(id, caminho, confirmado, gaveta){
   if(!confirmado){ materialParaExcluir = id; carregarMeusMateriais(); return; }
   materialParaExcluir = null;
   await sb.from('materiais').delete().eq('id', id);
-  await sb.storage.from('materiais').remove([caminho]);
+  await sb.storage.from(gaveta || 'materiais').remove([caminho]);
   await carregarMeusMateriais();
   await carregarMateriais(true);
 }
@@ -3753,11 +4056,12 @@ function atualizarModoMaterial(){
 async function editarMaterial(id){
   if(!sb || !usuario) return;
   var r = await sb.from('materiais')
-    .select('id, titulo, descricao, area, nivel, arquivo_nome, capa_path')
+    .select('id, titulo, descricao, area, nivel, arquivo_nome, capa_path, preco, arquivo_bucket')
     .eq('id', id).maybeSingle();
   if(r.error || !r.data){ return; }
 
   materialEditando = id;
+  materialGavetaAtual = r.data.arquivo_bucket || 'materiais';
   capaEscolhidaArq = null;
   go('publicar-material');
 
@@ -3769,6 +4073,8 @@ async function editarMaterial(id){
   document.getElementById('mt-capa').value = '';
   document.getElementById('mt-msg').style.display = 'none';
   document.getElementById('mt-info-capa').style.display = 'none';
+
+  aplicarPrecoNoFormulario(Number(r.data.preco) || 0);
 
   var cx = document.getElementById('mt-info-arquivo');
   cx.style.display = 'block';
@@ -3794,16 +4100,38 @@ async function salvarEdicaoMaterial(){
   var btn = document.getElementById('mt-publicar');
   btn.disabled = true; btn.textContent = 'Salvando…';
 
+  var precoNovo = precoDoFormulario();
+  if(precoNovo === false){
+    btn.disabled = false; atualizarModoMaterial();
+    mostrarMsgMaterial('Informe um preço de pelo menos R$ 1,00, ou marque o material como gratuito.', 'erro'); return;
+  }
+
+  var gavetaNova = precoNovo > 0 ? 'materiais-pagos' : 'materiais';
+  var mudouDeGaveta = (gavetaNova !== (materialGavetaAtual || 'materiais'));
+
   var mudancas = {
     titulo:    titulo,
     descricao: (document.getElementById('mt-desc').value || '').trim(),
     area:      document.getElementById('mt-area').value,
-    nivel:     document.getElementById('mt-nivel').value
+    nivel:     document.getElementById('mt-nivel').value,
+    preco:     precoNovo
   };
 
   /* arquivo novo? */
   var f = document.getElementById('mt-arquivo').files[0];
   var caminhoAntigo = null;
+
+  /* trocar de gratuito para pago (ou o contrário) muda o arquivo de
+     lugar: de uma gaveta aberta para uma fechada. Como não dá para
+     mover sem baixar e subir de novo, pedimos o arquivo. */
+  if(mudouDeGaveta && !f){
+    btn.disabled = false; atualizarModoMaterial();
+    mostrarMsgMaterial(precoNovo > 0
+      ? 'Para passar de gratuito para pago, escolha o arquivo de novo. Ele precisa sair da pasta aberta e ir para a fechada.'
+      : 'Para passar de pago para gratuito, escolha o arquivo de novo. Ele precisa sair da pasta fechada e ir para a aberta.', 'erro');
+    return;
+  }
+
   if(f){
     if(EXTENSOES_OK.indexOf(extensaoDe(f.name)) === -1){
       btn.disabled = false; atualizarModoMaterial();
@@ -3818,15 +4146,16 @@ async function salvarEdicaoMaterial(){
 
     var nomeSeguro = String(f.name).normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9._-]/g, '_');
     var caminho = usuario.id + '/' + Date.now() + '-' + nomeSeguro;
-    var up = await sb.storage.from('materiais').upload(caminho, f, { contentType: f.type || undefined });
+    var up = await sb.storage.from(gavetaNova).upload(caminho, f, { contentType: f.type || undefined });
     if(up.error){
       btn.disabled = false; atualizarModoMaterial();
       mostrarMsgMaterial('Não consegui enviar o arquivo novo: ' + esc(up.error.message), 'erro'); return;
     }
-    mudancas.arquivo_path  = caminho;
-    mudancas.arquivo_nome  = f.name;
-    mudancas.arquivo_tipo  = f.type || extensaoDe(f.name);
-    mudancas.tamanho_bytes = f.size;
+    mudancas.arquivo_path   = caminho;
+    mudancas.arquivo_nome   = f.name;
+    mudancas.arquivo_tipo   = f.type || extensaoDe(f.name);
+    mudancas.tamanho_bytes  = f.size;
+    mudancas.arquivo_bucket = gavetaNova;
   }
 
   /* capa nova? */
@@ -3840,7 +4169,8 @@ async function salvarEdicaoMaterial(){
 
   if(r.error){ mostrarMsgMaterial('Não deu certo: ' + esc(r.error.message), 'erro'); return; }
 
-  if(caminhoAntigo) await sb.storage.from('materiais').remove([caminhoAntigo]);
+  if(caminhoAntigo) await sb.storage.from(materialGavetaAtual || 'materiais').remove([caminhoAntigo]);
+  materialGavetaAtual = gavetaNova;
 
   mostrarMsgMaterial('Alterações salvas! ' +
     '<button class="btn btn-ghost btn-sm" style="margin-top:10px;" onclick="go(\'loja\')">Ver na lista</button>', 'ok');
@@ -3883,7 +4213,7 @@ function marcarPill(idContainer, texto){
 async function editarOferta(id){
   if(!sb || !usuario) return;
   var r = await sb.from('ofertas')
-    .select('id, titulo, descricao, area, nivel, formato, valor, cobranca, modalidade')
+    .select('id, titulo, descricao, area, nivel, formato, valor, cobranca, modalidade, pagar_pelo_site')
     .eq('id', id).maybeSingle();
   if(r.error || !r.data) return;
 
@@ -3899,6 +4229,7 @@ async function editarOferta(id){
   if(o.cobranca) document.getElementById('of-cobranca').value = o.cobranca;
   marcarPill('of-formato', o.formato);
   marcarPill('of-modalidade', o.modalidade);
+  aplicarPagamentoNoFormulario(!!o.pagar_pelo_site);
   document.getElementById('msg-oferta').style.display = 'none';
 
   atualizarModoOferta();
@@ -3930,7 +4261,8 @@ async function salvarEdicaoOferta(){
     descricao:  (document.getElementById('of-desc').value || '').trim(),
     valor:      valor,
     cobranca:   document.getElementById('of-cobranca').value,
-    modalidade: textoDoPillLigado('of-modalidade', 'Online')
+    modalidade: textoDoPillLigado('of-modalidade', 'Online'),
+    pagar_pelo_site: !!ofertaPagaSite
   }).eq('id', ofertaEditando);
 
   btn.disabled = false;
@@ -3948,10 +4280,11 @@ async function salvarEdicaoOferta(){
 
 
 /* ---------------- DENÚNCIA ---------------- */
-function abrirDenuncia(tipo, id, rotulo){
+function abrirDenuncia(tipo, id, rotulo, comoChamar){
   denunciaAlvo = { tipo: tipo, id: id, rotulo: rotulo || '' };
   document.getElementById('dn-alvo').innerHTML =
-    'Você está denunciando ' + (tipo === 'material' ? 'o material' : tipo === 'oferta' ? 'a oferta' : 'o perfil') +
+    'Você está denunciando ' + (comoChamar || (tipo === 'material' ? 'o material'
+      : tipo === 'oferta' ? 'a oferta' : 'o perfil')) +
     ' <b>' + esc(rotulo || '') + '</b>.';
   document.getElementById('dn-detalhe').value = '';
   document.getElementById('dn-msg').style.display = 'none';
@@ -4070,14 +4403,16 @@ async function blocoDenuncia(d){
     var m = await sb.from('materiais').select('titulo, ativo, professor_id').eq('id', d.alvo_id).maybeSingle();
     if(m.data){ titulo = m.data.titulo; noAr = m.data.ativo; dono = m.data.professor_id; }
   } else if(d.tipo === 'oferta'){
-    var o = await sb.from('ofertas').select('titulo, ativa, professor_id').eq('id', d.alvo_id).maybeSingle();
-    if(o.data){ titulo = o.data.titulo; noAr = o.data.ativa; dono = o.data.professor_id; }
+    var o = await sb.from('ofertas').select('titulo, ativa, professor_id, tipo').eq('id', d.alvo_id).maybeSingle();
+    if(o.data){ titulo = o.data.titulo; noAr = o.data.ativa; dono = o.data.professor_id;
+                if(o.data.tipo === 'servico') d.__servico = true; }
   } else {
     var pf = await sb.from('perfis').select('nome').eq('id', d.alvo_id).maybeSingle();
     if(pf.data){ titulo = pf.data.nome; dono = d.alvo_id; }
   }
 
-  var rotuloTipo = { material:'Material', oferta:'Oferta', perfil:'Perfil' }[d.tipo] || d.tipo;
+  var rotuloTipo = d.__servico ? 'Serviço'
+                 : ({ material:'Material', oferta:'Oferta', perfil:'Perfil' }[d.tipo] || d.tipo);
 
   var acoes = '';
   if(d.status === 'aberta'){
@@ -4146,8 +4481,1354 @@ function avisarSemConfig(){
 
 
 /* ---------- início ---------- */
+
+/* ================================================================
+   ETAPA 7 — VENDAS PELO MERCADO PAGO
+
+   Duas ideias guiam tudo o que está aqui:
+
+   1. O dinheiro não passa pela plataforma. Cada professor conecta
+      a própria conta do Mercado Pago e recebe direto; a comissão
+      da plataforma é separada pelo próprio Mercado Pago.
+
+   2. O site nunca decide sozinho que algo foi pago. Quem marca uma
+      compra como paga é o servidor, depois de perguntar ao Mercado
+      Pago. Aqui no navegador a gente só mostra o que já aconteceu.
+   ================================================================ */
+
+var mpConectado         = false;   /* este professor já ligou a conta? */
+var mpVerificado        = false;
+var materialPago        = false;   /* estado do formulário de material */
+var materialGavetaAtual = 'materiais';
+var ofertaPagaSite      = false;
+var minhasCompras       = [];
+var comprasCarregadas   = false;
+var retornoMP           = null;
+
+
+/* ---------------- atalhos de leitura ---------------- */
+function vendasLigadas(){ return !!(config && config.vendas_ativas); }
+function comissaoPct(){   return Number((config && config.comissao_percentual) || 0); }
+function mpClientId(){    return (config && config.mp_client_id) || ''; }
+
+function comprei(materialId){
+  return minhasCompras.some(function(c){
+    return c.material_id === materialId && c.status === 'paga';
+  });
+}
+
+
+/* ---------------- o card da lista ---------------- */
+function precoDoCard(m){
+  var p = Number(m.preco) || 0;
+  return p > 0
+    ? '<span class="price">' + esc(moeda(p)) + '</span>'
+    : '<span class="price" style="color:var(--green-600);">Gratuito</span>';
+}
+
+function botaoDoCard(m){
+  var p = Number(m.preco) || 0;
+  var gaveta = m.arquivo_bucket || 'materiais';
+  var caminho = String(m.arquivo_path || '').replace(/'/g, "\\'");
+
+  /* gratuito, ou pago e já comprado: baixa */
+  if(p <= 0 || comprei(m.id) || (usuario && usuario.id === m.professor_id)){
+    return '<button class="btn btn-primary btn-sm" onclick="baixarMaterial(\'' + m.id + '\', \'' +
+           caminho + '\', \'' + gaveta + '\')">Baixar</button>';
+  }
+  return '<button class="btn btn-accent btn-sm" onclick="comprar(\'material\', \'' + m.id + '\')">Comprar</button>';
+}
+
+
+/* ---------------- o formulário de material ---------------- */
+function pintarCampoPrecoMaterial(){
+  var campo = document.getElementById('mt-campo-preco');
+  if(!campo) return;
+
+  /* enquanto as vendas estiverem desligadas, nem aparece a escolha */
+  campo.style.display = vendasLigadas() ? '' : 'none';
+  if(!vendasLigadas()){ materialPago = false; return; }
+
+  var nota = document.getElementById('mt-nota-preco');
+  if(nota){
+    nota.innerHTML = 'O aluno paga pelo site, com Pix, cartão de crédito ou débito. ' +
+      (comissaoPct() > 0
+        ? 'A plataforma fica com <b>' + comissaoPct() + '%</b>; o resto cai direto na sua conta do Mercado Pago.'
+        : 'O valor cai direto na sua conta do Mercado Pago.');
+  }
+  avisoMercadoPago('mt-aviso-mp', materialPago);
+}
+
+function escolherTipoMaterial(botao, pago){
+  if(pago && !mpConectado){
+    avisoMercadoPago('mt-aviso-mp', true);
+    mostrarMsgMaterial('Conecte sua conta do Mercado Pago antes de cobrar por um material. O caminho está no seu painel.', 'aviso');
+    return;
+  }
+  pick(botao);
+  materialPago = !!pago;
+  var cx = document.getElementById('mt-caixa-preco');
+  if(cx) cx.style.display = pago ? 'block' : 'none';
+  if(!pago){ var p = document.getElementById('mt-preco'); if(p) p.value = ''; }
+  avisoMercadoPago('mt-aviso-mp', materialPago);
+  previaMaterial();
+}
+
+/** devolve o preço, ou false se o que está escrito não serve */
+function precoDoFormulario(){
+  if(!vendasLigadas() || !materialPago) return 0;
+  var v = Number((document.getElementById('mt-preco') || {}).value);
+  if(!(v >= 1)) return false;
+  return Math.round(v * 100) / 100;
+}
+
+function aplicarPrecoNoFormulario(preco){
+  var pago = Number(preco) > 0;
+  materialPago = pago;
+  marcarPill('mt-tipo', pago ? 'Pago' : 'Gratuito');
+  var cx = document.getElementById('mt-caixa-preco');
+  if(cx) cx.style.display = pago ? 'block' : 'none';
+  var el = document.getElementById('mt-preco');
+  if(el) el.value = pago ? preco : '';
+  pintarCampoPrecoMaterial();
+}
+
+
+/* ---------------- o formulário de oferta ---------------- */
+function pintarCampoPagamentoOferta(){
+  var campo = document.getElementById('of-campo-pagamento');
+  if(!campo) return;
+  campo.style.display = vendasLigadas() ? '' : 'none';
+  if(!vendasLigadas()){ ofertaPagaSite = false; }
+  avisoMercadoPago('of-aviso-mp', ofertaPagaSite);
+  atualizarNotaLiquido();
+}
+
+function escolherPagamentoOferta(botao, pelosite){
+  if(pelosite && !mpConectado){
+    avisoMercadoPago('of-aviso-mp', true);
+    mostrarMsgOferta('Conecte sua conta do Mercado Pago antes de receber pelo site. O caminho está no seu painel.', 'aviso');
+    return;
+  }
+  pick(botao);
+  ofertaPagaSite = !!pelosite;
+  avisoMercadoPago('of-aviso-mp', ofertaPagaSite);
+  atualizarNotaLiquido();
+}
+
+function aplicarPagamentoNoFormulario(pelosite){
+  ofertaPagaSite = !!pelosite && vendasLigadas();
+  marcarPill('of-pagamento', ofertaPagaSite ? 'Paga pelo site' : 'Combina comigo');
+  pintarCampoPagamentoOferta();
+}
+
+function atualizarNotaLiquido(){
+  var el = document.getElementById('of-liquido');
+  if(!el) return;
+  if(!ofertaPagaSite){
+    el.textContent = 'Combinado direto com o aluno, por WhatsApp.';
+    return;
+  }
+  var v = Number((document.getElementById('of-valor') || {}).value) || 0;
+  var fica = Math.round(v * (100 - comissaoPct())) / 100;
+  el.innerHTML = comissaoPct() > 0
+    ? 'A plataforma fica com ' + comissaoPct() + '%. Você recebe <b>' + esc(moeda(fica)) + '</b> por aula.'
+    : 'Você recebe o valor cheio.';
+}
+
+
+/* ---------------- o aviso de conta não conectada ---------------- */
+function avisoMercadoPago(idCaixa, precisa){
+  var cx = document.getElementById(idCaixa);
+  if(!cx) return;
+  if(!precisa || mpConectado){ cx.style.display = 'none'; return; }
+  cx.style.display = 'block';
+  cx.style.background = '#FEF3C7';
+  cx.style.color = '#92400E';
+  cx.innerHTML = '<b>Falta conectar sua conta do Mercado Pago.</b><br>' +
+    'Sem isso o aluno não tem para onde pagar. ' +
+    '<button class="btn btn-ghost btn-sm" style="margin-top:10px;" onclick="go(\'painel-prof\')">Ir ao painel</button>';
+}
+
+
+/* ---------------- conectar a conta do professor ---------------- */
+async function verificarMercadoPago(){
+  mpVerificado = true;
+  mpConectado = false;
+  if(!sb || !usuario) return;
+  try {
+    var r = await sb.rpc('mp_conectado', { pid: usuario.id });
+    mpConectado = !!(r && r.data);
+  } catch(e){ mpConectado = false; }
+}
+
+function pintarPainelMP(){
+  var caixa = document.getElementById('painel-mp');
+  var corpo = document.getElementById('mp-corpo');
+  if(!caixa || !corpo) return;
+
+  if(!vendasLigadas()){ caixa.style.display = 'none'; return; }
+  caixa.style.display = '';
+
+  if(mpConectado){
+    corpo.innerHTML =
+      '<div style="background:#DCFCE7;color:#166534;padding:14px 16px;border-radius:11px;font-size:.9rem;line-height:1.55;">' +
+        '<b>Conta conectada.</b> Você já pode cobrar por materiais e por aulas.' +
+      '</div>' +
+      '<p class="muted" style="font-size:.85rem;line-height:1.6;margin-top:14px;">' +
+        'O dinheiro das suas vendas cai direto na sua conta do Mercado Pago' +
+        (comissaoPct() > 0 ? ', já com os ' + comissaoPct() + '% da plataforma descontados' : '') +
+        '. A plataforma não guarda dinheiro seu em momento nenhum.' +
+      '</p>' +
+      '<button class="btn btn-ghost btn-block btn-sm" style="margin-top:14px;" onclick="conectarMercadoPago()">Conectar de novo</button>';
+    return;
+  }
+
+  corpo.innerHTML =
+    '<p style="font-size:.9rem;color:var(--ink-2);line-height:1.6;">' +
+      'Para vender material ou receber por aula pelo site, conecte sua conta do Mercado Pago. ' +
+      'Leva um minuto: você entra na sua conta e autoriza. Depois disso o dinheiro das suas vendas cai lá, direto.' +
+    '</p>' +
+    '<p class="muted" style="font-size:.82rem;line-height:1.6;margin-top:10px;">' +
+      'A plataforma não vê sua senha nem mexe no seu saldo. A autorização pode ser retirada por você a qualquer momento, ' +
+      'no próprio Mercado Pago.' +
+    '</p>' +
+    '<button class="btn btn-accent btn-block btn-sm" style="margin-top:14px;" onclick="conectarMercadoPago()">Conectar Mercado Pago</button>';
+}
+
+async function conectarMercadoPago(){
+  if(!sb || !usuario){ irParaEntrar('entrar'); return; }
+
+  if(!mpClientId()){
+    alert('Falta preencher o mp_client_id na tabela config do Supabase. Sem ele o site não sabe para onde mandar você.');
+    return;
+  }
+
+  /* bilhete de ida: um código aleatório que o servidor vai reconhecer
+     na volta. É o que garante que a conta conectada é a sua. */
+  var estado = 'e' + Date.now().toString(36) + Math.random().toString(36).slice(2, 12);
+
+  var r = await sb.from('mp_oauth_estados').insert({ estado: estado, professor_id: usuario.id });
+  if(r.error){
+    alert('Não consegui iniciar a conexão: ' + r.error.message);
+    return;
+  }
+
+  var volta = enderecoDeVolta();
+  irPara('https://auth.mercadopago.com/authorization' +
+    '?response_type=code' +
+    '&client_id=' + encodeURIComponent(mpClientId()) +
+    '&redirect_uri=' + encodeURIComponent(volta) +
+    '&state=' + encodeURIComponent(estado));
+}
+
+/* sair do site para outro endereço passa por aqui, num lugar só.
+   Fica mais fácil de conferir no teste, e de mudar se precisar. */
+function irPara(url){ location.href = url; }
+
+/* Para onde o Mercado Pago devolve o professor depois de autorizar.
+   É o próprio site: o portão do Supabase exige a chave do projeto em
+   toda chamada, e o Mercado Pago não tem como mandá-la. O site tem,
+   então ele recebe o código e repassa para a função. */
+function enderecoDeVolta(){ return location.origin + '/'; }
+
+/* Voltou do Mercado Pago? A barra de endereço traz ?code=...&state=... */
+async function tratarVoltaMP(){
+  var p = new URLSearchParams(location.search || '');
+  var code   = p.get('code');
+  var estado = p.get('state');
+  if(!code || !estado) return false;
+
+  /* tira o código da barra de endereço antes de qualquer outra coisa,
+     para ele não ficar no histórico do navegador */
+  if(history.replaceState) history.replaceState(null, '', location.pathname + '#painel-prof');
+
+  if(!sb){ retornoMP = 'erro'; return true; }
+
+  try {
+    var r = await sb.functions.invoke('mp-oauth', {
+      body: { code: code, state: estado, redirect_uri: enderecoDeVolta() }
+    });
+    retornoMP = (r && r.data && r.data.situacao) ? r.data.situacao : 'erro';
+  } catch(e){
+    retornoMP = 'erro';
+  }
+
+  try { await verificarMercadoPago(); } catch(e){}
+  return true;
+}
+
+function guardarRetornoMP(consulta){
+  var p = new URLSearchParams(consulta);
+  if(p.get('mp')) retornoMP = p.get('mp');
+}
+
+function mostrarRetornoMP(){
+  if(!retornoMP) return;
+  var situacao = retornoMP;
+  retornoMP = null;
+
+  /* quando dá certo, o próprio bloco já mostra "Conta conectada" —
+     um segundo aviso verde dizendo o mesmo só polui */
+  if(situacao === 'ok') return;
+
+  var recados = {
+    cancelado:      ['Você cancelou a conexão com o Mercado Pago. Nada foi alterado.', 'aviso'],
+    estado_invalido:['A conexão não pôde ser confirmada. Tente clicar em Conectar de novo.', 'erro'],
+    expirado:       ['A tentativa demorou demais e expirou. Clique em Conectar Mercado Pago outra vez.', 'aviso'],
+    recusado:       ['O Mercado Pago recusou a conexão. Confira se a conta tem a verificação de identidade completa.', 'erro'],
+    erro_ao_gravar: ['Consegui falar com o Mercado Pago, mas não gravei aqui. Tente de novo.', 'erro'],
+    erro:           ['Deu algum problema na conexão com o Mercado Pago. Tente de novo.', 'erro']
+  };
+  var r = recados[situacao] || recados.erro;
+
+  var corpo = document.getElementById('mp-corpo');
+  if(corpo){
+    var cores = { ok: ['#DCFCE7','#166534'], aviso: ['#FEF3C7','#92400E'], erro: ['#FEE2E2','#991B1B'] };
+    var c = cores[r[1]] || cores.erro;
+    var aviso = document.createElement('div');
+    aviso.style.cssText = 'padding:14px 16px;border-radius:11px;font-size:.9rem;line-height:1.55;margin-bottom:14px;' +
+                          'background:' + c[0] + ';color:' + c[1] + ';';
+    aviso.textContent = r[0];
+    corpo.insertBefore(aviso, corpo.firstChild);
+  }
+}
+
+
+/* ---------------- comprar ---------------- */
+async function comprar(tipo, id){
+  if(!sb) return;
+  if(!usuario){ irParaEntrar('entrar'); return; }
+
+  var botoes = document.querySelectorAll('button');
+  var antes = [];
+  botoes.forEach(function(b){ antes.push(b.disabled); b.disabled = true; });
+  function soltar(){ botoes.forEach(function(b, i){ b.disabled = antes[i]; }); }
+
+  var r;
+  try {
+    r = await sb.functions.invoke('mp-criar-pagamento', { body: { tipo: tipo, id: id } });
+  } catch(e){
+    soltar();
+    alert('Não consegui falar com o servidor de pagamento. Tente de novo em instantes.');
+    return;
+  }
+
+  soltar();
+
+  var dados = r && r.data;
+  if(dados && dados.url){ location.href = dados.url; return; }
+
+  var recado = (dados && dados.erro) || '';
+
+  /* Se o servidor respondeu com código de erro, a biblioteca guarda o
+     corpo aqui dentro. Vale tentar ler: é onde está o motivo de verdade. */
+  if(!recado && r && r.error && r.error.context && typeof r.error.context.json === 'function'){
+    try {
+      var corpo = await r.error.context.json();
+      if(corpo && corpo.erro) recado = corpo.erro;
+    } catch(e){}
+  }
+
+  if(!recado){
+    recado = 'O servidor de pagamento não respondeu. Se isso continuar, me avise — ' +
+             'pode ser que as funções do Mercado Pago precisem ser republicadas.';
+  }
+  alert(recado);
+}
+
+
+/* ---------------- minhas compras ---------------- */
+async function carregarCompras(forcar){
+  if(!sb || !usuario){ minhasCompras = []; comprasCarregadas = false; pintarCompras(); return; }
+  if(comprasCarregadas && !forcar){ pintarCompras(); return; }
+
+  var r = await sb.from('compras')
+    .select('id, tipo, material_id, oferta_id, titulo, valor, status, meio, criado_em, pago_em, vendedor_id, aula_confirmada_em')
+    .eq('comprador_id', usuario.id)
+    .order('criado_em', { ascending: false })
+    .limit(200);
+
+  if(r.error){
+    minhasCompras = [];
+    var cx = document.getElementById('compras-lista');
+    if(cx){
+      cx.innerHTML = /relation|does not exist/i.test(r.error.message || '')
+        ? '<p class="muted">As compras ainda não existem neste banco. Falta rodar o <b>banco-etapa7.sql</b>.</p>'
+        : '<p class="muted">Não consegui carregar: ' + esc(r.error.message) + '</p>';
+    }
+    return;
+  }
+
+  minhasCompras = r.data || [];
+  comprasCarregadas = true;
+  pintarCompras();
+  filtrarMateriais();   /* o botão do card muda de Comprar para Baixar */
+}
+
+function pintarCompras(){
+  var cx = document.getElementById('compras-lista');
+  if(!cx) return;
+
+  if(!usuario){ cx.innerHTML = '<p class="muted">Entre na sua conta para ver suas compras.</p>'; return; }
+
+  if(minhasCompras.length === 0){
+    cx.innerHTML = '<div class="panel" style="padding:34px;text-align:center;">' +
+      '<p class="muted" style="line-height:1.6;">Você ainda não comprou nada por aqui.</p>' +
+      '<button class="btn btn-primary btn-sm" style="margin-top:14px;" onclick="go(\'loja\')">Ver materiais</button></div>';
+    return;
+  }
+
+  cx.innerHTML = '<div class="panel" style="padding:22px;">' +
+    minhasCompras.map(blocoCompra).join('') + '</div>';
+}
+
+function blocoCompra(c){
+  var cores = {
+    paga:      ['#DCFCE7', '#166534', 'Paga'],
+    pendente:  ['#FEF3C7', '#92400E', 'Aguardando pagamento'],
+    cancelada: ['#FEE2E2', '#991B1B', 'Cancelada'],
+    devolvida: ['#E5E7EB', '#374151', 'Devolvida']
+  };
+  var e = cores[c.status] || cores.pendente;
+
+  var acao = '';
+  if(c.status === 'paga' && c.tipo === 'material'){
+    var m = materiais.filter(function(x){ return x.id === c.material_id; })[0];
+    acao = m
+      ? '<button class="btn btn-primary btn-sm" onclick="baixarMaterial(\'' + m.id + '\', \'' +
+        String(m.arquivo_path).replace(/'/g, "\\'") + '\', \'' + (m.arquivo_bucket || 'materiais') + '\')">Baixar</button>'
+      : '<span class="muted" style="font-size:.82rem;">material saiu do ar</span>';
+  }
+  if(c.status === 'paga' && c.tipo === 'oferta'){
+    acao = '<button class="btn btn-ghost btn-sm" onclick="verPerfil(\'' + c.vendedor_id + '\')">Falar com quem ensina</button>';
+  }
+
+  return '<div class="list-item">' +
+    '<div class="g"><b>' + esc(c.titulo) + '</b>' +
+      '<small>' + esc(dataBR(c.criado_em)) + ' · ' + esc(moeda(c.valor)) +
+      (c.meio ? ' · ' + esc(meioLegivel(c.meio)) : '') + '</small></div>' +
+    '<span style="display:flex;gap:8px;align-items:center;">' +
+      '<span class="tag" style="background:' + e[0] + ';color:' + e[1] + ';border:0;">' + e[2] + '</span>' +
+      acao +
+    '</span>' +
+  '</div>';
+}
+
+function meioLegivel(m){
+  var mapa = {
+    'account_money': 'saldo Mercado Pago',
+    'credit_card':   'cartão de crédito',
+    'debit_card':    'cartão de débito',
+    'bank_transfer': 'Pix',
+    'ticket':        'boleto'
+  };
+  return mapa[m] || m;
+}
+
+
+/* ---------------- minhas vendas, no painel ---------------- */
+async function carregarMinhasVendas(){
+  var caixa = document.getElementById('painel-vendas');
+  var lista = document.getElementById('lista-vendas');
+  if(!caixa || !lista) return;
+
+  if(!sb || !usuario || !vendasLigadas()){ caixa.style.display = 'none'; return; }
+
+  var r = await sb.from('compras')
+    .select('id, tipo, titulo, valor, comissao, status, criado_em, pago_em, comprador_id, aula_confirmada_em, perfis:comprador_id(nome)')
+    .eq('vendedor_id', usuario.id)
+    .order('criado_em', { ascending: false })
+    .limit(100);
+
+  if(r.error){ caixa.style.display = 'none'; return; }
+
+  var vendas = (r.data || []).filter(function(v){ return v.status !== 'pendente'; });
+  caixa.style.display = '';
+
+  if(vendas.length === 0){
+    lista.innerHTML = '<p class="muted" style="font-size:.88rem;line-height:1.6;">' +
+      'Nenhuma venda ainda. Assim que alguém comprar, aparece aqui — e o dinheiro cai direto na sua conta do Mercado Pago.</p>';
+    return;
+  }
+
+  var totalPago = vendas
+    .filter(function(v){ return v.status === 'paga'; })
+    .reduce(function(t, v){ return t + (Number(v.valor) - Number(v.comissao || 0)); }, 0);
+
+  lista.innerHTML =
+    '<p style="font-size:.9rem;margin-bottom:14px;">Já recebido: <b style="color:var(--green-600);">' +
+      esc(moeda(totalPago)) + '</b></p>' +
+    vendas.map(blocoVenda).join('');
+}
+
+function blocoVenda(v){
+  var quem = (v.perfis && v.perfis.nome) || 'aluno';
+  var liquido = Number(v.valor) - Number(v.comissao || 0);
+
+  var marca = v.status === 'paga'
+    ? '<span class="tag" style="background:#DCFCE7;color:#166534;border:0;">' + esc(moeda(liquido)) + '</span>'
+    : '<span class="tag" style="background:#E5E7EB;color:#374151;border:0;">' + esc(v.status) + '</span>';
+
+  /* a aula é o caso em que vale registrar que aconteceu:
+     é o único papel que a plataforma tem se o aluno contestar depois */
+  var confirmar = '';
+  if(v.tipo === 'oferta' && v.status === 'paga'){
+    confirmar = v.aula_confirmada_em
+      ? '<span class="muted" style="font-size:.8rem;">aula confirmada</span>'
+      : '<button class="btn btn-ghost btn-sm" onclick="confirmarAula(\'' + v.id + '\')">Marcar que a aula aconteceu</button>';
+  }
+
+  return '<div class="list-item">' +
+    '<div class="g"><b>' + esc(v.titulo) + '</b>' +
+    '<small>' + esc(quem) + ' · ' + esc(dataBR(v.criado_em)) + '</small></div>' +
+    '<span style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">' + marca + confirmar + '</span>' +
+  '</div>';
+}
+
+async function confirmarAula(compraId){
+  if(!sb) return;
+  var r = await sb.rpc('confirmar_aula', { compra: compraId });
+  if(r.error){ alert('Não consegui registrar: ' + r.error.message); return; }
+  await carregarMinhasVendas();
+}
+
+
+
+/* ================================================================
+   ETAPA 9 — SERVIÇOS: QUEM PUBLICA RECEBE
+
+   A etapa 8 tinha invertido isto, e foi refeita. Agora:
+
+     o profissional publica o serviço  →  quem precisa contrata
+     →  paga pelo site (ou contrata direto, se for gratuito)
+     →  abre a área fechada de arquivos entre os dois
+
+   Um serviço é uma OFERTA com tipo 'servico'. Aproveita tudo o que
+   a oferta já tem: edição, exclusão, moderação e cobrança.
+
+   O trabalho é uma COMPRA paga. As duas partes são quem comprou e
+   quem vendeu — e é só isso que a regra do banco confere.
+   ================================================================ */
+
+var CATEGORIAS = {
+  '📑 Acadêmico': ['Revisão textual', 'Formatação ABNT', 'Orientação de TCC',
+                   'Revisão bibliográfica', 'Metodologia', 'Tradução de resumo'],
+  '📚 Escolar':   ['Plano de aula', 'Sequência didática', 'Material de apoio',
+                   'Correção de atividades', 'Adaptação BNCC'],
+  '📊 Projetos':  ['Projeto pedagógico', 'Relatório', 'Apresentação', 'Planilha'],
+  '📖 Livros':    ['Diagramação', 'Design de capa', 'Preparação de texto', 'Revisão de prova'],
+  '🖥️ Design educacional': ['Slides', 'Videoaula', 'Ilustração', 'Infográfico']
+};
+
+var servicos           = [];
+var servicosCarregados = false;
+var servicoEditando    = null;
+var servicoAberto      = null;   /* id da oferta na tela v-servico */
+var trabalhoAberto     = null;   /* id da COMPRA na tela v-trabalho */
+var arquivoTrabalho    = null;
+var cobrancaServico    = 'site'; /* site | gratis | combinar */
+
+var MAX_TRABALHO = 50 * 1024 * 1024;
+
+
+/* ---------------- listas ---------------- */
+function montarListasServicos(){
+  var cat = document.getElementById('sv-categoria');
+  if(cat && !cat.options.length){
+    Object.keys(CATEGORIAS).forEach(function(c){
+      var o = document.createElement('option'); o.textContent = c; cat.appendChild(o);
+    });
+  }
+  montarTiposServico();
+
+  var filtros = document.getElementById('filtros-categoria');
+  if(filtros && !filtros.innerHTML.trim()){
+    filtros.innerHTML = Object.keys(CATEGORIAS).map(function(c){
+      return '<label style="display:flex;align-items:center;gap:8px;cursor:pointer;">' +
+             '<input type="checkbox" data-cat="' + esc(c) + '" onchange="filtrarServicos()"> ' +
+             esc(c) + '</label>';
+    }).join('');
+  }
+}
+
+function montarTiposServico(){
+  var cat  = document.getElementById('sv-categoria');
+  var tipo = document.getElementById('sv-tipo');
+  if(!cat || !tipo) return;
+  var lista = CATEGORIAS[cat.value] || [];
+  tipo.innerHTML = lista.map(function(t){ return '<option>' + esc(t) + '</option>'; }).join('');
+}
+
+
+/* ---------------- a vitrine ---------------- */
+async function carregarServicos(forcar){
+  if(!sb) return;
+  if(servicosCarregados && !forcar){ filtrarServicos(); return; }
+
+  var lista = document.getElementById('lista-servicos');
+
+  var r;
+  try {
+    r = await sb.from('ofertas')
+      .select('id, titulo, descricao, area, nivel, formato, valor, cobranca, modalidade, ' +
+              'prazo_dias, pagar_pelo_site, criado_em, professor_id, perfis(nome, cidade)')
+      .eq('ativa', true).eq('tipo', 'servico')
+      .order('criado_em', { ascending: false })
+      .limit(200);
+  } catch(e){
+    if(lista) lista.innerHTML = '<p class="muted">Esta área ainda não existe neste banco. Falta rodar o <b>banco-etapa9.sql</b>.</p>';
+    return;
+  }
+
+  if(r.error){
+    if(lista){
+      lista.innerHTML = /column|does not exist/i.test(r.error.message || '')
+        ? '<p class="muted">Falta rodar o <b>banco-etapa9.sql</b> no Supabase.</p>'
+        : '<p class="muted">Não consegui carregar: ' + esc(r.error.message) + '</p>';
+    }
+    return;
+  }
+
+  servicos = r.data || [];
+  servicosCarregados = true;
+  filtrarServicos();
+}
+
+function filtrarServicos(){
+  var lista = document.getElementById('lista-servicos');
+  var vazio = document.getElementById('vazio-servicos');
+  var cont  = document.getElementById('contador-servicos');
+  if(!lista) return;
+
+  var busca = ((document.getElementById('busca-servicos') || {}).value || '').trim().toLowerCase();
+
+  var cats = [];
+  document.querySelectorAll('#filtros-categoria input:checked').forEach(function(c){
+    cats.push(c.getAttribute('data-cat'));
+  });
+
+  var precoEl = document.getElementById('filtro-preco-servico');
+  var preco = precoEl ? precoEl.value : '0';
+
+  var res = servicos.filter(function(o){
+    if(cats.length && cats.indexOf(o.area) === -1) return false;
+    var v = Number(o.valor) || 0;
+    if(preco === 'gratis' && v > 0) return false;
+    if(preco !== 'gratis' && Number(preco) > 0 && v > Number(preco)) return false;
+    if(busca){
+      var alvo = [o.titulo, o.descricao, o.area, o.formato].join(' ').toLowerCase();
+      if(alvo.indexOf(busca) === -1) return false;
+    }
+    return true;
+  });
+
+  if(cont) cont.textContent = res.length === 1 ? '1 serviço publicado' : res.length + ' serviços publicados';
+  if(vazio) vazio.style.display = res.length ? 'none' : 'block';
+  lista.innerHTML = res.map(cardServico).join('');
+}
+
+function precoServico(o){
+  var v = Number(o.valor) || 0;
+  if(v > 0 && o.pagar_pelo_site) return moeda(v);
+  if(v > 0) return moeda(v) + '*';
+  return o.pagar_pelo_site ? 'Gratuito' : 'a combinar';
+}
+
+function cardServico(o){
+  var quem = (o.perfis && o.perfis.nome) || 'profissional';
+  var v = Number(o.valor) || 0;
+  var gratis = (v === 0 && o.pagar_pelo_site);
+
+  return '' +
+  '<article class="card job">' +
+    '<div class="job-head">' +
+      '<div>' +
+        '<h4>' + esc(o.titulo) + '</h4>' +
+        '<div class="tags" style="margin-top:8px;">' +
+          '<span class="tag">' + esc(o.area) + '</span>' +
+          '<span class="tag">' + esc(o.formato) + '</span>' +
+        '</div>' +
+      '</div>' +
+      '<div class="budget"><b style="' + (gratis ? 'color:var(--green-600);' : '') + '">' +
+        esc(precoServico(o)) + '</b><small>' + (o.pagar_pelo_site ? 'pelo site' : 'combinado direto') + '</small></div>' +
+    '</div>' +
+    '<p class="muted" style="font-size:.88rem;line-height:1.6;">' +
+      esc(cortar(o.descricao || 'Sem descrição.', 260)) + '</p>' +
+    '<div class="job-meta">' +
+      '<span>por <b class="link-auth" onclick="verPerfil(\'' + o.professor_id + '\')">' + esc(quem) + '</b></span>' +
+      (o.prazo_dias ? '<span>⏱ Entrega em ' + o.prazo_dias + ' dias</span>' : '') +
+      '<span>🕐 ' + esc(dataBR(o.criado_em)) + '</span>' +
+    '</div>' +
+    '<div class="job-foot">' +
+      '<span class="muted" style="font-size:.85rem;font-weight:600;">' + esc(o.modalidade || 'Online') + '</span>' +
+      '<button class="btn btn-primary btn-sm" onclick="verServico(\'' + o.id + '\')">Ver e contratar</button>' +
+    '</div>' +
+  '</article>';
+}
+
+function cortar(t, n){
+  t = String(t || '');
+  return t.length > n ? t.slice(0, n - 1) + '…' : t;
+}
+
+
+/* ---------------- publicar um serviço ---------------- */
+function previaServico(){
+  if(!document.getElementById('sv-pv-titulo')) return;
+  var t  = (document.getElementById('sv-titulo').value || '').trim();
+  var d  = (document.getElementById('sv-desc').value || '').trim();
+  var c  = (document.getElementById('sv-categoria') || {}).value || '';
+  var tp = (document.getElementById('sv-tipo') || {}).value || '';
+  var pz = (document.getElementById('sv-prazo') || {}).value || '';
+  var v  = Number((document.getElementById('sv-valor') || {}).value) || 0;
+
+  document.getElementById('sv-pv-titulo').textContent = t || 'O que você faz';
+  document.getElementById('sv-pv-desc').textContent   = d || 'A descrição aparece aqui.';
+  document.getElementById('sv-pv-cat').textContent    = c || 'Categoria';
+  document.getElementById('sv-pv-tipo').textContent   = tp || 'Tipo';
+  document.getElementById('sv-pv-valor').textContent  =
+    cobrancaServico === 'gratis' ? 'Gratuito' :
+    cobrancaServico === 'combinar' ? 'a combinar' :
+    (v > 0 ? moeda(v) : 'sem preço');
+  document.getElementById('sv-pv-prazo').textContent = pz ? ('⏱ Entrega em ' + pz + ' dias') : 'sem prazo definido';
+}
+
+function escolherCobrancaServico(botao, modo){
+  if((modo === 'site' || modo === 'gratis') && !mpConectado){
+    /* gratuito também precisa? não. Só o pago. */
+    if(modo === 'site'){
+      avisoMercadoPago('sv-aviso-mp', true);
+      mostrarMsgServico('Para receber pelo site você precisa conectar sua conta do Mercado Pago. O caminho está no seu painel.', 'aviso');
+      return;
+    }
+  }
+  pick(botao);
+  cobrancaServico = modo;
+  var caixa = document.getElementById('sv-caixa-valor');
+  if(caixa) caixa.style.display = (modo === 'site') ? '' : 'none';
+  pintarNotaCobranca();
+  avisoMercadoPago('sv-aviso-mp', modo === 'site');
+  previaServico();
+}
+
+function pintarNotaCobranca(){
+  var el = document.getElementById('sv-nota-cobranca');
+  if(!el) return;
+  if(cobrancaServico === 'site'){
+    el.innerHTML = 'Quem contratar paga aqui mesmo, com Pix ou cartão. ' +
+      (comissaoPct() > 0 ? 'A plataforma fica com <b>' + comissaoPct() + '%</b>; o resto cai na sua conta do Mercado Pago.'
+                         : 'O valor cai direto na sua conta do Mercado Pago.') +
+      ' A área de arquivos abre no pagamento.';
+  } else if(cobrancaServico === 'gratis'){
+    el.innerHTML = 'Sem cobrança. Quem contratar entra direto na área de arquivos com você.';
+  } else {
+    el.innerHTML = 'O site só apresenta vocês dois. Sem pagamento e <b>sem área de arquivos</b> — vocês combinam tudo por WhatsApp.';
+  }
+}
+
+function mostrarMsgServico(texto, tipo){
+  var c = { ok:['#DCFCE7','#166534'], erro:['#FEE2E2','#991B1B'], aviso:['#FEF3C7','#92400E'] }[tipo || 'aviso'];
+  var el = document.getElementById('sv-msg');
+  if(!el) return;
+  el.style.background = c[0]; el.style.color = c[1];
+  el.innerHTML = texto; el.style.display = 'block';
+}
+
+function atualizarPortaoServico(){
+  var portao = document.getElementById('portao-servico');
+  var form   = document.getElementById('form-servico');
+  if(!portao || !form) return;
+
+  if(!usuario){
+    portao.style.display = 'block';
+    portao.style.background = '#FEF3C7'; portao.style.color = '#92400E';
+    portao.innerHTML = '<b>Entre na sua conta para publicar um serviço.</b><br>' +
+      '<button class="btn btn-primary btn-sm" style="margin-top:10px;" onclick="irParaEntrar(\'criar\')">Entrar ou criar conta</button>';
+    form.style.display = 'none';
+    return;
+  }
+
+  if(!(perfil && (perfil.papel === 'professor' || perfil.papel === 'vendedor'))){
+    portao.style.display = 'block';
+    portao.style.background = '#FEF3C7'; portao.style.color = '#92400E';
+    portao.innerHTML = '<b>Só quem tem papel profissional publica serviço.</b><br>' +
+      'No seu perfil, escolha "Quero ensinar" ou "Quero vender material". ' +
+      '<button class="btn btn-primary btn-sm" style="margin-top:10px;" onclick="go(\'editar-perfil\')">Editar meu perfil</button>';
+    form.style.display = 'none';
+    return;
+  }
+
+  portao.style.display = 'none';
+  form.style.display = '';
+}
+
+function atualizarModoServico(){
+  atualizarPortaoServico();
+  var editando = !!servicoEditando;
+  var t = document.getElementById('sv-titulo-tela');
+  var u = document.getElementById('sv-sub-tela');
+  var c = document.getElementById('sv-crumb');
+  if(t) t.textContent = editando ? 'Editar serviço' : 'Publique o que você faz';
+  if(u) u.textContent = editando ? 'Altere o que quiser e salve.' : 'Descreva o serviço, o que está incluído e por quanto. Quem precisar contrata por aqui.';
+  if(c) c.textContent = editando ? 'Serviços › Editar' : 'Serviços › Publicar';
+  var b = document.getElementById('sv-publicar');
+  if(b) b.textContent = editando ? 'Salvar alterações' : 'Publicar serviço';
+  var x = document.getElementById('sv-cancelar');
+  if(x) x.style.display = editando ? '' : 'none';
+  pintarNotaCobranca();
+}
+
+function lerFormServico(){
+  var titulo = (document.getElementById('sv-titulo').value || '').trim();
+  if(titulo.length < 8){ mostrarMsgServico('Escreva um título com pelo menos 8 letras.', 'erro'); return null; }
+
+  var valor = 0, pagaSite = false;
+  if(cobrancaServico === 'site'){
+    valor = Number(document.getElementById('sv-valor').value);
+    if(!(valor >= 1)){ mostrarMsgServico('Informe um preço de pelo menos R$ 1,00 — ou escolha Gratuito.', 'erro'); return null; }
+    pagaSite = true;
+  } else if(cobrancaServico === 'gratis'){
+    valor = 0; pagaSite = true;    /* contrata pelo site, sem cobrança */
+  } else {
+    valor = 0; pagaSite = false;   /* a combinar */
+  }
+
+  var prazo = document.getElementById('sv-prazo').value;
+
+  return {
+    titulo:          titulo,
+    tipo:            'servico',
+    area:            document.getElementById('sv-categoria').value,
+    nivel:           'Livre / Profissional',
+    formato:         document.getElementById('sv-tipo').value,
+    descricao:       (document.getElementById('sv-desc').value || '').trim(),
+    valor:           valor,
+    cobranca:        'Curso completo',
+    modalidade:      'Online',
+    prazo_dias:      prazo === '' ? null : Number(prazo),
+    pagar_pelo_site: pagaSite
+  };
+}
+
+async function publicarServico(){
+  if(!sb) return;
+  if(!usuario){ irParaEntrar('criar'); return; }
+  if(servicoEditando) return salvarEdicaoServico();
+
+  var dados = lerFormServico();
+  if(!dados) return;
+
+  var btn = document.getElementById('sv-publicar');
+  btn.disabled = true; btn.textContent = 'Publicando…';
+
+  dados.professor_id = usuario.id;
+  var r = await sb.from('ofertas').insert(dados);
+
+  btn.disabled = false; atualizarModoServico();
+
+  if(r.error){
+    var m = r.error.message || '';
+    mostrarMsgServico(
+      /Conecte sua conta do Mercado Pago/i.test(m) ? 'Conecte sua conta do Mercado Pago antes de cobrar por um serviço. O caminho está no seu painel.' :
+      /column .*tipo.* does not exist|prazo_dias/i.test(m) ? 'Falta rodar o <b>banco-etapa9.sql</b> no Supabase.' :
+      /row-level security/i.test(m) ? 'O banco recusou: sua conta precisa estar como professor ou vendedor.' :
+      'Não deu certo: ' + esc(m), 'erro');
+    return;
+  }
+
+  mostrarMsgServico('Serviço publicado! ' +
+    '<button class="btn btn-ghost btn-sm" style="margin-top:10px;" onclick="go(\'servicos\')">Ver na lista</button>', 'ok');
+  limparFormServico();
+  await carregarServicos(true);
+}
+
+function limparFormServico(){
+  ['sv-titulo','sv-desc','sv-valor','sv-prazo'].forEach(function(id){
+    var el = document.getElementById(id); if(el) el.value = '';
+  });
+  var c = document.getElementById('sv-categoria'); if(c) c.selectedIndex = 0;
+  montarTiposServico();
+  cobrancaServico = 'site';
+  marcarPill('sv-cobranca', 'Preço fixo, pago pelo site');
+  var cx = document.getElementById('sv-caixa-valor'); if(cx) cx.style.display = '';
+  pintarNotaCobranca();
+  previaServico();
+}
+
+async function editarServico(id){
+  if(!sb || !usuario) return;
+  var r = await sb.from('ofertas')
+    .select('id, titulo, descricao, area, formato, valor, prazo_dias, pagar_pelo_site')
+    .eq('id', id).maybeSingle();
+  if(r.error || !r.data) return;
+
+  servicoEditando = id;
+  go('publicar-servico');
+
+  var o = r.data;
+  document.getElementById('sv-titulo').value = o.titulo || '';
+  document.getElementById('sv-desc').value   = o.descricao || '';
+  if(o.area) document.getElementById('sv-categoria').value = o.area;
+  montarTiposServico();
+  if(o.formato) document.getElementById('sv-tipo').value = o.formato;
+  document.getElementById('sv-valor').value = o.valor != null ? o.valor : '';
+  document.getElementById('sv-prazo').value = o.prazo_dias != null ? o.prazo_dias : '';
+  document.getElementById('sv-msg').style.display = 'none';
+
+  cobrancaServico = !o.pagar_pelo_site ? 'combinar' : (Number(o.valor) > 0 ? 'site' : 'gratis');
+  marcarPill('sv-cobranca',
+    cobrancaServico === 'site' ? 'Preço fixo, pago pelo site' :
+    cobrancaServico === 'gratis' ? 'Gratuito' : 'A combinar por WhatsApp');
+  var cx = document.getElementById('sv-caixa-valor');
+  if(cx) cx.style.display = (cobrancaServico === 'site') ? '' : 'none';
+
+  atualizarModoServico();
+  previaServico();
+}
+
+function cancelarEdicaoServico(){
+  servicoEditando = null;
+  limparFormServico();
+  document.getElementById('sv-msg').style.display = 'none';
+  atualizarModoServico();
+  go('meus-servicos');
+}
+
+async function salvarEdicaoServico(){
+  var dados = lerFormServico();
+  if(!dados) return;
+  delete dados.tipo;
+
+  var btn = document.getElementById('sv-publicar');
+  btn.disabled = true; btn.textContent = 'Salvando…';
+
+  var r = await sb.from('ofertas').update(dados).eq('id', servicoEditando);
+  btn.disabled = false;
+
+  if(r.error){ atualizarModoServico(); mostrarMsgServico('Não deu certo: ' + esc(r.error.message), 'erro'); return; }
+
+  mostrarMsgServico('Alterações salvas.', 'ok');
+  servicoEditando = null;
+  atualizarModoServico();
+  limparFormServico();
+  await carregarServicos(true);
+}
+
+async function excluirServico(id, confirmado){
+  if(!confirmado){ window.__servicoExcluir = id; carregarMeusServicos(true); return; }
+  window.__servicoExcluir = null;
+  await sb.from('ofertas').delete().eq('id', id);
+  await carregarMeusServicos(true);
+  await carregarServicos(true);
+}
+
+
+/* ---------------- a tela de um serviço ---------------- */
+function verServico(id){
+  servicoAberto = id;
+  go('servico');
+  if(history.replaceState) history.replaceState(null, '', '#servico/' + id);
+  carregarServico();
+}
+
+async function carregarServico(){
+  if(!sb || !servicoAberto) return;
+
+  var titulo = document.getElementById('se-titulo');
+  var sub    = document.getElementById('se-sub');
+  var corpo  = document.getElementById('se-corpo');
+  var acao   = document.getElementById('se-acao');
+
+  var r;
+  try {
+    r = await sb.from('ofertas')
+      .select('id, titulo, descricao, area, formato, valor, prazo_dias, pagar_pelo_site, ' +
+              'modalidade, criado_em, professor_id, ativa, perfis(nome, cidade, telefone, titulo_profissional)')
+      .eq('id', servicoAberto).maybeSingle();
+  } catch(e){ r = { error: { message: 'indisponivel' }, data: null }; }
+
+  if(r.error || !r.data){
+    titulo.textContent = 'Serviço não encontrado';
+    sub.textContent = 'Ele pode ter sido apagado ou saído do ar.';
+    corpo.innerHTML = '';
+    acao.innerHTML = '<button class="btn btn-ghost btn-block btn-sm" onclick="go(\'servicos\')">Ver outros serviços</button>';
+    return;
+  }
+
+  var o = r.data;
+  var meu = !!(usuario && usuario.id === o.professor_id);
+  var quem = (o.perfis && o.perfis.nome) || 'profissional';
+
+  titulo.textContent = o.titulo;
+  sub.textContent = o.area + ' · ' + o.formato + ' · por ' + quem +
+                    (o.perfis && o.perfis.cidade ? ' · ' + o.perfis.cidade : '');
+
+  corpo.innerHTML =
+    '<p style="font-size:.95rem;line-height:1.7;white-space:pre-wrap;">' + esc(o.descricao || 'Sem descrição.') + '</p>' +
+    '<div class="job-meta" style="margin-top:18px;">' +
+      '<span>💰 ' + esc(precoServico(o)) + '</span>' +
+      (o.prazo_dias ? '<span>⏱ ' + o.prazo_dias + ' dias</span>' : '') +
+      '<span>🕐 ' + esc(dataBR(o.criado_em)) + '</span>' +
+    '</div>' +
+    /* Sem este botão, um serviço que fere a ética acadêmica só sai do ar
+       se alguém avisar por fora. Com ele, cai na fila da moderação. */
+    (meu ? '' :
+      '<p style="font-size:.8rem;margin-top:20px;padding-top:16px;border-top:1px solid var(--linha);">' +
+        '<b class="link-auth" onclick="abrirDenuncia(\'oferta\', \'' + o.id + '\', \'' +
+        String(o.titulo).replace(/'/g, "\\'").replace(/"/g, '') + '\', \'o serviço\')">⚑ Denunciar este serviço</b>' +
+      '</p>');
+
+  await pintarAcaoServico(o, meu);
+}
+
+async function pintarAcaoServico(o, meu){
+  var acao = document.getElementById('se-acao');
+  if(!acao) return;
+
+  if(meu){
+    acao.innerHTML =
+      '<h4 style="margin-bottom:10px;">Este serviço é seu</h4>' +
+      '<p class="muted" style="font-size:.88rem;line-height:1.6;">Quem contratar aparece em Meus serviços, com a área de arquivos.</p>' +
+      '<button class="btn btn-ghost btn-block btn-sm" style="margin-top:14px;" onclick="editarServico(\'' + o.id + '\')">Editar serviço</button>';
+    return;
+  }
+
+  if(!usuario){
+    acao.innerHTML =
+      '<h4 style="margin-bottom:10px;">Contratar</h4>' +
+      '<p class="muted" style="font-size:.88rem;line-height:1.6;">Entre na sua conta para contratar este serviço.</p>' +
+      '<button class="btn btn-primary btn-block btn-sm" style="margin-top:14px;" onclick="irParaEntrar(\'criar\')">Entrar ou criar conta</button>';
+    return;
+  }
+
+  /* já contratei? então o botão leva ao trabalho */
+  var jah = null;
+  try {
+    var t = await sb.rpc('trabalho_do_servico', { oferta: o.id });
+    jah = (t && t.data) || null;
+  } catch(e){}
+
+  if(jah){
+    acao.innerHTML =
+      '<div style="background:#DCFCE7;color:#166534;padding:14px 16px;border-radius:11px;font-size:.9rem;line-height:1.55;">' +
+        '<b>Você já contratou este serviço.</b></div>' +
+      '<button class="btn btn-accent btn-block btn-sm" style="margin-top:14px;" onclick="verTrabalho(\'' + jah + '\')">Abrir o trabalho</button>';
+    return;
+  }
+
+  if(!o.pagar_pelo_site){
+    var tel = o.perfis && o.perfis.telefone;
+    acao.innerHTML =
+      '<h4 style="margin-bottom:10px;">Combinado direto</h4>' +
+      '<p class="muted" style="font-size:.88rem;line-height:1.6;">Este serviço não é contratado pelo site. Fale com quem publicou e combinem valor e prazo.</p>' +
+      (tel
+        ? '<a class="btn btn-accent btn-block btn-sm" style="margin-top:14px;" target="_blank" rel="noopener" href="' +
+          esc(linkWhatsapp(tel, o.perfis.nome, o.titulo)) + '">Chamar no WhatsApp</a>'
+        : '<p class="muted" style="font-size:.82rem;margin-top:12px;">Quem publicou não deixou WhatsApp no perfil.</p>') +
+      '<p class="muted" style="font-size:.8rem;line-height:1.55;margin-top:12px;">Combinando por fora, não há área de arquivos nem registro no site.</p>';
+    return;
+  }
+
+  var gratis = !(Number(o.valor) > 0);
+  acao.innerHTML =
+    '<h4 style="margin-bottom:10px;">Contratar</h4>' +
+    '<p style="font-size:1.4rem;font-weight:800;color:' + (gratis ? 'var(--green-600)' : 'var(--brand-600)') + ';">' +
+      (gratis ? 'Gratuito' : esc(moeda(o.valor))) + '</p>' +
+    (o.prazo_dias ? '<p class="muted" style="font-size:.88rem;margin-top:4px;">Entrega em ' + o.prazo_dias + ' dias</p>' : '') +
+    '<p class="muted" style="font-size:.86rem;line-height:1.6;margin-top:12px;">' +
+      (gratis ? 'Ao contratar, abre uma área fechada entre vocês dois para trocar os arquivos.'
+              : 'O pagamento é no Mercado Pago, com Pix ou cartão. A área de arquivos abre assim que o pagamento for confirmado.') +
+    '</p>' +
+    '<button class="btn btn-accent btn-block btn-sm" style="margin-top:16px;" id="se-contratar" onclick="contratarServico(\'' +
+      o.id + '\', ' + (gratis ? 'true' : 'false') + ')">' +
+      (gratis ? 'Contratar' : 'Contratar e pagar') + '</button>';
+}
+
+async function contratarServico(ofertaId, gratis){
+  if(!sb) return;
+  if(!usuario){ irParaEntrar('entrar'); return; }
+
+  if(!gratis){ comprar('servico', ofertaId); return; }
+
+  var btn = document.getElementById('se-contratar');
+  if(btn){ btn.disabled = true; btn.textContent = 'Contratando…'; }
+
+  var r = await sb.rpc('contratar_gratis', { oferta: ofertaId });
+  if(btn){ btn.disabled = false; btn.textContent = 'Contratar'; }
+
+  if(r.error || !r.data){
+    alert('Não consegui contratar. Recarregue a página e tente de novo.');
+    return;
+  }
+  verTrabalho(r.data);
+}
+
+
+/* ---------------- a área do trabalho ---------------- */
+function verTrabalho(compraId){
+  trabalhoAberto = compraId;
+  go('trabalho');
+  if(history.replaceState) history.replaceState(null, '', '#trabalho/' + compraId);
+  carregarTrabalho();
+}
+
+async function carregarTrabalho(){
+  if(!sb || !trabalhoAberto) return;
+
+  var titulo = document.getElementById('tr-titulo');
+  var sub    = document.getElementById('tr-sub');
+  var lado   = document.getElementById('tr-lado');
+
+  if(!usuario){
+    titulo.textContent = 'Entre na sua conta';
+    sub.textContent = 'Esta área é fechada entre as duas pessoas do trabalho.';
+    return;
+  }
+
+  var r;
+  try {
+    r = await sb.from('compras')
+      .select('id, titulo, valor, status, tipo, criado_em, comprador_id, vendedor_id, oferta_id, ' +
+              'comprador:comprador_id(nome, telefone), vendedor:vendedor_id(nome, telefone)')
+      .eq('id', trabalhoAberto).maybeSingle();
+  } catch(e){ r = { error: { message: 'indisponivel' }, data: null }; }
+
+  if(r.error || !r.data || r.data.status !== 'paga'){
+    titulo.textContent = 'Trabalho não encontrado';
+    sub.textContent = 'Ou ele não existe, ou o pagamento ainda não foi confirmado, ou você não faz parte dele.';
+    if(lado) lado.innerHTML = '<button class="btn btn-ghost btn-block btn-sm" onclick="go(\'servicos\')">Ver serviços</button>';
+    document.getElementById('tr-lista').innerHTML = '';
+    return;
+  }
+
+  var c = r.data;
+  var souCliente = usuario.id === c.comprador_id;
+  var outro = souCliente ? c.vendedor : c.comprador;
+
+  titulo.textContent = c.titulo;
+  sub.textContent = (souCliente ? 'Você contratou' : 'Você está fazendo') +
+                    (outro && outro.nome ? ' · com ' + outro.nome : '') +
+                    ' · ' + (Number(c.valor) > 0 ? moeda(c.valor) : 'gratuito');
+
+  if(lado){
+    lado.innerHTML =
+      '<h4 style="margin-bottom:10px;">' + (souCliente ? 'Quem está fazendo' : 'Quem contratou') + '</h4>' +
+      '<p style="font-size:.95rem;font-weight:700;">' + esc((outro && outro.nome) || '—') + '</p>' +
+      '<p class="muted" style="font-size:.88rem;margin-top:8px;">Contratado em ' + esc(dataBR(c.criado_em)) + '</p>' +
+      (outro && outro.telefone
+        ? '<a class="btn btn-accent btn-block btn-sm" style="margin-top:14px;" target="_blank" rel="noopener" href="' +
+          esc(linkWhatsapp(outro.telefone, outro.nome, c.titulo)) + '">Chamar no WhatsApp</a>'
+        : '<p class="muted" style="font-size:.82rem;margin-top:12px;">Sem WhatsApp no perfil.</p>') +
+      '<button class="btn btn-ghost btn-block btn-sm" style="margin-top:10px;" onclick="go(\'meus-servicos\')">Meus serviços</button>';
+  }
+
+  await carregarArquivosTrabalho();
+}
+
+function arquivoTrabalhoEscolhido(){
+  var f = document.getElementById('tr-arquivo').files[0];
+  arquivoTrabalho = f || null;
+  document.getElementById('tr-msg').style.display = 'none';
+  if(f && f.size > MAX_TRABALHO){
+    mostrarMsgTrabalho('O arquivo tem ' + tamanhoLegivel(f.size) + ' e o limite é 50 MB.', 'erro');
+    document.getElementById('tr-arquivo').value = '';
+    arquivoTrabalho = null;
+  }
+}
+
+function mostrarMsgTrabalho(texto, tipo){
+  var c = { ok:['#DCFCE7','#166534'], erro:['#FEE2E2','#991B1B'], aviso:['#FEF3C7','#92400E'] }[tipo || 'aviso'];
+  var el = document.getElementById('tr-msg');
+  if(!el) return;
+  el.style.background = c[0]; el.style.color = c[1];
+  el.innerHTML = texto; el.style.display = 'block';
+}
+
+async function enviarArquivoTrabalho(){
+  if(!sb || !usuario || !trabalhoAberto) return;
+  var f = arquivoTrabalho;
+  if(!f){ mostrarMsgTrabalho('Escolha um arquivo primeiro.', 'erro'); return; }
+
+  var btn = document.getElementById('tr-enviar');
+  btn.disabled = true; btn.textContent = 'Enviando…';
+  document.getElementById('tr-barra').style.display = 'block';
+  document.getElementById('tr-barra-fill').style.width = '40%';
+
+  var nomeSeguro = String(f.name).normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-zA-Z0-9._-]/g, '_');
+  var caminho = trabalhoAberto + '/' + Date.now() + '-' + nomeSeguro;
+
+  var up = await sb.storage.from('trabalhos').upload(caminho, f, { contentType: f.type || undefined });
+
+  if(up.error){
+    document.getElementById('tr-barra').style.display = 'none';
+    btn.disabled = false; btn.textContent = 'Enviar arquivo';
+    var m = up.error.message || '';
+    mostrarMsgTrabalho(
+      /Bucket not found/i.test(m) ? 'Falta rodar o <b>banco-etapa9.sql</b> — a pasta dos trabalhos ainda não existe.' :
+      /mime|not allowed/i.test(m) ? 'Esse tipo de arquivo não é aceito.' :
+      /row-level security|Unauthorized/i.test(m) ? 'O servidor recusou: você não faz parte deste trabalho.' :
+      'Não consegui enviar: ' + esc(m), 'erro');
+    return;
+  }
+
+  document.getElementById('tr-barra-fill').style.width = '85%';
+
+  var r = await sb.from('trabalho_arquivos').insert({
+    compra_id:     trabalhoAberto,
+    autor_id:      usuario.id,
+    arquivo_path:  caminho,
+    arquivo_nome:  f.name,
+    tamanho_bytes: f.size,
+    observacao:    (document.getElementById('tr-obs').value || '').trim() || null
+  });
+
+  document.getElementById('tr-barra').style.display = 'none';
+  btn.disabled = false; btn.textContent = 'Enviar arquivo';
+
+  if(r.error){
+    await sb.storage.from('trabalhos').remove([caminho]);
+    mostrarMsgTrabalho('Não consegui registrar o arquivo: ' + esc(r.error.message), 'erro');
+    return;
+  }
+
+  mostrarMsgTrabalho('Arquivo enviado. A outra pessoa já consegue baixar.', 'ok');
+  document.getElementById('tr-arquivo').value = '';
+  document.getElementById('tr-obs').value = '';
+  arquivoTrabalho = null;
+  await carregarArquivosTrabalho();
+}
+
+async function carregarArquivosTrabalho(){
+  var caixa = document.getElementById('tr-lista');
+  if(!caixa || !sb || !trabalhoAberto) return;
+
+  var r;
+  try {
+    r = await sb.from('trabalho_arquivos')
+      .select('id, arquivo_path, arquivo_nome, tamanho_bytes, observacao, criado_em, autor_id, perfis:autor_id(nome)')
+      .eq('compra_id', trabalhoAberto)
+      .order('criado_em', { ascending: false });
+  } catch(e){ r = { error: { message: 'indisponivel' }, data: [] }; }
+
+  if(r.error){ caixa.innerHTML = '<p class="muted" style="font-size:.88rem;">Não consegui carregar os arquivos.</p>'; return; }
+
+  var arqs = r.data || [];
+  if(arqs.length === 0){
+    caixa.innerHTML = '<p class="muted" style="font-size:.88rem;line-height:1.6;">Nenhum arquivo ainda. ' +
+      'Quem contratou costuma mandar o documento primeiro; quem faz devolve o trabalho pronto aqui mesmo.</p>';
+    return;
+  }
+
+  caixa.innerHTML = '<h4 style="margin-bottom:14px;">' +
+    (arqs.length === 1 ? '1 arquivo' : arqs.length + ' arquivos') + '</h4>' +
+    arqs.map(blocoArquivoTrabalho).join('');
+}
+
+function blocoArquivoTrabalho(a){
+  var quem = (a.perfis && a.perfis.nome) || 'alguém';
+  var meu = !!(usuario && usuario.id === a.autor_id);
+  return '<div class="list-item">' +
+    '<div class="g"><b>' + iconeArquivo(a.arquivo_nome) + ' ' + esc(a.arquivo_nome) + '</b>' +
+      '<small>' + esc(quem) + ' · ' + esc(dataBR(a.criado_em)) +
+      (a.tamanho_bytes ? ' · ' + esc(tamanhoLegivel(a.tamanho_bytes)) : '') + '</small>' +
+      (a.observacao ? '<small style="display:block;margin-top:6px;color:var(--ink-2);">' + esc(a.observacao) + '</small>' : '') +
+    '</div>' +
+    '<span style="display:flex;gap:6px;">' +
+      '<button class="btn btn-primary btn-sm" onclick="baixarArquivoTrabalho(\'' + a.arquivo_path.replace(/'/g, "\\'") + '\')">Baixar</button>' +
+      (meu ? '<button class="btn btn-ghost btn-sm" onclick="apagarArquivoTrabalho(\'' + a.id + '\', \'' + a.arquivo_path.replace(/'/g, "\\'") + '\')">Apagar</button>' : '') +
+    '</span>' +
+  '</div>';
+}
+
+async function baixarArquivoTrabalho(caminho){
+  var ass = await sb.storage.from('trabalhos').createSignedUrl(caminho, 300);
+  if(ass.error || !ass.data || !ass.data.signedUrl){
+    alert('Não consegui liberar o arquivo. Recarregue a página e tente de novo.');
+    return;
+  }
+  window.open(ass.data.signedUrl, '_blank');
+}
+
+async function apagarArquivoTrabalho(id, caminho){
+  await sb.from('trabalho_arquivos').delete().eq('id', id);
+  await sb.storage.from('trabalhos').remove([caminho]);
+  await carregarArquivosTrabalho();
+}
+
+
+/* ---------------- meus serviços ---------------- */
+async function carregarMeusServicos(forcar){
+  if(!sb || !usuario) return;
+
+  /* serviços que eu publiquei */
+  var rs;
+  try {
+    rs = await sb.from('ofertas')
+      .select('id, titulo, area, valor, pagar_pelo_site, ativa, criado_em')
+      .eq('professor_id', usuario.id).eq('tipo', 'servico')
+      .order('criado_em', { ascending: false });
+  } catch(e){ rs = { error: { message: 'indisponivel' }, data: [] }; }
+
+  var cxS = document.getElementById('meus-servicos-lista');
+  if(cxS){
+    if(rs.error){
+      cxS.innerHTML = '<p class="muted" style="font-size:.88rem;">Falta rodar o <b>banco-etapa9.sql</b>.</p>';
+    } else if((rs.data || []).length === 0){
+      cxS.innerHTML = '<p class="muted" style="font-size:.88rem;line-height:1.6;">Você ainda não publicou nenhum serviço. ' +
+        '<b class="link-auth" onclick="go(\'publicar-servico\')">Publicar o primeiro</b>.</p>';
+    } else {
+      cxS.innerHTML = rs.data.map(function(o){
+        var confirmando = (window.__servicoExcluir === o.id);
+        return '<div class="list-item">' +
+          '<div class="g"><b class="link-auth" onclick="verServico(\'' + o.id + '\')">' + esc(o.titulo) + '</b>' +
+          '<small>' + esc(o.area) + ' · ' + esc(precoServico(o)) + ' · ' + esc(dataBR(o.criado_em)) + '</small></div>' +
+          (confirmando
+            ? '<span style="display:flex;gap:6px;"><button class="btn btn-sm" style="background:#DC2626;color:#fff;" onclick="excluirServico(\'' + o.id + '\', true)">Confirmar</button>' +
+              '<button class="btn btn-ghost btn-sm" onclick="window.__servicoExcluir=null;carregarMeusServicos(true)">Cancelar</button></span>'
+            : '<span style="display:flex;gap:6px;">' +
+              '<button class="btn btn-ghost btn-sm" onclick="editarServico(\'' + o.id + '\')">Editar</button>' +
+              '<button class="btn btn-ghost btn-sm" onclick="excluirServico(\'' + o.id + '\')">Excluir</button></span>') +
+        '</div>';
+      }).join('');
+    }
+  }
+
+  /* trabalhos: compras de serviço, dos dois lados */
+  var cxT = document.getElementById('meus-trabalhos');
+  if(!cxT) return;
+
+  var rt;
+  try {
+    rt = await sb.from('compras')
+      .select('id, titulo, valor, status, criado_em, comprador_id, vendedor_id, ' +
+              'comprador:comprador_id(nome), vendedor:vendedor_id(nome)')
+      .eq('tipo', 'servico').eq('status', 'paga')
+      .order('criado_em', { ascending: false });
+  } catch(e){ rt = { error: { message: 'indisponivel' }, data: [] }; }
+
+  var trabalhos = (rt.data || []).filter(function(c){
+    return c.comprador_id === usuario.id || c.vendedor_id === usuario.id;
+  });
+
+  cxT.innerHTML = trabalhos.length
+    ? trabalhos.map(function(c){
+        var souCliente = c.comprador_id === usuario.id;
+        var outro = souCliente ? c.vendedor : c.comprador;
+        return '<div class="list-item"><div class="g"><b>' + esc(c.titulo) + '</b>' +
+          '<small>' + (souCliente ? 'você contratou' : 'você está fazendo') +
+          (outro && outro.nome ? ' · com ' + esc(outro.nome) : '') +
+          ' · ' + (Number(c.valor) > 0 ? esc(moeda(c.valor)) : 'gratuito') + '</small></div>' +
+          '<button class="btn btn-primary btn-sm" onclick="verTrabalho(\'' + c.id + '\')">Abrir</button></div>';
+      }).join('')
+    : '<p class="muted" style="font-size:.88rem;line-height:1.6;">Nenhum trabalho em andamento. ' +
+      'Assim que alguém contratar um serviço seu — ou você contratar o de alguém —, ele aparece aqui com a área de arquivos.</p>';
+}
+
+
 window.addEventListener('DOMContentLoaded', async function(){
   montarListas();
+  montarListasServicos();
   modoAuth('criar');
   if(sb){
     await carregarConfig();
@@ -4170,7 +5851,17 @@ window.addEventListener('DOMContentLoaded', async function(){
   /* veio do link do e-mail? então abre direto a tela de nova senha */
   if(modoRecuperacao){ go('nova-senha'); return; }
 
+  /* voltou do Mercado Pago? então é para o painel, com o recado */
+  var voltouDoMP = false;
+  try { voltouDoMP = await tratarVoltaMP(); } catch(e){ voltouDoMP = false; }
+  if(voltouDoMP){
+    go('painel-prof');
+    mostrarRetornoMP();
+    return;
+  }
+
   fromHash();
+  mostrarRetornoMP();
 });
 window.addEventListener('hashchange', fromHash);
 </script>
