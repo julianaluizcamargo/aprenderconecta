@@ -3179,6 +3179,9 @@ function pintarResumoCadastro(){
   if(!perfil) return;
   var papeis = { professor:'Professor', aluno:'Aluno', contratante:'Contratante', vendedor:'Vende materiais' };
   var html =
+    /* o e-mail vem primeiro de propósito: é o que diz em QUAL conta
+       a pessoa está. Quem se cadastrou duas vezes só descobre por aqui. */
+    itemResumo('e-mail da conta', (usuario && usuario.email) || '—', !!(usuario && usuario.email)) +
     itemResumo('seu papel na plataforma', papeis[perfil.papel] || perfil.papel) +
     itemResumo('cidade', perfil.cidade || 'não informada', !!perfil.cidade) +
     itemResumo('WhatsApp no perfil', perfil.telefone ? 'informado' : 'não informado', !!perfil.telefone) +
