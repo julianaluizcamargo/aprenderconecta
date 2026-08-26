@@ -573,9 +573,9 @@ ul{margin:0;padding:0;list-style:none;}
       </a>
       <a href="#" class="path" onclick="go('servicos');return false;">
         <div class="path-ico i-amber">💼</div>
-        <h3>Quero contratar</h3>
-        <p>Publique sua necessidade e receba propostas de profissionais qualificados e avaliados.</p>
-        <div class="path-go">Publicar pedido →</div>
+        <h3>Serviços</h3>
+        <p>Correção de trabalhos, revisão de tese, planos de aula, tradução. Contrate ou ofereça o seu.</p>
+        <div class="path-go">Ver serviços →</div>
       </a>
       <a href="#" class="path" onclick="go('loja');return false;">
         <div class="path-ico i-purple">📚</div>
@@ -924,11 +924,11 @@ ul{margin:0;padding:0;list-style:none;}
   <div class="page-head">
     <div class="wrap">
       <div class="crumb">Início › Serviços</div>
-      <h1>Publique o que você precisa. Receba propostas.</h1>
-      <p>Revisão, formatação ABNT, diagramação, material didático, projetos. Quem precisa descreve o trabalho; quem faz manda proposta.</p>
+      <h1>Trabalhos sob encomenda</h1>
+      <p>Revisão, formatação ABNT, diagramação, material didático, projetos. Quem faz publica o serviço; quem precisa contrata e paga pelo site.</p>
       <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:20px;">
-        <button class="btn btn-accent" onclick="go('publicar-pedido')">＋ Publicar um pedido</button>
-        <button class="btn btn-ghost" onclick="go('painel')">Minhas propostas</button>
+        <button class="btn btn-accent" onclick="go('publicar-servico')">＋ Publicar um serviço</button>
+        <button class="btn btn-ghost" onclick="go('meus-servicos')">Meus serviços</button>
       </div>
     </div>
   </div>
@@ -941,45 +941,45 @@ ul{margin:0;padding:0;list-style:none;}
           <h4 style="margin-bottom:14px;">Categoria</h4>
           <div id="filtros-categoria" style="display:grid;gap:10px;font-size:.9rem;"></div>
 
-          <h4 style="margin:22px 0 14px;">Orçamento</h4>
-          <select id="filtro-orcamento" onchange="filtrarPedidos()">
+          <h4 style="margin:22px 0 14px;">Preço</h4>
+          <select id="filtro-preco-servico" onchange="filtrarServicos()">
             <option value="0">Qualquer valor</option>
+            <option value="gratis">Só os gratuitos</option>
             <option value="200">Até R$ 200</option>
             <option value="500">Até R$ 500</option>
-            <option value="99999">Acima de R$ 500</option>
           </select>
 
           <h4 style="margin:22px 0 12px;">Busca</h4>
-          <input type="text" id="busca-pedidos" placeholder="palavra no pedido" oninput="filtrarPedidos()">
+          <input type="text" id="busca-servicos" placeholder="palavra no serviço" oninput="filtrarServicos()">
         </div>
 
         <div class="panel" style="padding:22px;margin-top:18px;background:#FEF3C7;border:0;">
           <h4 style="margin-bottom:10px;color:#92400E;">⚖️ Ética acadêmica</h4>
           <p style="font-size:.86rem;line-height:1.6;color:#92400E;">
-            Não é permitido pedir nem vender trabalho acadêmico pronto para entregar como se fosse seu.
+            Não é permitido vender trabalho acadêmico pronto para ser entregue como se fosse de outra pessoa.
             <b>Orientação, revisão, formatação, tutoria e consultoria são bem-vindas</b> — fazer o trabalho no lugar do aluno, não.
           </p>
           <p style="font-size:.82rem;line-height:1.6;color:#92400E;margin-top:10px;">
-            Pedido que pedir isso sai do ar.
+            Serviço que ofereça isso sai do ar.
           </p>
         </div>
       </aside>
 
       <div>
         <div style="display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:18px;">
-          <p class="muted" id="contador-pedidos" style="font-weight:600;">Carregando…</p>
-          <button class="btn btn-ghost btn-sm" onclick="carregarPedidos(true)">Atualizar</button>
+          <p class="muted" id="contador-servicos" style="font-weight:600;">Carregando…</p>
+          <button class="btn btn-ghost btn-sm" onclick="carregarServicos(true)">Atualizar</button>
         </div>
 
-        <div class="grid" style="gap:16px;" id="lista-pedidos"></div>
+        <div class="grid" style="gap:16px;" id="lista-servicos"></div>
 
-        <div id="vazio-pedidos" class="panel" style="padding:40px;text-align:center;display:none;">
-          <h3 class="h3" style="margin-bottom:8px;">Nenhum pedido por aqui ainda</h3>
+        <div id="vazio-servicos" class="panel" style="padding:40px;text-align:center;display:none;">
+          <h3 class="h3" style="margin-bottom:8px;">Nenhum serviço publicado ainda</h3>
           <p class="muted" style="line-height:1.6;max-width:460px;margin:0 auto;">
-            Esta área acabou de abrir. Se você precisa de uma revisão, uma formatação ou um material,
-            publique o primeiro pedido — é de graça e leva dois minutos.
+            Esta área acabou de abrir. Se você revisa, formata, diagrama ou monta material,
+            publique o primeiro serviço — é de graça e leva dois minutos.
           </p>
-          <button class="btn btn-accent" style="margin-top:18px;" onclick="go('publicar-pedido')">＋ Publicar um pedido</button>
+          <button class="btn btn-accent" style="margin-top:18px;" onclick="go('publicar-servico')">＋ Publicar um serviço</button>
         </div>
       </div>
 
@@ -988,13 +988,13 @@ ul{margin:0;padding:0;list-style:none;}
 </section>
 
 
-<!-- ========================= PUBLICAR PEDIDO ========================= -->
-<section class="view" id="v-publicar-pedido">
+<!-- ========================= PUBLICAR SERVIÇO ========================= -->
+<section class="view" id="v-publicar-servico">
   <div class="page-head">
     <div class="wrap">
-      <div class="crumb" id="pd-crumb">Serviços › Publicar pedido</div>
-      <h1 id="pd-titulo-tela">Descreva o que você precisa</h1>
-      <p id="pd-sub-tela">Quanto mais detalhe, melhores as propostas que você recebe.</p>
+      <div class="crumb" id="sv-crumb">Serviços › Publicar</div>
+      <h1 id="sv-titulo-tela">Publique o que você faz</h1>
+      <p id="sv-sub-tela">Descreva o serviço, o que está incluído e por quanto. Quem precisar contrata por aqui.</p>
     </div>
   </div>
 
@@ -1002,54 +1002,59 @@ ul{margin:0;padding:0;list-style:none;}
     <div class="wrap split" style="grid-template-columns:1fr 340px;">
 
       <div class="panel" style="padding:30px;">
-        <div id="portao-pedido" style="display:none;padding:18px 20px;border-radius:12px;margin-bottom:24px;"></div>
+        <div id="portao-servico" style="display:none;padding:18px 20px;border-radius:12px;margin-bottom:24px;"></div>
 
-        <div id="form-pedido">
+        <div id="form-servico">
           <div class="field">
-            <label>Título do pedido</label>
-            <input type="text" id="pd-titulo" placeholder="Ex.: Revisão e formatação ABNT do meu TCC de Pedagogia" oninput="previaPedido()">
-            <small>Diga em uma linha o que precisa ser feito.</small>
+            <label>O que você faz</label>
+            <input type="text" id="sv-titulo" placeholder="Ex.: Revisão e formatação ABNT de TCC, até 80 páginas" oninput="previaServico()">
+            <small>Diga o serviço e o tamanho dele. É o que evita proposta fora do alvo.</small>
           </div>
 
           <div class="grid g2" style="gap:16px;">
             <div class="field">
               <label>Categoria</label>
-              <select id="pd-categoria" onchange="montarTiposServico();previaPedido()"></select>
+              <select id="sv-categoria" onchange="montarTiposServico();previaServico()"></select>
             </div>
             <div class="field">
               <label>Tipo de serviço</label>
-              <select id="pd-tipo" onchange="previaPedido()"></select>
+              <select id="sv-tipo" onchange="previaServico()"></select>
             </div>
           </div>
 
           <div class="field">
             <label>Descrição</label>
-            <textarea rows="6" id="pd-desc" placeholder="Quantas páginas, qual o curso, o que exatamente precisa ser feito, o que você já tem pronto." oninput="previaPedido()"></textarea>
-            <small>Detalhe evita proposta fora da realidade — e evita discussão depois.</small>
+            <textarea rows="6" id="sv-desc" placeholder="O que está incluído, o que não está, como você trabalha, o que precisa receber do cliente." oninput="previaServico()"></textarea>
           </div>
 
-          <div class="grid g3" style="gap:16px;">
+          <div class="field">
+            <label>Como você quer receber</label>
+            <div class="pill-row" id="sv-cobranca" style="margin-bottom:0;">
+              <button class="pill on" onclick="escolherCobrancaServico(this, 'site')">Preço fixo, pago pelo site</button>
+              <button class="pill" onclick="escolherCobrancaServico(this, 'gratis')">Gratuito</button>
+              <button class="pill" onclick="escolherCobrancaServico(this, 'combinar')">A combinar por WhatsApp</button>
+            </div>
+            <small id="sv-nota-cobranca" style="display:block;margin-top:10px;"></small>
+          </div>
+
+          <div class="grid g2" style="gap:16px;" id="sv-caixa-valor">
             <div class="field">
-              <label>Orçamento de (R$)</label>
-              <input type="number" id="pd-min" min="0" step="0.01" placeholder="200" oninput="previaPedido()">
+              <label>Preço (R$)</label>
+              <input type="number" id="sv-valor" min="0" step="0.01" placeholder="350" oninput="previaServico()">
             </div>
             <div class="field">
-              <label>até (R$)</label>
-              <input type="number" id="pd-max" min="0" step="0.01" placeholder="500" oninput="previaPedido()">
-            </div>
-            <div class="field">
-              <label>Prazo (dias)</label>
-              <input type="number" id="pd-prazo" min="1" step="1" placeholder="15" oninput="previaPedido()">
+              <label>Prazo de entrega (dias)</label>
+              <input type="number" id="sv-prazo" min="1" step="1" placeholder="10" oninput="previaServico()">
             </div>
           </div>
-          <small class="muted" style="display:block;margin:-6px 0 18px;">Os três são opcionais. Sem orçamento, você recebe propostas mais variadas — e mais fora do alvo.</small>
 
-          <div id="pd-msg" style="display:none;padding:12px 14px;border-radius:10px;font-size:.88rem;line-height:1.45;margin-bottom:14px;"></div>
+          <div id="sv-aviso-mp" style="display:none;padding:14px 16px;border-radius:11px;font-size:.88rem;line-height:1.55;margin-bottom:16px;"></div>
+          <div id="sv-msg" style="display:none;padding:12px 14px;border-radius:10px;font-size:.88rem;line-height:1.45;margin-bottom:14px;"></div>
 
           <div style="display:flex;gap:10px;flex-wrap:wrap;">
-            <button class="btn btn-accent" id="pd-publicar" onclick="publicarPedido()">Publicar pedido</button>
-            <button class="btn btn-ghost" id="pd-cancelar" style="display:none;" onclick="cancelarEdicaoPedido()">Cancelar edição</button>
-            <button class="btn btn-ghost" id="pd-ver" onclick="go('servicos')">Ver os pedidos</button>
+            <button class="btn btn-accent" id="sv-publicar" onclick="publicarServico()">Publicar serviço</button>
+            <button class="btn btn-ghost" id="sv-cancelar" style="display:none;" onclick="cancelarEdicaoServico()">Cancelar edição</button>
+            <button class="btn btn-ghost" onclick="go('servicos')">Ver os serviços</button>
           </div>
         </div>
       </div>
@@ -1060,27 +1065,27 @@ ul{margin:0;padding:0;list-style:none;}
           <div class="card job" style="box-shadow:none;border:1px solid var(--line);">
             <div class="job-head">
               <div>
-                <h4 id="pd-pv-titulo">Título do pedido</h4>
+                <h4 id="sv-pv-titulo">O que você faz</h4>
                 <div class="tags" style="margin-top:8px;">
-                  <span class="tag" id="pd-pv-cat">Categoria</span>
-                  <span class="tag" id="pd-pv-tipo">Tipo</span>
+                  <span class="tag" id="sv-pv-cat">Categoria</span>
+                  <span class="tag" id="sv-pv-tipo">Tipo</span>
                 </div>
               </div>
-              <div class="budget"><b id="pd-pv-valor">a combinar</b><small>orçamento</small></div>
+              <div class="budget"><b id="sv-pv-valor">a combinar</b><small>preço</small></div>
             </div>
-            <p class="muted" style="font-size:.86rem;line-height:1.6;" id="pd-pv-desc">A descrição aparece aqui.</p>
-            <div class="job-meta"><span id="pd-pv-prazo">sem prazo definido</span></div>
+            <p class="muted" style="font-size:.86rem;line-height:1.6;" id="sv-pv-desc">A descrição aparece aqui.</p>
+            <div class="job-meta"><span id="sv-pv-prazo">sem prazo definido</span></div>
           </div>
         </div>
 
         <div class="panel" style="padding:24px;margin-top:18px;">
-          <h4 style="margin-bottom:10px;">Antes de publicar</h4>
+          <h4 style="margin-bottom:10px;">Como o dinheiro chega</h4>
           <p class="muted" style="font-size:.85rem;line-height:1.65;">
-            Seu pedido fica <b>visível para qualquer pessoa</b>, inclusive quem não tem conta.
-            Não escreva aqui dados pessoais, matrícula, nome da instituição nem nada que você não queira público.
+            Com <b>preço fixo</b>, quem contrata paga pelo site e o valor cai direto na sua conta do Mercado Pago,
+            já com a comissão da plataforma descontada. A área de arquivos abre no momento do pagamento.
           </p>
           <p class="muted" style="font-size:.85rem;line-height:1.65;margin-top:10px;">
-            O documento em si você só envia depois de escolher alguém — aí sim, numa área fechada entre vocês dois.
+            Com <b>a combinar</b>, o site só apresenta vocês dois — não há pagamento nem área de arquivos.
           </p>
         </div>
       </aside>
@@ -1090,50 +1095,41 @@ ul{margin:0;padding:0;list-style:none;}
 </section>
 
 
-<!-- ========================= UM PEDIDO ========================= -->
-<section class="view" id="v-pedido">
+<!-- ========================= UM SERVIÇO ========================= -->
+<section class="view" id="v-servico">
   <div class="page-head">
     <div class="wrap">
-      <div class="crumb">Serviços › Pedido</div>
-      <h1 id="pe-titulo">Carregando…</h1>
-      <p id="pe-sub"></p>
+      <div class="crumb">Serviços › Detalhe</div>
+      <h1 id="se-titulo">Carregando…</h1>
+      <p id="se-sub"></p>
     </div>
   </div>
 
   <div class="section-sm">
     <div class="wrap split" style="grid-template-columns:1fr 340px;">
-      <div>
-        <div class="panel" style="padding:28px;">
-          <h4 style="margin-bottom:14px;">O pedido</h4>
-          <div id="pe-corpo"></div>
-        </div>
-
-        <div class="panel" style="padding:28px;">
-          <h4 style="margin-bottom:14px;" id="pe-titulo-propostas">Propostas</h4>
-          <div id="pe-propostas"></div>
-        </div>
+      <div class="panel" style="padding:28px;">
+        <h4 style="margin-bottom:14px;">O serviço</h4>
+        <div id="se-corpo"></div>
       </div>
-
       <aside>
-        <div class="panel" style="padding:24px;" id="pe-acao"></div>
+        <div class="panel" style="padding:24px;" id="se-acao"></div>
       </aside>
     </div>
   </div>
 </section>
 
 
-<!-- ========================= MEUS SERVIÇOS ========================= -->
 <section class="view" id="v-meus-servicos">
   <div class="page-head">
     <div class="wrap" style="display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;">
       <div>
         <div class="crumb">Minha conta › Serviços</div>
         <h1>Meus serviços</h1>
-        <p>Os pedidos que você publicou, as propostas que você enviou e os trabalhos em andamento.</p>
+        <p>Os serviços que você publica, e os trabalhos em andamento — dos dois lados.</p>
       </div>
       <div style="display:flex;gap:10px;flex-wrap:wrap;">
         <button class="btn btn-ghost" onclick="carregarMeusServicos(true)">Atualizar</button>
-        <button class="btn btn-accent" onclick="go('publicar-pedido')">＋ Publicar pedido</button>
+        <button class="btn btn-accent" onclick="go('publicar-servico')">＋ Publicar serviço</button>
       </div>
     </div>
   </div>
@@ -1146,13 +1142,8 @@ ul{margin:0;padding:0;list-style:none;}
       </div>
 
       <div class="panel" style="padding:28px;">
-        <h4 style="margin-bottom:14px;">Pedidos que publiquei</h4>
-        <div id="meus-pedidos"><p class="muted" style="font-size:.88rem;">Carregando…</p></div>
-      </div>
-
-      <div class="panel" style="padding:28px;">
-        <h4 style="margin-bottom:14px;">Propostas que enviei</h4>
-        <div id="minhas-propostas"><p class="muted" style="font-size:.88rem;">Carregando…</p></div>
+        <h4 style="margin-bottom:14px;">Serviços que publiquei</h4>
+        <div id="meus-servicos-lista"><p class="muted" style="font-size:.88rem;">Carregando…</p></div>
       </div>
     </div>
   </div>
@@ -1175,7 +1166,7 @@ ul{margin:0;padding:0;list-style:none;}
         <div class="panel" style="padding:28px;">
           <h4 style="margin-bottom:6px;">Arquivos deste trabalho</h4>
           <p class="muted" style="font-size:.86rem;line-height:1.6;margin-bottom:18px;">
-            Só você e a outra pessoa deste trabalho enxergam o que está aqui.
+            Só você e a outra pessoa deste trabalho enxergam o que está aqui. Nem a plataforma mostra isso para mais ninguém.
           </p>
 
           <div class="field">
@@ -1628,7 +1619,7 @@ ul{margin:0;padding:0;list-style:none;}
 
         <h2>4. Papéis na plataforma</h2>
         <p>A mesma conta pode assumir papéis diferentes:</p>
-        <p>· <b>Quem aprende</b> — busca, contrata e compra.<br>· <b>Quem ensina</b> — publica ofertas e materiais. Somente contas com este papel podem publicar.<br>· <b>Quem contrata serviços</b> — papel previsto para funcionalidade ainda em desenvolvimento.</p>
+        <p>· <b>Quem aprende</b> — busca, contrata e compra.<br>· <b>Quem ensina</b> — publica ofertas e materiais. Somente contas com este papel podem publicar.<br>· <b>Quem contrata serviços</b> — publica e vende serviços sob encomenda, como revisão, formatação e material didático.</p>
         <p>Você pode alterar seu papel a qualquer momento no seu perfil.</p>
 
         <h2>5. O que é publicado</h2>
@@ -1642,6 +1633,7 @@ ul{margin:0;padding:0;list-style:none;}
         <p>Confirmado o pagamento, o valor é dividido automaticamente pelo Mercado Pago: a maior parte vai para a conta de quem vendeu e <b>10% ficam com a plataforma</b>, como comissão pelo uso do site. Esse percentual é informado a quem publica no momento de definir o preço, e pode mudar mediante aviso prévio.</p>
         <p><b>Material pago</b> fica disponível para download assim que o pagamento é confirmado, em <i>Minhas compras</i>. O acesso é pessoal: não é permitido repassar, revender ou publicar o arquivo em outro lugar.</p>
         <p><b>Aula ou mentoria paga pelo site</b>: o pagamento garante a contratação. Data, horário e formato são combinados diretamente com quem ensina, fora da plataforma.</p>
+        <p><b>Serviço contratado pelo site</b>: quem publica o serviço é quem executa e recebe; quem contrata é quem paga. Assim que o pagamento é confirmado, abre-se uma área fechada entre as duas pessoas para a troca de arquivos. Serviço marcado como gratuito abre essa área na hora, sem pagamento.</p>
         <p>A emissão de nota fiscal, quando devida, é responsabilidade de quem vendeu.</p>
 
         <h2>7. Devolução e cancelamento</h2>
@@ -1649,6 +1641,7 @@ ul{margin:0;padding:0;list-style:none;}
           <p><b>Arrependimento em 7 dias.</b> Você pode desistir de qualquer compra feita no site em até <b>7 dias corridos</b> contados do pagamento, e receber o valor de volta — inclusive se já tiver baixado o arquivo. É o direito previsto no artigo 49 do Código de Defesa do Consumidor, e nós o respeitamos sem discussão.</p>
         </div>
         <p><b>Aula não realizada.</b> Enquanto a aula ou mentoria não acontecer, você pode cancelar e receber o valor de volta, mesmo depois dos 7 dias.</p>
+        <p><b>Serviço não entregue.</b> Enquanto o trabalho contratado não for entregue no prazo combinado, você pode cancelar e receber o valor de volta, mesmo depois dos 7 dias. Se o trabalho já foi entregue, valem os 7 dias de arrependimento.</p>
         <p><b>Como pedir:</b> escreva para <a href="mailto:julianaluizcamargo@gmail.com">julianaluizcamargo@gmail.com</a> dizendo o que comprou e quando. Avisamos quem vendeu, e a devolução é feita pelo Mercado Pago, normalmente em poucos dias úteis. <b>A comissão da plataforma é devolvida junto</b> — não ficamos com nada de uma compra desfeita.</p>
         <p>Se quem vendeu não fizer a devolução, podemos tirar o conteúdo dele do ar e suspender a conta. Ainda assim, avise-nos: mesmo sem ter o dinheiro em mãos, é a nós que cabe resolver o que der errado dentro do site.</p>
         <p>Se você contestar a compra junto ao seu banco ou operadora de cartão, o acesso ao material comprado é suspenso enquanto a contestação durar.</p>
@@ -1668,6 +1661,7 @@ ul{margin:0;padding:0;list-style:none;}
         <p>Qualquer pessoa pode denunciar conteúdo impróprio pelo botão <b>⚑</b>, inclusive sem ter conta.</p>
 
         <h2>9. Contato entre usuários</h2>
+        <p><b>Arquivos da área de trabalho.</b> Os arquivos trocados dentro de um serviço contratado ficam guardados no site, em pasta fechada, e só as duas pessoas daquele trabalho conseguem abri-los. A administração da plataforma tem acesso técnico a eles e só o usa para apurar denúncia ou cumprir ordem judicial. Não envie por ali documento que você não queira que fique guardado — e não envie dado sensível de terceiros sem necessidade.</p>
         <p>O contato entre aluno e professor acontece por <b>WhatsApp</b>, a partir do número que o professor optou por informar no perfil.</p>
         <p>Ao preencher esse campo, o professor está ciente de que <b>o número fica visível publicamente</b> para qualquer pessoa que abrir seu perfil. Preencher é opcional.</p>
         <p>Como a conversa acontece fora da plataforma, <b>não temos acesso ao seu conteúdo</b> e não conseguimos comprovar o que foi combinado entre as partes.</p>
@@ -1751,6 +1745,7 @@ ul{margin:0;padding:0;list-style:none;}
           <tr><td>Texto de apresentação</td><td>No perfil</td><td>Não</td></tr>
           <tr><td>WhatsApp</td><td>No perfil</td><td>Não</td></tr>
           <tr><td>Conteúdo das ofertas</td><td>Ao publicar</td><td>Só se publicar</td></tr>
+          <tr><td>Arquivos enviados na área de um serviço contratado</td><td>Ao enviar</td><td>Só se contratar ou prestar um serviço</td></tr>
         </table>
         </div>
         <p>A senha é armazenada de forma criptografada pelo nosso provedor de autenticação. Nem nós conseguimos lê-la.</p>
@@ -1811,6 +1806,7 @@ ul{margin:0;padding:0;list-style:none;}
         <h2>8. Por quanto tempo guardamos</h2>
         <p>Enquanto sua conta existir, mantemos seus dados.</p>
         <p>Se você pedir a exclusão, apagamos seu perfil e suas ofertas. Alguns registros podem ser mantidos por prazo maior quando houver obrigação legal ou necessidade de defesa em processo.</p>
+        <p><b>Arquivos de serviços contratados</b> ficam guardados enquanto as duas pessoas do trabalho tiverem conta, e podem ser apagados por quem os enviou a qualquer momento, pelo próprio site.</p>
 
         <h2>9. Seus direitos</h2>
         <p>A LGPD garante a você o direito de:</p>
@@ -2238,7 +2234,7 @@ var perfil    = null;   // nome e papel, vindos da tabela "perfis"
 var modoAtual = 'criar';
 
 var TELAS_PROTEGIDAS = ['painel', 'painel-prof', 'editar-perfil', 'compras',
-                        'publicar-pedido', 'meus-servicos', 'trabalho'];
+                        'publicar-servico', 'meus-servicos', 'trabalho'];
 var perfilVisto = null;   // id do professor aberto na tela de perfil
 
 
@@ -2257,10 +2253,10 @@ function go(view){
     if(typeof limparOfertaSemMensagem === 'function') limparOfertaSemMensagem();
     if(typeof atualizarModoOferta === 'function') atualizarModoOferta();
   }
-  if(typeof pedidoEditando !== 'undefined' && pedidoEditando && view !== 'publicar-pedido'){
-    pedidoEditando = null;
-    if(typeof limparFormPedido === 'function') limparFormPedido();
-    if(typeof atualizarModoPedido === 'function') atualizarModoPedido();
+  if(typeof servicoEditando !== 'undefined' && servicoEditando && view !== 'publicar-servico'){
+    servicoEditando = null;
+    if(typeof limparFormServico === 'function') limparFormServico();
+    if(typeof atualizarModoServico === 'function') atualizarModoServico();
   }
 
   if(TELAS_PROTEGIDAS.indexOf(view) !== -1 && !usuario){
@@ -2288,10 +2284,8 @@ function go(view){
   if(view === 'publicar-material') { atualizarPortaoMaterial(); atualizarModoMaterial(); previaMaterial(); pintarCampoPrecoMaterial(); }
   if(view === 'moderacao')     carregarDenuncias(true);
   if(view === 'compras')       carregarCompras(true);
-  /* sempre do zero: um pedido fechado agora há pouco precisa sumir
-     daqui, e uma proposta nova precisa aparecer na contagem */
-  if(view === 'servicos')      carregarPedidos(true);
-  if(view === 'publicar-pedido'){ atualizarModoPedido(); previaPedido(); }
+  if(view === 'servicos')      carregarServicos(true);
+  if(view === 'publicar-servico'){ atualizarModoServico(); previaServico(); }
   if(view === 'meus-servicos') carregarMeusServicos(true);
 }
 function pick(el){
@@ -2312,7 +2306,7 @@ function fromHash(){
   var partes = bruto.split('/');
   var h = partes[0];
   if(h === 'perfil'   && partes[1]){ verPerfil(partes[1]);   return; }
-  if(h === 'pedido'   && partes[1]){ verPedido(partes[1]);   return; }
+  if(h === 'servico'  && partes[1]){ verServico(partes[1]);  return; }
   if(h === 'trabalho' && partes[1]){ verTrabalho(partes[1]); return; }
   if(!document.getElementById('v-'+h)) h = 'home';
   go(h);
@@ -2484,7 +2478,7 @@ function atualizarInterface(){
 
   atualizarPortaoEnsinar();
   atualizarPortaoMaterial();
-  if(typeof atualizarModoPedido === 'function') atualizarModoPedido();
+  if(typeof atualizarModoServico === 'function') atualizarModoServico();
   atualizarPrevia();
   carregarFormPerfil();
   pintarPainelAssinatura();
@@ -2666,7 +2660,8 @@ async function publicarOferta(){
     valor:      valor,
     cobranca:   document.getElementById('of-cobranca').value,
     modalidade: textoDoPillLigado('of-modalidade', 'Online'),
-    pagar_pelo_site: !!ofertaPagaSite
+    pagar_pelo_site: !!ofertaPagaSite,
+    tipo:       'aula'
   });
 
   btn.disabled = false; btn.textContent = 'Publicar oferta';
@@ -2707,9 +2702,10 @@ async function carregarOfertas(forcar){
   if(!sb) return;
   if(ofertasCarregadas && !forcar) { filtrarOfertas(); return; }
 
+  /* serviço também é oferta, mas não é aula: fora da aba Aprender */
   var r = await sb.from('ofertas')
     .select('id, titulo, area, nivel, formato, descricao, valor, cobranca, modalidade, criado_em, professor_id, perfis(nome, cidade)')
-    .eq('ativa', true)
+    .eq('ativa', true).neq('tipo', 'servico')
     .order('criado_em', { ascending: false })
     .limit(200);
 
@@ -2835,9 +2831,10 @@ async function carregarMinhasOfertas(){
   if(!caixa) return;
   if(!sb || !usuario){ caixa.innerHTML = '<p class="muted" style="font-size:.88rem;">Entre na sua conta para ver suas ofertas.</p>'; return; }
 
+  /* serviço aparece em Meus serviços, não aqui */
   var r = await sb.from('ofertas')
     .select('id, titulo, formato, valor, cobranca, ativa, criado_em')
-    .eq('professor_id', usuario.id)
+    .eq('professor_id', usuario.id).neq('tipo', 'servico')
     .order('criado_em', { ascending: false });
 
   if(r.error){ caixa.innerHTML = '<p class="muted" style="font-size:.88rem;">Erro ao carregar: ' + esc(r.error.message) + '</p>'; return; }
@@ -4283,10 +4280,11 @@ async function salvarEdicaoOferta(){
 
 
 /* ---------------- DENÚNCIA ---------------- */
-function abrirDenuncia(tipo, id, rotulo){
+function abrirDenuncia(tipo, id, rotulo, comoChamar){
   denunciaAlvo = { tipo: tipo, id: id, rotulo: rotulo || '' };
   document.getElementById('dn-alvo').innerHTML =
-    'Você está denunciando ' + (tipo === 'material' ? 'o material' : tipo === 'oferta' ? 'a oferta' : 'o perfil') +
+    'Você está denunciando ' + (comoChamar || (tipo === 'material' ? 'o material'
+      : tipo === 'oferta' ? 'a oferta' : 'o perfil')) +
     ' <b>' + esc(rotulo || '') + '</b>.';
   document.getElementById('dn-detalhe').value = '';
   document.getElementById('dn-msg').style.display = 'none';
@@ -4405,14 +4403,16 @@ async function blocoDenuncia(d){
     var m = await sb.from('materiais').select('titulo, ativo, professor_id').eq('id', d.alvo_id).maybeSingle();
     if(m.data){ titulo = m.data.titulo; noAr = m.data.ativo; dono = m.data.professor_id; }
   } else if(d.tipo === 'oferta'){
-    var o = await sb.from('ofertas').select('titulo, ativa, professor_id').eq('id', d.alvo_id).maybeSingle();
-    if(o.data){ titulo = o.data.titulo; noAr = o.data.ativa; dono = o.data.professor_id; }
+    var o = await sb.from('ofertas').select('titulo, ativa, professor_id, tipo').eq('id', d.alvo_id).maybeSingle();
+    if(o.data){ titulo = o.data.titulo; noAr = o.data.ativa; dono = o.data.professor_id;
+                if(o.data.tipo === 'servico') d.__servico = true; }
   } else {
     var pf = await sb.from('perfis').select('nome').eq('id', d.alvo_id).maybeSingle();
     if(pf.data){ titulo = pf.data.nome; dono = d.alvo_id; }
   }
 
-  var rotuloTipo = { material:'Material', oferta:'Oferta', perfil:'Perfil' }[d.tipo] || d.tipo;
+  var rotuloTipo = d.__servico ? 'Serviço'
+                 : ({ material:'Material', oferta:'Oferta', perfil:'Perfil' }[d.tipo] || d.tipo);
 
   var acoes = '';
   if(d.status === 'aberta'){
@@ -4996,21 +4996,19 @@ async function confirmarAula(compraId){
 
 
 /* ================================================================
-   ETAPA 8 — MURAL DE SERVIÇOS
+   ETAPA 9 — SERVIÇOS: QUEM PUBLICA RECEBE
 
-   O caminho de uma ponta à outra:
+   A etapa 8 tinha invertido isto, e foi refeita. Agora:
 
-     pedido publicado  →  propostas recebidas  →  cliente escolhe uma
-                       →  paga (ou aceita, se for grátis)
-                       →  área fechada onde os dois trocam arquivos
+     o profissional publica o serviço  →  quem precisa contrata
+     →  paga pelo site (ou contrata direto, se for gratuito)
+     →  abre a área fechada de arquivos entre os dois
 
-   Duas coisas que NÃO estão aqui, e sim no banco, de propósito:
+   Um serviço é uma OFERTA com tipo 'servico'. Aproveita tudo o que
+   a oferta já tem: edição, exclusão, moderação e cobrança.
 
-     · proposta só é lida por quem enviou e pelo dono do pedido;
-     · arquivo de trabalho só é lido pelas duas pessoas daquele
-       trabalho.
-
-   Se alguém burlar esta tela, esbarra na regra do banco.
+   O trabalho é uma COMPRA paga. As duas partes são quem comprou e
+   quem vendeu — e é só isso que a regra do banco confere.
    ================================================================ */
 
 var CATEGORIAS = {
@@ -5023,19 +5021,20 @@ var CATEGORIAS = {
   '🖥️ Design educacional': ['Slides', 'Videoaula', 'Ilustração', 'Infográfico']
 };
 
-var pedidos            = [];
-var pedidosCarregados  = false;
-var pedidoEditando     = null;
-var pedidoAberto       = null;   /* o pedido que está na tela v-pedido */
-var trabalhoAberto     = null;   /* o pedido que está na tela v-trabalho */
+var servicos           = [];
+var servicosCarregados = false;
+var servicoEditando    = null;
+var servicoAberto      = null;   /* id da oferta na tela v-servico */
+var trabalhoAberto     = null;   /* id da COMPRA na tela v-trabalho */
 var arquivoTrabalho    = null;
+var cobrancaServico    = 'site'; /* site | gratis | combinar */
 
 var MAX_TRABALHO = 50 * 1024 * 1024;
 
 
 /* ---------------- listas ---------------- */
 function montarListasServicos(){
-  var cat = document.getElementById('pd-categoria');
+  var cat = document.getElementById('sv-categoria');
   if(cat && !cat.options.length){
     Object.keys(CATEGORIAS).forEach(function(c){
       var o = document.createElement('option'); o.textContent = c; cat.appendChild(o);
@@ -5047,142 +5046,123 @@ function montarListasServicos(){
   if(filtros && !filtros.innerHTML.trim()){
     filtros.innerHTML = Object.keys(CATEGORIAS).map(function(c){
       return '<label style="display:flex;align-items:center;gap:8px;cursor:pointer;">' +
-             '<input type="checkbox" data-cat="' + esc(c) + '" onchange="filtrarPedidos()"> ' +
+             '<input type="checkbox" data-cat="' + esc(c) + '" onchange="filtrarServicos()"> ' +
              esc(c) + '</label>';
     }).join('');
   }
 }
 
 function montarTiposServico(){
-  var cat = document.getElementById('pd-categoria');
-  var tipo = document.getElementById('pd-tipo');
+  var cat  = document.getElementById('sv-categoria');
+  var tipo = document.getElementById('sv-tipo');
   if(!cat || !tipo) return;
   var lista = CATEGORIAS[cat.value] || [];
   tipo.innerHTML = lista.map(function(t){ return '<option>' + esc(t) + '</option>'; }).join('');
 }
 
 
-/* ---------------- a lista de pedidos ---------------- */
-async function carregarPedidos(forcar){
+/* ---------------- a vitrine ---------------- */
+async function carregarServicos(forcar){
   if(!sb) return;
-  if(pedidosCarregados && !forcar){ filtrarPedidos(); return; }
+  if(servicosCarregados && !forcar){ filtrarServicos(); return; }
 
-  var lista = document.getElementById('lista-pedidos');
+  var lista = document.getElementById('lista-servicos');
 
-  /* Se o banco-etapa8.sql ainda não rodou, esta consulta falha.
-     Falhar é aceitável; derrubar o resto da página, não. */
   var r;
   try {
-    r = await sb.from('pedidos')
-      .select('id, titulo, categoria, tipo_servico, descricao, orcamento_min, orcamento_max, ' +
-              'prazo_dias, status, criado_em, cliente_id, perfis:cliente_id(nome, cidade)')
-      .eq('status', 'aberto')
+    r = await sb.from('ofertas')
+      .select('id, titulo, descricao, area, nivel, formato, valor, cobranca, modalidade, ' +
+              'prazo_dias, pagar_pelo_site, criado_em, professor_id, perfis(nome, cidade)')
+      .eq('ativa', true).eq('tipo', 'servico')
       .order('criado_em', { ascending: false })
       .limit(200);
   } catch(e){
-    if(lista) lista.innerHTML = '<p class="muted">Esta área ainda não existe neste banco. Falta rodar o <b>banco-etapa8.sql</b>.</p>';
-    var vz = document.getElementById('vazio-pedidos'); if(vz) vz.style.display = 'none';
-    var ct = document.getElementById('contador-pedidos'); if(ct) ct.textContent = '';
+    if(lista) lista.innerHTML = '<p class="muted">Esta área ainda não existe neste banco. Falta rodar o <b>banco-etapa9.sql</b>.</p>';
     return;
   }
 
   if(r.error){
     if(lista){
-      lista.innerHTML = /relation|does not exist/i.test(r.error.message || '')
-        ? '<p class="muted">Esta área ainda não existe neste banco. Falta rodar o <b>banco-etapa8.sql</b>.</p>'
+      lista.innerHTML = /column|does not exist/i.test(r.error.message || '')
+        ? '<p class="muted">Falta rodar o <b>banco-etapa9.sql</b> no Supabase.</p>'
         : '<p class="muted">Não consegui carregar: ' + esc(r.error.message) + '</p>';
     }
     return;
   }
 
-  pedidos = r.data || [];
-  pedidosCarregados = true;
-
-  /* quantas propostas cada um tem. O número é público; o conteúdo não. */
-  await Promise.all(pedidos.map(async function(p){
-    try {
-      var c = await sb.rpc('quantas_propostas', { ped: p.id });
-      p.__props = Number((c && c.data) || 0);
-    } catch(e){ p.__props = 0; }
-  }));
-
-  filtrarPedidos();
+  servicos = r.data || [];
+  servicosCarregados = true;
+  filtrarServicos();
 }
 
-function filtrarPedidos(){
-  var lista = document.getElementById('lista-pedidos');
-  var vazio = document.getElementById('vazio-pedidos');
-  var cont  = document.getElementById('contador-pedidos');
+function filtrarServicos(){
+  var lista = document.getElementById('lista-servicos');
+  var vazio = document.getElementById('vazio-servicos');
+  var cont  = document.getElementById('contador-servicos');
   if(!lista) return;
 
-  var busca = ((document.getElementById('busca-pedidos') || {}).value || '').trim().toLowerCase();
+  var busca = ((document.getElementById('busca-servicos') || {}).value || '').trim().toLowerCase();
 
   var cats = [];
   document.querySelectorAll('#filtros-categoria input:checked').forEach(function(c){
     cats.push(c.getAttribute('data-cat'));
   });
 
-  var tetoEl = document.getElementById('filtro-orcamento');
-  var teto = tetoEl ? Number(tetoEl.value) : 0;
+  var precoEl = document.getElementById('filtro-preco-servico');
+  var preco = precoEl ? precoEl.value : '0';
 
-  var res = pedidos.filter(function(p){
-    if(cats.length && cats.indexOf(p.categoria) === -1) return false;
-    if(teto > 0 && teto < 99999){
-      var ref = Number(p.orcamento_max || p.orcamento_min || 0);
-      if(ref > teto) return false;
-    }
-    if(teto === 99999){
-      var ref2 = Number(p.orcamento_max || p.orcamento_min || 0);
-      if(ref2 <= 500) return false;
-    }
+  var res = servicos.filter(function(o){
+    if(cats.length && cats.indexOf(o.area) === -1) return false;
+    var v = Number(o.valor) || 0;
+    if(preco === 'gratis' && v > 0) return false;
+    if(preco !== 'gratis' && Number(preco) > 0 && v > Number(preco)) return false;
     if(busca){
-      var alvo = [p.titulo, p.descricao, p.categoria, p.tipo_servico].join(' ').toLowerCase();
+      var alvo = [o.titulo, o.descricao, o.area, o.formato].join(' ').toLowerCase();
       if(alvo.indexOf(busca) === -1) return false;
     }
     return true;
   });
 
-  if(cont) cont.textContent = res.length === 1 ? '1 pedido aberto' : res.length + ' pedidos abertos';
-
+  if(cont) cont.textContent = res.length === 1 ? '1 serviço publicado' : res.length + ' serviços publicados';
   if(vazio) vazio.style.display = res.length ? 'none' : 'block';
-  lista.innerHTML = res.map(cardPedido).join('');
+  lista.innerHTML = res.map(cardServico).join('');
 }
 
-function orcamentoTexto(p){
-  var a = Number(p.orcamento_min || 0), b = Number(p.orcamento_max || 0);
-  if(a && b && a !== b) return moeda(a) + ' – ' + moeda(b);
-  if(b) return 'até ' + moeda(b);
-  if(a) return 'a partir de ' + moeda(a);
-  return 'a combinar';
+function precoServico(o){
+  var v = Number(o.valor) || 0;
+  if(v > 0 && o.pagar_pelo_site) return moeda(v);
+  if(v > 0) return moeda(v) + '*';
+  return o.pagar_pelo_site ? 'Gratuito' : 'a combinar';
 }
 
-function cardPedido(p){
-  var quem = (p.perfis && p.perfis.nome) || 'alguém';
-  var n = Number(p.__props || 0);
+function cardServico(o){
+  var quem = (o.perfis && o.perfis.nome) || 'profissional';
+  var v = Number(o.valor) || 0;
+  var gratis = (v === 0 && o.pagar_pelo_site);
+
   return '' +
   '<article class="card job">' +
     '<div class="job-head">' +
       '<div>' +
-        '<h4>' + esc(p.titulo) + '</h4>' +
+        '<h4>' + esc(o.titulo) + '</h4>' +
         '<div class="tags" style="margin-top:8px;">' +
-          '<span class="tag">' + esc(p.categoria) + '</span>' +
-          '<span class="tag">' + esc(p.tipo_servico) + '</span>' +
+          '<span class="tag">' + esc(o.area) + '</span>' +
+          '<span class="tag">' + esc(o.formato) + '</span>' +
         '</div>' +
       '</div>' +
-      '<div class="budget"><b>' + esc(orcamentoTexto(p)) + '</b><small>orçamento</small></div>' +
+      '<div class="budget"><b style="' + (gratis ? 'color:var(--green-600);' : '') + '">' +
+        esc(precoServico(o)) + '</b><small>' + (o.pagar_pelo_site ? 'pelo site' : 'combinado direto') + '</small></div>' +
     '</div>' +
     '<p class="muted" style="font-size:.88rem;line-height:1.6;">' +
-      esc(cortar(p.descricao || 'Sem descrição.', 260)) + '</p>' +
+      esc(cortar(o.descricao || 'Sem descrição.', 260)) + '</p>' +
     '<div class="job-meta">' +
-      '<span>por ' + esc(quem) + '</span>' +
-      (p.prazo_dias ? '<span>⏱ Prazo: ' + p.prazo_dias + ' dias</span>' : '') +
-      '<span>🕐 ' + esc(dataBR(p.criado_em)) + '</span>' +
+      '<span>por <b class="link-auth" onclick="verPerfil(\'' + o.professor_id + '\')">' + esc(quem) + '</b></span>' +
+      (o.prazo_dias ? '<span>⏱ Entrega em ' + o.prazo_dias + ' dias</span>' : '') +
+      '<span>🕐 ' + esc(dataBR(o.criado_em)) + '</span>' +
     '</div>' +
     '<div class="job-foot">' +
-      '<span class="muted" style="font-size:.85rem;font-weight:600;">' +
-        (n === 0 ? 'nenhuma proposta ainda' : n === 1 ? '1 proposta recebida' : n + ' propostas recebidas') +
-      '</span>' +
-      '<button class="btn btn-primary btn-sm" onclick="verPedido(\'' + p.id + '\')">Ver e propor</button>' +
+      '<span class="muted" style="font-size:.85rem;font-weight:600;">' + esc(o.modalidade || 'Online') + '</span>' +
+      '<button class="btn btn-primary btn-sm" onclick="verServico(\'' + o.id + '\')">Ver e contratar</button>' +
     '</div>' +
   '</article>';
 }
@@ -5193,474 +5173,403 @@ function cortar(t, n){
 }
 
 
-/* ---------------- publicar um pedido ---------------- */
-function previaPedido(){
-  if(!document.getElementById('pd-pv-titulo')) return;
-  var t = (document.getElementById('pd-titulo').value || '').trim();
-  var d = (document.getElementById('pd-desc').value || '').trim();
-  var c = (document.getElementById('pd-categoria') || {}).value || '';
-  var tp = (document.getElementById('pd-tipo') || {}).value || '';
-  var pz = (document.getElementById('pd-prazo') || {}).value || '';
+/* ---------------- publicar um serviço ---------------- */
+function previaServico(){
+  if(!document.getElementById('sv-pv-titulo')) return;
+  var t  = (document.getElementById('sv-titulo').value || '').trim();
+  var d  = (document.getElementById('sv-desc').value || '').trim();
+  var c  = (document.getElementById('sv-categoria') || {}).value || '';
+  var tp = (document.getElementById('sv-tipo') || {}).value || '';
+  var pz = (document.getElementById('sv-prazo') || {}).value || '';
+  var v  = Number((document.getElementById('sv-valor') || {}).value) || 0;
 
-  document.getElementById('pd-pv-titulo').textContent = t || 'Título do pedido';
-  document.getElementById('pd-pv-desc').textContent   = d || 'A descrição aparece aqui.';
-  document.getElementById('pd-pv-cat').textContent    = c || 'Categoria';
-  document.getElementById('pd-pv-tipo').textContent   = tp || 'Tipo';
-  document.getElementById('pd-pv-valor').textContent  = orcamentoTexto({
-    orcamento_min: (document.getElementById('pd-min') || {}).value,
-    orcamento_max: (document.getElementById('pd-max') || {}).value
-  });
-  document.getElementById('pd-pv-prazo').textContent = pz ? ('⏱ Prazo: ' + pz + ' dias') : 'sem prazo definido';
+  document.getElementById('sv-pv-titulo').textContent = t || 'O que você faz';
+  document.getElementById('sv-pv-desc').textContent   = d || 'A descrição aparece aqui.';
+  document.getElementById('sv-pv-cat').textContent    = c || 'Categoria';
+  document.getElementById('sv-pv-tipo').textContent   = tp || 'Tipo';
+  document.getElementById('sv-pv-valor').textContent  =
+    cobrancaServico === 'gratis' ? 'Gratuito' :
+    cobrancaServico === 'combinar' ? 'a combinar' :
+    (v > 0 ? moeda(v) : 'sem preço');
+  document.getElementById('sv-pv-prazo').textContent = pz ? ('⏱ Entrega em ' + pz + ' dias') : 'sem prazo definido';
 }
 
-function mostrarMsgPedido(texto, tipo){
+function escolherCobrancaServico(botao, modo){
+  if((modo === 'site' || modo === 'gratis') && !mpConectado){
+    /* gratuito também precisa? não. Só o pago. */
+    if(modo === 'site'){
+      avisoMercadoPago('sv-aviso-mp', true);
+      mostrarMsgServico('Para receber pelo site você precisa conectar sua conta do Mercado Pago. O caminho está no seu painel.', 'aviso');
+      return;
+    }
+  }
+  pick(botao);
+  cobrancaServico = modo;
+  var caixa = document.getElementById('sv-caixa-valor');
+  if(caixa) caixa.style.display = (modo === 'site') ? '' : 'none';
+  pintarNotaCobranca();
+  avisoMercadoPago('sv-aviso-mp', modo === 'site');
+  previaServico();
+}
+
+function pintarNotaCobranca(){
+  var el = document.getElementById('sv-nota-cobranca');
+  if(!el) return;
+  if(cobrancaServico === 'site'){
+    el.innerHTML = 'Quem contratar paga aqui mesmo, com Pix ou cartão. ' +
+      (comissaoPct() > 0 ? 'A plataforma fica com <b>' + comissaoPct() + '%</b>; o resto cai na sua conta do Mercado Pago.'
+                         : 'O valor cai direto na sua conta do Mercado Pago.') +
+      ' A área de arquivos abre no pagamento.';
+  } else if(cobrancaServico === 'gratis'){
+    el.innerHTML = 'Sem cobrança. Quem contratar entra direto na área de arquivos com você.';
+  } else {
+    el.innerHTML = 'O site só apresenta vocês dois. Sem pagamento e <b>sem área de arquivos</b> — vocês combinam tudo por WhatsApp.';
+  }
+}
+
+function mostrarMsgServico(texto, tipo){
   var c = { ok:['#DCFCE7','#166534'], erro:['#FEE2E2','#991B1B'], aviso:['#FEF3C7','#92400E'] }[tipo || 'aviso'];
-  var el = document.getElementById('pd-msg');
+  var el = document.getElementById('sv-msg');
   if(!el) return;
   el.style.background = c[0]; el.style.color = c[1];
   el.innerHTML = texto; el.style.display = 'block';
 }
 
-function atualizarPortaoPedido(){
-  var portao = document.getElementById('portao-pedido');
-  var form   = document.getElementById('form-pedido');
+function atualizarPortaoServico(){
+  var portao = document.getElementById('portao-servico');
+  var form   = document.getElementById('form-servico');
   if(!portao || !form) return;
 
   if(!usuario){
     portao.style.display = 'block';
     portao.style.background = '#FEF3C7'; portao.style.color = '#92400E';
-    portao.innerHTML = '<b>Entre na sua conta para publicar um pedido.</b><br>' +
-      'É rápido, e é o que permite os profissionais falarem com você. ' +
+    portao.innerHTML = '<b>Entre na sua conta para publicar um serviço.</b><br>' +
       '<button class="btn btn-primary btn-sm" style="margin-top:10px;" onclick="irParaEntrar(\'criar\')">Entrar ou criar conta</button>';
     form.style.display = 'none';
     return;
   }
+
+  if(!(perfil && (perfil.papel === 'professor' || perfil.papel === 'vendedor'))){
+    portao.style.display = 'block';
+    portao.style.background = '#FEF3C7'; portao.style.color = '#92400E';
+    portao.innerHTML = '<b>Só quem tem papel profissional publica serviço.</b><br>' +
+      'No seu perfil, escolha "Quero ensinar" ou "Quero vender material". ' +
+      '<button class="btn btn-primary btn-sm" style="margin-top:10px;" onclick="go(\'editar-perfil\')">Editar meu perfil</button>';
+    form.style.display = 'none';
+    return;
+  }
+
   portao.style.display = 'none';
   form.style.display = '';
 }
 
-function atualizarModoPedido(){
-  atualizarPortaoPedido();
-  var editando = !!pedidoEditando;
-  var t = document.getElementById('pd-titulo-tela');
-  var u = document.getElementById('pd-sub-tela');
-  var c = document.getElementById('pd-crumb');
-  if(t) t.textContent = editando ? 'Editar pedido' : 'Descreva o que você precisa';
-  if(u) u.textContent = editando ? 'Altere o que quiser e salve.' : 'Quanto mais detalhe, melhores as propostas que você recebe.';
-  if(c) c.textContent = editando ? 'Serviços › Editar pedido' : 'Serviços › Publicar pedido';
-  var b = document.getElementById('pd-publicar');
-  if(b) b.textContent = editando ? 'Salvar alterações' : 'Publicar pedido';
-  var x = document.getElementById('pd-cancelar');
+function atualizarModoServico(){
+  atualizarPortaoServico();
+  var editando = !!servicoEditando;
+  var t = document.getElementById('sv-titulo-tela');
+  var u = document.getElementById('sv-sub-tela');
+  var c = document.getElementById('sv-crumb');
+  if(t) t.textContent = editando ? 'Editar serviço' : 'Publique o que você faz';
+  if(u) u.textContent = editando ? 'Altere o que quiser e salve.' : 'Descreva o serviço, o que está incluído e por quanto. Quem precisar contrata por aqui.';
+  if(c) c.textContent = editando ? 'Serviços › Editar' : 'Serviços › Publicar';
+  var b = document.getElementById('sv-publicar');
+  if(b) b.textContent = editando ? 'Salvar alterações' : 'Publicar serviço';
+  var x = document.getElementById('sv-cancelar');
   if(x) x.style.display = editando ? '' : 'none';
+  pintarNotaCobranca();
 }
 
-function lerFormPedido(){
-  var titulo = (document.getElementById('pd-titulo').value || '').trim();
-  if(titulo.length < 8){ mostrarMsgPedido('Escreva um título com pelo menos 8 letras — ajuda quem vai propor.', 'erro'); return null; }
+function lerFormServico(){
+  var titulo = (document.getElementById('sv-titulo').value || '').trim();
+  if(titulo.length < 8){ mostrarMsgServico('Escreva um título com pelo menos 8 letras.', 'erro'); return null; }
 
-  var min = document.getElementById('pd-min').value;
-  var max = document.getElementById('pd-max').value;
-  min = min === '' ? null : Number(min);
-  max = max === '' ? null : Number(max);
-  if(min !== null && max !== null && max < min){
-    mostrarMsgPedido('O valor final do orçamento não pode ser menor que o inicial.', 'erro'); return null;
+  var valor = 0, pagaSite = false;
+  if(cobrancaServico === 'site'){
+    valor = Number(document.getElementById('sv-valor').value);
+    if(!(valor >= 1)){ mostrarMsgServico('Informe um preço de pelo menos R$ 1,00 — ou escolha Gratuito.', 'erro'); return null; }
+    pagaSite = true;
+  } else if(cobrancaServico === 'gratis'){
+    valor = 0; pagaSite = true;    /* contrata pelo site, sem cobrança */
+  } else {
+    valor = 0; pagaSite = false;   /* a combinar */
   }
 
-  var prazo = document.getElementById('pd-prazo').value;
+  var prazo = document.getElementById('sv-prazo').value;
 
   return {
-    titulo:        titulo,
-    categoria:     document.getElementById('pd-categoria').value,
-    tipo_servico:  document.getElementById('pd-tipo').value,
-    descricao:     (document.getElementById('pd-desc').value || '').trim(),
-    orcamento_min: min,
-    orcamento_max: max,
-    prazo_dias:    prazo === '' ? null : Number(prazo)
+    titulo:          titulo,
+    tipo:            'servico',
+    area:            document.getElementById('sv-categoria').value,
+    nivel:           'Livre / Profissional',
+    formato:         document.getElementById('sv-tipo').value,
+    descricao:       (document.getElementById('sv-desc').value || '').trim(),
+    valor:           valor,
+    cobranca:        'Curso completo',
+    modalidade:      'Online',
+    prazo_dias:      prazo === '' ? null : Number(prazo),
+    pagar_pelo_site: pagaSite
   };
 }
 
-async function publicarPedido(){
+async function publicarServico(){
   if(!sb) return;
   if(!usuario){ irParaEntrar('criar'); return; }
-  if(pedidoEditando) return salvarEdicaoPedido();
+  if(servicoEditando) return salvarEdicaoServico();
 
-  var dados = lerFormPedido();
+  var dados = lerFormServico();
   if(!dados) return;
 
-  var btn = document.getElementById('pd-publicar');
+  var btn = document.getElementById('sv-publicar');
   btn.disabled = true; btn.textContent = 'Publicando…';
 
-  dados.cliente_id = usuario.id;
-  var r = await sb.from('pedidos').insert(dados);
+  dados.professor_id = usuario.id;
+  var r = await sb.from('ofertas').insert(dados);
 
-  btn.disabled = false; atualizarModoPedido();
-
-  if(r.error){
-    mostrarMsgPedido(/relation|does not exist/i.test(r.error.message || '')
-      ? 'Falta rodar o <b>banco-etapa8.sql</b> no Supabase.'
-      : 'Não deu certo: ' + esc(r.error.message), 'erro');
-    return;
-  }
-
-  mostrarMsgPedido('Pedido publicado! Agora é esperar as propostas. ' +
-    '<button class="btn btn-ghost btn-sm" style="margin-top:10px;" onclick="go(\'servicos\')">Ver no mural</button>', 'ok');
-  limparFormPedido();
-  await carregarPedidos(true);
-}
-
-function limparFormPedido(){
-  ['pd-titulo','pd-desc','pd-min','pd-max','pd-prazo'].forEach(function(id){
-    var el = document.getElementById(id); if(el) el.value = '';
-  });
-  var c = document.getElementById('pd-categoria'); if(c) c.selectedIndex = 0;
-  montarTiposServico();
-  previaPedido();
-}
-
-async function editarPedido(id){
-  if(!sb || !usuario) return;
-  var r = await sb.from('pedidos')
-    .select('id, titulo, categoria, tipo_servico, descricao, orcamento_min, orcamento_max, prazo_dias')
-    .eq('id', id).maybeSingle();
-  if(r.error || !r.data) return;
-
-  pedidoEditando = id;
-  go('publicar-pedido');
-
-  var p = r.data;
-  document.getElementById('pd-titulo').value = p.titulo || '';
-  document.getElementById('pd-desc').value   = p.descricao || '';
-  if(p.categoria) document.getElementById('pd-categoria').value = p.categoria;
-  montarTiposServico();
-  if(p.tipo_servico) document.getElementById('pd-tipo').value = p.tipo_servico;
-  document.getElementById('pd-min').value   = p.orcamento_min != null ? p.orcamento_min : '';
-  document.getElementById('pd-max').value   = p.orcamento_max != null ? p.orcamento_max : '';
-  document.getElementById('pd-prazo').value = p.prazo_dias != null ? p.prazo_dias : '';
-  document.getElementById('pd-msg').style.display = 'none';
-
-  atualizarModoPedido();
-  previaPedido();
-}
-
-function cancelarEdicaoPedido(){
-  pedidoEditando = null;
-  limparFormPedido();
-  document.getElementById('pd-msg').style.display = 'none';
-  atualizarModoPedido();
-  go('meus-servicos');
-}
-
-async function salvarEdicaoPedido(){
-  var dados = lerFormPedido();
-  if(!dados) return;
-
-  var btn = document.getElementById('pd-publicar');
-  btn.disabled = true; btn.textContent = 'Salvando…';
-
-  var r = await sb.from('pedidos').update(dados).eq('id', pedidoEditando);
-  btn.disabled = false;
-
-  if(r.error){ atualizarModoPedido(); mostrarMsgPedido('Não deu certo: ' + esc(r.error.message), 'erro'); return; }
-
-  mostrarMsgPedido('Alterações salvas.', 'ok');
-  pedidoEditando = null;
-  atualizarModoPedido();
-  limparFormPedido();
-  await carregarPedidos(true);
-}
-
-async function excluirPedido(id, confirmado){
-  if(!confirmado){ window.__pedidoExcluir = id; carregarMeusServicos(true); return; }
-  window.__pedidoExcluir = null;
-  await sb.from('pedidos').delete().eq('id', id);
-  await carregarMeusServicos(true);
-  await carregarPedidos(true);
-}
-
-
-/* ---------------- a tela de um pedido ---------------- */
-function verPedido(id){
-  pedidoAberto = id;
-  go('pedido');
-  if(history.replaceState) history.replaceState(null, '', '#pedido/' + id);
-  carregarPedido();
-}
-
-async function carregarPedido(){
-  if(!sb || !pedidoAberto) return;
-
-  var r;
-  try {
-    r = await sb.from('pedidos')
-      .select('id, titulo, categoria, tipo_servico, descricao, orcamento_min, orcamento_max, ' +
-              'prazo_dias, status, criado_em, cliente_id, proposta_aceita, perfis:cliente_id(nome, cidade)')
-      .eq('id', pedidoAberto).maybeSingle();
-  } catch(e){ r = { error: { message: 'indisponivel' }, data: null }; }
-
-  var titulo = document.getElementById('pe-titulo');
-  var sub    = document.getElementById('pe-sub');
-  var corpo  = document.getElementById('pe-corpo');
-  var acao   = document.getElementById('pe-acao');
-
-  if(r.error || !r.data){
-    if(titulo) titulo.textContent = 'Pedido não encontrado';
-    if(sub) sub.textContent = 'Ele pode ter sido apagado, ou já está fechado.';
-    if(corpo) corpo.innerHTML = '';
-    if(acao) acao.innerHTML = '<button class="btn btn-ghost btn-block btn-sm" onclick="go(\'servicos\')">Voltar ao mural</button>';
-    document.getElementById('pe-propostas').innerHTML = '';
-    return;
-  }
-
-  var p = r.data;
-  var meu = !!(usuario && usuario.id === p.cliente_id);
-  var quem = (p.perfis && p.perfis.nome) || 'alguém';
-
-  titulo.textContent = p.titulo;
-  sub.textContent = p.categoria + ' · ' + p.tipo_servico + ' · publicado por ' + quem +
-                    (p.perfis && p.perfis.cidade ? ' · ' + p.perfis.cidade : '');
-
-  corpo.innerHTML =
-    '<p style="font-size:.95rem;line-height:1.7;white-space:pre-wrap;">' + esc(p.descricao || 'Sem descrição.') + '</p>' +
-    '<div class="job-meta" style="margin-top:18px;">' +
-      '<span>💰 ' + esc(orcamentoTexto(p)) + '</span>' +
-      (p.prazo_dias ? '<span>⏱ ' + p.prazo_dias + ' dias</span>' : '') +
-      '<span>🕐 ' + esc(dataBR(p.criado_em)) + '</span>' +
-      '<span>' + (p.status === 'aberto' ? '🟢 aberto' : '⚪ fechado') + '</span>' +
-    '</div>';
-
-  pintarAcaoPedido(p, meu);
-  await pintarPropostas(p, meu);
-}
-
-function pintarAcaoPedido(p, meu){
-  var acao = document.getElementById('pe-acao');
-  if(!acao) return;
-
-  if(p.status !== 'aberto'){
-    acao.innerHTML =
-      '<h4 style="margin-bottom:10px;">Pedido fechado</h4>' +
-      '<p class="muted" style="font-size:.88rem;line-height:1.6;">Este pedido já tem alguém escolhido.</p>' +
-      (meu || (usuario && p.__souEscolhido)
-        ? '<button class="btn btn-accent btn-block btn-sm" style="margin-top:14px;" onclick="verTrabalho(\'' + p.id + '\')">Abrir o trabalho</button>'
-        : '') +
-      '<button class="btn btn-ghost btn-block btn-sm" style="margin-top:10px;" onclick="go(\'servicos\')">Ver outros pedidos</button>';
-    return;
-  }
-
-  if(meu){
-    acao.innerHTML =
-      '<h4 style="margin-bottom:10px;">Este pedido é seu</h4>' +
-      '<p class="muted" style="font-size:.88rem;line-height:1.6;">Compare as propostas ao lado e escolha uma. Depois de escolher, vocês trocam os arquivos por aqui.</p>' +
-      '<button class="btn btn-ghost btn-block btn-sm" style="margin-top:14px;" onclick="editarPedido(\'' + p.id + '\')">Editar pedido</button>';
-    return;
-  }
-
-  if(!usuario){
-    acao.innerHTML =
-      '<h4 style="margin-bottom:10px;">Quer fazer este trabalho?</h4>' +
-      '<p class="muted" style="font-size:.88rem;line-height:1.6;">Entre na sua conta para enviar uma proposta.</p>' +
-      '<button class="btn btn-primary btn-block btn-sm" style="margin-top:14px;" onclick="irParaEntrar(\'criar\')">Entrar ou criar conta</button>';
-    return;
-  }
-
-  acao.innerHTML =
-    '<h4 style="margin-bottom:12px;">Enviar proposta</h4>' +
-    '<div class="field"><label>Quanto você cobra (R$)</label>' +
-      '<input type="number" id="pp-valor" min="0" step="0.01" placeholder="350">' +
-      '<small>Coloque <b>0</b> se for fazer de graça.</small></div>' +
-    '<div class="field"><label>Em quantos dias</label>' +
-      '<input type="number" id="pp-prazo" min="1" step="1" placeholder="10"></div>' +
-    '<div class="field"><label>Mensagem</label>' +
-      '<textarea rows="4" id="pp-msg" placeholder="Conte como você faria e o que está incluído."></textarea></div>' +
-    '<div id="pp-aviso" style="display:none;padding:12px 14px;border-radius:10px;font-size:.86rem;line-height:1.5;margin-bottom:12px;"></div>' +
-    '<button class="btn btn-accent btn-block btn-sm" id="pp-enviar" onclick="enviarProposta()">Enviar proposta</button>';
-}
-
-function mostrarAvisoProposta(texto, tipo){
-  var c = { ok:['#DCFCE7','#166534'], erro:['#FEE2E2','#991B1B'], aviso:['#FEF3C7','#92400E'] }[tipo || 'aviso'];
-  var el = document.getElementById('pp-aviso');
-  if(!el) return;
-  el.style.background = c[0]; el.style.color = c[1];
-  el.innerHTML = texto; el.style.display = 'block';
-}
-
-async function enviarProposta(){
-  if(!sb || !usuario || !pedidoAberto) return;
-
-  var valor = document.getElementById('pp-valor').value;
-  var prazo = document.getElementById('pp-prazo').value;
-  var msg   = (document.getElementById('pp-msg').value || '').trim();
-
-  if(valor === '' || !(Number(valor) >= 0)){ mostrarAvisoProposta('Informe quanto você cobra. Use 0 se for de graça.', 'erro'); return; }
-  if(msg.length < 10){ mostrarAvisoProposta('Escreva uma mensagem — quem publicou vai escolher pelo que você disser aqui.', 'erro'); return; }
-
-  var btn = document.getElementById('pp-enviar');
-  btn.disabled = true; btn.textContent = 'Enviando…';
-
-  var r = await sb.from('propostas').insert({
-    pedido_id:       pedidoAberto,
-    profissional_id: usuario.id,
-    valor:           Number(valor),
-    prazo_dias:      prazo === '' ? null : Number(prazo),
-    mensagem:        msg
-  });
-
-  btn.disabled = false; btn.textContent = 'Enviar proposta';
+  btn.disabled = false; atualizarModoServico();
 
   if(r.error){
     var m = r.error.message || '';
-    mostrarAvisoProposta(
-      /uma_proposta_por_pessoa|duplicate/i.test(m) ? 'Você já enviou uma proposta para este pedido.' :
-      /row-level security/i.test(m) ? 'Não foi possível enviar. O pedido pode ter sido fechado agora há pouco.' :
+    mostrarMsgServico(
+      /Conecte sua conta do Mercado Pago/i.test(m) ? 'Conecte sua conta do Mercado Pago antes de cobrar por um serviço. O caminho está no seu painel.' :
+      /column .*tipo.* does not exist|prazo_dias/i.test(m) ? 'Falta rodar o <b>banco-etapa9.sql</b> no Supabase.' :
+      /row-level security/i.test(m) ? 'O banco recusou: sua conta precisa estar como professor ou vendedor.' :
       'Não deu certo: ' + esc(m), 'erro');
     return;
   }
 
-  mostrarAvisoProposta('Proposta enviada. Se for escolhida, o trabalho abre aqui mesmo.', 'ok');
-  await carregarPedido();
+  mostrarMsgServico('Serviço publicado! ' +
+    '<button class="btn btn-ghost btn-sm" style="margin-top:10px;" onclick="go(\'servicos\')">Ver na lista</button>', 'ok');
+  limparFormServico();
+  await carregarServicos(true);
 }
 
-async function pintarPropostas(p, meu){
-  var caixa = document.getElementById('pe-propostas');
-  var tit   = document.getElementById('pe-titulo-propostas');
-  if(!caixa) return;
+function limparFormServico(){
+  ['sv-titulo','sv-desc','sv-valor','sv-prazo'].forEach(function(id){
+    var el = document.getElementById(id); if(el) el.value = '';
+  });
+  var c = document.getElementById('sv-categoria'); if(c) c.selectedIndex = 0;
+  montarTiposServico();
+  cobrancaServico = 'site';
+  marcarPill('sv-cobranca', 'Preço fixo, pago pelo site');
+  var cx = document.getElementById('sv-caixa-valor'); if(cx) cx.style.display = '';
+  pintarNotaCobranca();
+  previaServico();
+}
 
-  if(!usuario){
-    tit.textContent = 'Propostas';
-    caixa.innerHTML = '<p class="muted" style="font-size:.88rem;line-height:1.6;">As propostas são privadas: só quem publicou o pedido e quem enviou cada uma conseguem ver.</p>';
-    return;
-  }
+async function editarServico(id){
+  if(!sb || !usuario) return;
+  var r = await sb.from('ofertas')
+    .select('id, titulo, descricao, area, formato, valor, prazo_dias, pagar_pelo_site')
+    .eq('id', id).maybeSingle();
+  if(r.error || !r.data) return;
+
+  servicoEditando = id;
+  go('publicar-servico');
+
+  var o = r.data;
+  document.getElementById('sv-titulo').value = o.titulo || '';
+  document.getElementById('sv-desc').value   = o.descricao || '';
+  if(o.area) document.getElementById('sv-categoria').value = o.area;
+  montarTiposServico();
+  if(o.formato) document.getElementById('sv-tipo').value = o.formato;
+  document.getElementById('sv-valor').value = o.valor != null ? o.valor : '';
+  document.getElementById('sv-prazo').value = o.prazo_dias != null ? o.prazo_dias : '';
+  document.getElementById('sv-msg').style.display = 'none';
+
+  cobrancaServico = !o.pagar_pelo_site ? 'combinar' : (Number(o.valor) > 0 ? 'site' : 'gratis');
+  marcarPill('sv-cobranca',
+    cobrancaServico === 'site' ? 'Preço fixo, pago pelo site' :
+    cobrancaServico === 'gratis' ? 'Gratuito' : 'A combinar por WhatsApp');
+  var cx = document.getElementById('sv-caixa-valor');
+  if(cx) cx.style.display = (cobrancaServico === 'site') ? '' : 'none';
+
+  atualizarModoServico();
+  previaServico();
+}
+
+function cancelarEdicaoServico(){
+  servicoEditando = null;
+  limparFormServico();
+  document.getElementById('sv-msg').style.display = 'none';
+  atualizarModoServico();
+  go('meus-servicos');
+}
+
+async function salvarEdicaoServico(){
+  var dados = lerFormServico();
+  if(!dados) return;
+  delete dados.tipo;
+
+  var btn = document.getElementById('sv-publicar');
+  btn.disabled = true; btn.textContent = 'Salvando…';
+
+  var r = await sb.from('ofertas').update(dados).eq('id', servicoEditando);
+  btn.disabled = false;
+
+  if(r.error){ atualizarModoServico(); mostrarMsgServico('Não deu certo: ' + esc(r.error.message), 'erro'); return; }
+
+  mostrarMsgServico('Alterações salvas.', 'ok');
+  servicoEditando = null;
+  atualizarModoServico();
+  limparFormServico();
+  await carregarServicos(true);
+}
+
+async function excluirServico(id, confirmado){
+  if(!confirmado){ window.__servicoExcluir = id; carregarMeusServicos(true); return; }
+  window.__servicoExcluir = null;
+  await sb.from('ofertas').delete().eq('id', id);
+  await carregarMeusServicos(true);
+  await carregarServicos(true);
+}
+
+
+/* ---------------- a tela de um serviço ---------------- */
+function verServico(id){
+  servicoAberto = id;
+  go('servico');
+  if(history.replaceState) history.replaceState(null, '', '#servico/' + id);
+  carregarServico();
+}
+
+async function carregarServico(){
+  if(!sb || !servicoAberto) return;
+
+  var titulo = document.getElementById('se-titulo');
+  var sub    = document.getElementById('se-sub');
+  var corpo  = document.getElementById('se-corpo');
+  var acao   = document.getElementById('se-acao');
 
   var r;
   try {
-    r = await sb.from('propostas')
-      .select('id, valor, prazo_dias, mensagem, status, criado_em, profissional_id, perfis:profissional_id(nome, cidade, titulo_profissional)')
-      .eq('pedido_id', p.id)
-      .order('criado_em', { ascending: true });
-  } catch(e){ r = { error: { message: 'indisponivel' }, data: [] }; }
+    r = await sb.from('ofertas')
+      .select('id, titulo, descricao, area, formato, valor, prazo_dias, pagar_pelo_site, ' +
+              'modalidade, criado_em, professor_id, ativa, perfis(nome, cidade, telefone, titulo_profissional)')
+      .eq('id', servicoAberto).maybeSingle();
+  } catch(e){ r = { error: { message: 'indisponivel' }, data: null }; }
 
-  if(r.error){ caixa.innerHTML = '<p class="muted">Não consegui carregar as propostas.</p>'; return; }
-
-  var props = r.data || [];
-  p.__souEscolhido = props.some(function(x){
-    return x.status === 'aceita' && x.profissional_id === usuario.id;
-  });
-
-  if(meu){
-    tit.textContent = props.length === 1 ? '1 proposta recebida' : props.length + ' propostas recebidas';
-    caixa.innerHTML = props.length
-      ? props.map(function(x){ return blocoProposta(x, p, true); }).join('')
-      : '<p class="muted" style="font-size:.88rem;line-height:1.6;">Ainda não chegou nenhuma proposta. Assim que chegar, aparece aqui.</p>';
+  if(r.error || !r.data){
+    titulo.textContent = 'Serviço não encontrado';
+    sub.textContent = 'Ele pode ter sido apagado ou saído do ar.';
+    corpo.innerHTML = '';
+    acao.innerHTML = '<button class="btn btn-ghost btn-block btn-sm" onclick="go(\'servicos\')">Ver outros serviços</button>';
     return;
   }
 
-  tit.textContent = 'Minha proposta';
-  var minha = props.filter(function(x){ return x.profissional_id === usuario.id; })[0];
-  caixa.innerHTML = minha
-    ? blocoProposta(minha, p, false)
-    : '<p class="muted" style="font-size:.88rem;line-height:1.6;">Você ainda não enviou proposta para este pedido. As propostas das outras pessoas são privadas — nem você vê as delas, nem elas veem a sua.</p>';
+  var o = r.data;
+  var meu = !!(usuario && usuario.id === o.professor_id);
+  var quem = (o.perfis && o.perfis.nome) || 'profissional';
 
-  /* já mandou? então o lugar do formulário é o aviso de que mandou.
-     Sem isso a pessoa vê um formulário em branco de novo e acha que
-     não foi — e manda outra vez, que o banco recusa. */
-  if(minha) pintarAcaoJaProposta(p, minha);
+  titulo.textContent = o.titulo;
+  sub.textContent = o.area + ' · ' + o.formato + ' · por ' + quem +
+                    (o.perfis && o.perfis.cidade ? ' · ' + o.perfis.cidade : '');
+
+  corpo.innerHTML =
+    '<p style="font-size:.95rem;line-height:1.7;white-space:pre-wrap;">' + esc(o.descricao || 'Sem descrição.') + '</p>' +
+    '<div class="job-meta" style="margin-top:18px;">' +
+      '<span>💰 ' + esc(precoServico(o)) + '</span>' +
+      (o.prazo_dias ? '<span>⏱ ' + o.prazo_dias + ' dias</span>' : '') +
+      '<span>🕐 ' + esc(dataBR(o.criado_em)) + '</span>' +
+    '</div>' +
+    /* Sem este botão, um serviço que fere a ética acadêmica só sai do ar
+       se alguém avisar por fora. Com ele, cai na fila da moderação. */
+    (meu ? '' :
+      '<p style="font-size:.8rem;margin-top:20px;padding-top:16px;border-top:1px solid var(--linha);">' +
+        '<b class="link-auth" onclick="abrirDenuncia(\'oferta\', \'' + o.id + '\', \'' +
+        String(o.titulo).replace(/'/g, "\\'").replace(/"/g, '') + '\', \'o serviço\')">⚑ Denunciar este serviço</b>' +
+      '</p>');
+
+  await pintarAcaoServico(o, meu);
 }
 
-function pintarAcaoJaProposta(p, minha){
-  var acao = document.getElementById('pe-acao');
+async function pintarAcaoServico(o, meu){
+  var acao = document.getElementById('se-acao');
   if(!acao) return;
 
-  if(minha.status === 'aceita'){
+  if(meu){
+    acao.innerHTML =
+      '<h4 style="margin-bottom:10px;">Este serviço é seu</h4>' +
+      '<p class="muted" style="font-size:.88rem;line-height:1.6;">Quem contratar aparece em Meus serviços, com a área de arquivos.</p>' +
+      '<button class="btn btn-ghost btn-block btn-sm" style="margin-top:14px;" onclick="editarServico(\'' + o.id + '\')">Editar serviço</button>';
+    return;
+  }
+
+  if(!usuario){
+    acao.innerHTML =
+      '<h4 style="margin-bottom:10px;">Contratar</h4>' +
+      '<p class="muted" style="font-size:.88rem;line-height:1.6;">Entre na sua conta para contratar este serviço.</p>' +
+      '<button class="btn btn-primary btn-block btn-sm" style="margin-top:14px;" onclick="irParaEntrar(\'criar\')">Entrar ou criar conta</button>';
+    return;
+  }
+
+  /* já contratei? então o botão leva ao trabalho */
+  var jah = null;
+  try {
+    var t = await sb.rpc('trabalho_do_servico', { oferta: o.id });
+    jah = (t && t.data) || null;
+  } catch(e){}
+
+  if(jah){
     acao.innerHTML =
       '<div style="background:#DCFCE7;color:#166534;padding:14px 16px;border-radius:11px;font-size:.9rem;line-height:1.55;">' +
-        '<b>Sua proposta foi escolhida.</b> O trabalho já está aberto.</div>' +
-      '<button class="btn btn-accent btn-block btn-sm" style="margin-top:14px;" onclick="verTrabalho(\'' + p.id + '\')">Abrir o trabalho</button>';
+        '<b>Você já contratou este serviço.</b></div>' +
+      '<button class="btn btn-accent btn-block btn-sm" style="margin-top:14px;" onclick="verTrabalho(\'' + jah + '\')">Abrir o trabalho</button>';
     return;
   }
 
-  if(minha.status === 'recusada'){
+  if(!o.pagar_pelo_site){
+    var tel = o.perfis && o.perfis.telefone;
     acao.innerHTML =
-      '<div style="background:#F3F4F6;color:#374151;padding:14px 16px;border-radius:11px;font-size:.9rem;line-height:1.55;">' +
-        'Desta vez escolheram outra proposta.</div>' +
-      '<button class="btn btn-ghost btn-block btn-sm" style="margin-top:14px;" onclick="go(\'servicos\')">Ver outros pedidos</button>';
+      '<h4 style="margin-bottom:10px;">Combinado direto</h4>' +
+      '<p class="muted" style="font-size:.88rem;line-height:1.6;">Este serviço não é contratado pelo site. Fale com quem publicou e combinem valor e prazo.</p>' +
+      (tel
+        ? '<a class="btn btn-accent btn-block btn-sm" style="margin-top:14px;" target="_blank" rel="noopener" href="' +
+          esc(linkWhatsapp(tel, o.perfis.nome, o.titulo)) + '">Chamar no WhatsApp</a>'
+        : '<p class="muted" style="font-size:.82rem;margin-top:12px;">Quem publicou não deixou WhatsApp no perfil.</p>') +
+      '<p class="muted" style="font-size:.8rem;line-height:1.55;margin-top:12px;">Combinando por fora, não há área de arquivos nem registro no site.</p>';
     return;
   }
 
+  var gratis = !(Number(o.valor) > 0);
   acao.innerHTML =
-    '<div style="background:#DCFCE7;color:#166534;padding:14px 16px;border-radius:11px;font-size:.9rem;line-height:1.55;">' +
-      '<b>Proposta enviada.</b> Agora é esperar. Se for escolhida, o trabalho abre aqui.</div>' +
-    '<p class="muted" style="font-size:.86rem;line-height:1.6;margin-top:14px;">Você propôs <b>' +
-      (Number(minha.valor) > 0 ? esc(moeda(minha.valor)) : 'fazer de graça') + '</b>' +
-      (minha.prazo_dias ? ', em ' + minha.prazo_dias + ' dias' : '') + '.</p>' +
-    '<button class="btn btn-ghost btn-block btn-sm" style="margin-top:14px;" onclick="retirarProposta(\'' + minha.id + '\')">Retirar minha proposta</button>';
+    '<h4 style="margin-bottom:10px;">Contratar</h4>' +
+    '<p style="font-size:1.4rem;font-weight:800;color:' + (gratis ? 'var(--green-600)' : 'var(--brand-600)') + ';">' +
+      (gratis ? 'Gratuito' : esc(moeda(o.valor))) + '</p>' +
+    (o.prazo_dias ? '<p class="muted" style="font-size:.88rem;margin-top:4px;">Entrega em ' + o.prazo_dias + ' dias</p>' : '') +
+    '<p class="muted" style="font-size:.86rem;line-height:1.6;margin-top:12px;">' +
+      (gratis ? 'Ao contratar, abre uma área fechada entre vocês dois para trocar os arquivos.'
+              : 'O pagamento é no Mercado Pago, com Pix ou cartão. A área de arquivos abre assim que o pagamento for confirmado.') +
+    '</p>' +
+    '<button class="btn btn-accent btn-block btn-sm" style="margin-top:16px;" id="se-contratar" onclick="contratarServico(\'' +
+      o.id + '\', ' + (gratis ? 'true' : 'false') + ')">' +
+      (gratis ? 'Contratar' : 'Contratar e pagar') + '</button>';
 }
 
-async function retirarProposta(id){
+async function contratarServico(ofertaId, gratis){
   if(!sb) return;
-  var r = await sb.from('propostas').delete().eq('id', id);
-  if(r.error){ alert('Não consegui retirar: ' + r.error.message); return; }
-  await carregarPedido();
-}
+  if(!usuario){ irParaEntrar('entrar'); return; }
 
-function blocoProposta(x, p, souDono){
-  var quem = (x.perfis && x.perfis.nome) || 'profissional';
-  var titulo = (x.perfis && x.perfis.titulo_profissional) || '';
-  var cores = { enviada:['#EFF6FF','#1D4ED8','aguardando'], aceita:['#DCFCE7','#166534','aceita'], recusada:['#F3F4F6','#6B7280','não escolhida'] };
-  var e = cores[x.status] || cores.enviada;
-  var gratis = !(Number(x.valor) > 0);
+  if(!gratis){ comprar('servico', ofertaId); return; }
 
-  var botao = '';
-  if(souDono && p.status === 'aberto' && x.status === 'enviada'){
-    botao = gratis
-      ? '<button class="btn btn-accent btn-sm" onclick="aceitarPropostaGratis(\'' + x.id + '\')">Aceitar</button>'
-      : '<button class="btn btn-accent btn-sm" onclick="aceitarPropostaPaga(\'' + x.id + '\')">Aceitar e pagar</button>';
-  }
-  if(x.status === 'aceita'){
-    botao = '<button class="btn btn-primary btn-sm" onclick="verTrabalho(\'' + p.id + '\')">Abrir o trabalho</button>';
-  }
+  var btn = document.getElementById('se-contratar');
+  if(btn){ btn.disabled = true; btn.textContent = 'Contratando…'; }
 
-  return '<div class="list-item" style="align-items:flex-start;">' +
-    '<div class="g">' +
-      '<b class="link-auth" onclick="verPerfil(\'' + x.profissional_id + '\')">' + esc(quem) + '</b>' +
-      (titulo ? '<small>' + esc(titulo) + '</small>' : '') +
-      '<p class="muted" style="font-size:.88rem;line-height:1.6;margin-top:8px;white-space:pre-wrap;">' + esc(x.mensagem || '') + '</p>' +
-      '<small style="margin-top:8px;display:block;">' +
-        '<b style="color:' + (gratis ? 'var(--green-600)' : 'var(--brand-600)') + ';">' +
-          (gratis ? 'Gratuito' : moeda(x.valor)) + '</b>' +
-        (x.prazo_dias ? ' · ' + x.prazo_dias + ' dias' : '') +
-        ' · ' + esc(dataBR(x.criado_em)) +
-      '</small>' +
-    '</div>' +
-    '<span style="display:flex;flex-direction:column;gap:8px;align-items:flex-end;">' +
-      '<span class="tag" style="background:' + e[0] + ';color:' + e[1] + ';border:0;">' + e[2] + '</span>' +
-      botao +
-    '</span>' +
-  '</div>';
-}
+  var r = await sb.rpc('contratar_gratis', { oferta: ofertaId });
+  if(btn){ btn.disabled = false; btn.textContent = 'Contratar'; }
 
-async function aceitarPropostaGratis(propId){
-  if(!sb) return;
-  var r = await sb.rpc('aceitar_proposta', { prop: propId });
-  if(r.error || r.data !== true){
-    alert('Não consegui aceitar. Recarregue a página e tente de novo.');
+  if(r.error || !r.data){
+    alert('Não consegui contratar. Recarregue a página e tente de novo.');
     return;
   }
-  await carregarPedido();
-  verTrabalho(pedidoAberto);
-}
-
-function aceitarPropostaPaga(propId){
-  /* daqui vai para o Mercado Pago. O pedido só fecha quando o
-     pagamento é confirmado — quem fecha é o servidor, não esta tela. */
-  comprar('servico', propId);
+  verTrabalho(r.data);
 }
 
 
 /* ---------------- a área do trabalho ---------------- */
-function verTrabalho(pedidoId){
-  trabalhoAberto = pedidoId;
+function verTrabalho(compraId){
+  trabalhoAberto = compraId;
   go('trabalho');
-  if(history.replaceState) history.replaceState(null, '', '#trabalho/' + pedidoId);
+  if(history.replaceState) history.replaceState(null, '', '#trabalho/' + compraId);
   carregarTrabalho();
 }
 
@@ -5679,51 +5588,37 @@ async function carregarTrabalho(){
 
   var r;
   try {
-    r = await sb.from('pedidos')
-      .select('id, titulo, categoria, tipo_servico, status, cliente_id, proposta_aceita, ' +
-              'perfis:cliente_id(nome, telefone), propostas:proposta_aceita(id, valor, prazo_dias, profissional_id, perfis:profissional_id(nome, telefone))')
+    r = await sb.from('compras')
+      .select('id, titulo, valor, status, tipo, criado_em, comprador_id, vendedor_id, oferta_id, ' +
+              'comprador:comprador_id(nome, telefone), vendedor:vendedor_id(nome, telefone)')
       .eq('id', trabalhoAberto).maybeSingle();
   } catch(e){ r = { error: { message: 'indisponivel' }, data: null }; }
 
-  if(r.error || !r.data){
+  if(r.error || !r.data || r.data.status !== 'paga'){
     titulo.textContent = 'Trabalho não encontrado';
-    sub.textContent = 'Ou ele não existe, ou você não faz parte dele.';
-    if(lado) lado.innerHTML = '<button class="btn btn-ghost btn-block btn-sm" onclick="go(\'servicos\')">Voltar ao mural</button>';
+    sub.textContent = 'Ou ele não existe, ou o pagamento ainda não foi confirmado, ou você não faz parte dele.';
+    if(lado) lado.innerHTML = '<button class="btn btn-ghost btn-block btn-sm" onclick="go(\'servicos\')">Ver serviços</button>';
     document.getElementById('tr-lista').innerHTML = '';
     return;
   }
 
-  var p = r.data;
-  var prof = p.propostas || null;
-  var souCliente = usuario.id === p.cliente_id;
-  var souProf = !!(prof && prof.profissional_id === usuario.id);
+  var c = r.data;
+  var souCliente = usuario.id === c.comprador_id;
+  var outro = souCliente ? c.vendedor : c.comprador;
 
-  if(!souCliente && !souProf){
-    titulo.textContent = 'Trabalho fechado';
-    sub.textContent = 'Só as duas pessoas deste trabalho têm acesso.';
-    if(lado) lado.innerHTML = '<button class="btn btn-ghost btn-block btn-sm" onclick="go(\'servicos\')">Voltar ao mural</button>';
-    document.getElementById('tr-lista').innerHTML = '';
-    return;
-  }
-
-  var outro = souCliente
-    ? (prof && prof.perfis ? prof.perfis : null)
-    : (p.perfis || null);
-
-  titulo.textContent = p.titulo;
-  sub.textContent = p.categoria + ' · ' + p.tipo_servico +
-                    (outro && outro.nome ? ' · com ' + outro.nome : '');
+  titulo.textContent = c.titulo;
+  sub.textContent = (souCliente ? 'Você contratou' : 'Você está fazendo') +
+                    (outro && outro.nome ? ' · com ' + outro.nome : '') +
+                    ' · ' + (Number(c.valor) > 0 ? moeda(c.valor) : 'gratuito');
 
   if(lado){
     lado.innerHTML =
-      '<h4 style="margin-bottom:10px;">' + (souCliente ? 'Quem está fazendo' : 'Quem pediu') + '</h4>' +
+      '<h4 style="margin-bottom:10px;">' + (souCliente ? 'Quem está fazendo' : 'Quem contratou') + '</h4>' +
       '<p style="font-size:.95rem;font-weight:700;">' + esc((outro && outro.nome) || '—') + '</p>' +
-      (prof ? '<p class="muted" style="font-size:.88rem;margin-top:8px;">Combinado: <b>' +
-        (Number(prof.valor) > 0 ? esc(moeda(prof.valor)) : 'gratuito') + '</b>' +
-        (prof.prazo_dias ? ' · ' + prof.prazo_dias + ' dias' : '') + '</p>' : '') +
+      '<p class="muted" style="font-size:.88rem;margin-top:8px;">Contratado em ' + esc(dataBR(c.criado_em)) + '</p>' +
       (outro && outro.telefone
         ? '<a class="btn btn-accent btn-block btn-sm" style="margin-top:14px;" target="_blank" rel="noopener" href="' +
-          esc(linkWhatsapp(outro.telefone, outro.nome, p.titulo)) + '">Chamar no WhatsApp</a>'
+          esc(linkWhatsapp(outro.telefone, outro.nome, c.titulo)) + '">Chamar no WhatsApp</a>'
         : '<p class="muted" style="font-size:.82rem;margin-top:12px;">Sem WhatsApp no perfil.</p>') +
       '<button class="btn btn-ghost btn-block btn-sm" style="margin-top:10px;" onclick="go(\'meus-servicos\')">Meus serviços</button>';
   }
@@ -5770,7 +5665,7 @@ async function enviarArquivoTrabalho(){
     btn.disabled = false; btn.textContent = 'Enviar arquivo';
     var m = up.error.message || '';
     mostrarMsgTrabalho(
-      /Bucket not found/i.test(m) ? 'Falta rodar o <b>banco-etapa8.sql</b> — a pasta dos trabalhos ainda não existe.' :
+      /Bucket not found/i.test(m) ? 'Falta rodar o <b>banco-etapa9.sql</b> — a pasta dos trabalhos ainda não existe.' :
       /mime|not allowed/i.test(m) ? 'Esse tipo de arquivo não é aceito.' :
       /row-level security|Unauthorized/i.test(m) ? 'O servidor recusou: você não faz parte deste trabalho.' :
       'Não consegui enviar: ' + esc(m), 'erro');
@@ -5780,7 +5675,7 @@ async function enviarArquivoTrabalho(){
   document.getElementById('tr-barra-fill').style.width = '85%';
 
   var r = await sb.from('trabalho_arquivos').insert({
-    pedido_id:     trabalhoAberto,
+    compra_id:     trabalhoAberto,
     autor_id:      usuario.id,
     arquivo_path:  caminho,
     arquivo_nome:  f.name,
@@ -5812,7 +5707,7 @@ async function carregarArquivosTrabalho(){
   try {
     r = await sb.from('trabalho_arquivos')
       .select('id, arquivo_path, arquivo_nome, tamanho_bytes, observacao, criado_em, autor_id, perfis:autor_id(nome)')
-      .eq('pedido_id', trabalhoAberto)
+      .eq('compra_id', trabalhoAberto)
       .order('criado_em', { ascending: false });
   } catch(e){ r = { error: { message: 'indisponivel' }, data: [] }; }
 
@@ -5821,7 +5716,7 @@ async function carregarArquivosTrabalho(){
   var arqs = r.data || [];
   if(arqs.length === 0){
     caixa.innerHTML = '<p class="muted" style="font-size:.88rem;line-height:1.6;">Nenhum arquivo ainda. ' +
-      'Quem pediu costuma mandar o documento primeiro; quem faz devolve o trabalho pronto aqui mesmo.</p>';
+      'Quem contratou costuma mandar o documento primeiro; quem faz devolve o trabalho pronto aqui mesmo.</p>';
     return;
   }
 
@@ -5866,93 +5761,68 @@ async function apagarArquivoTrabalho(id, caminho){
 async function carregarMeusServicos(forcar){
   if(!sb || !usuario) return;
 
-  /* pedidos que eu publiquei */
-  var rp;
+  /* serviços que eu publiquei */
+  var rs;
   try {
-    rp = await sb.from('pedidos')
-      .select('id, titulo, categoria, status, criado_em, proposta_aceita')
-      .eq('cliente_id', usuario.id)
+    rs = await sb.from('ofertas')
+      .select('id, titulo, area, valor, pagar_pelo_site, ativa, criado_em')
+      .eq('professor_id', usuario.id).eq('tipo', 'servico')
       .order('criado_em', { ascending: false });
-  } catch(e){ rp = { error: { message: 'relation does not exist' }, data: [] }; }
+  } catch(e){ rs = { error: { message: 'indisponivel' }, data: [] }; }
 
-  var cxP = document.getElementById('meus-pedidos');
-  if(cxP){
-    if(rp.error){
-      cxP.innerHTML = /relation|does not exist/i.test(rp.error.message || '')
-        ? '<p class="muted" style="font-size:.88rem;">Falta rodar o <b>banco-etapa8.sql</b>.</p>'
-        : '<p class="muted" style="font-size:.88rem;">Erro: ' + esc(rp.error.message) + '</p>';
-    } else if((rp.data || []).length === 0){
-      cxP.innerHTML = '<p class="muted" style="font-size:.88rem;line-height:1.6;">Você ainda não publicou nenhum pedido.</p>';
+  var cxS = document.getElementById('meus-servicos-lista');
+  if(cxS){
+    if(rs.error){
+      cxS.innerHTML = '<p class="muted" style="font-size:.88rem;">Falta rodar o <b>banco-etapa9.sql</b>.</p>';
+    } else if((rs.data || []).length === 0){
+      cxS.innerHTML = '<p class="muted" style="font-size:.88rem;line-height:1.6;">Você ainda não publicou nenhum serviço. ' +
+        '<b class="link-auth" onclick="go(\'publicar-servico\')">Publicar o primeiro</b>.</p>';
     } else {
-      cxP.innerHTML = rp.data.map(function(p){
-        var confirmando = (window.__pedidoExcluir === p.id);
+      cxS.innerHTML = rs.data.map(function(o){
+        var confirmando = (window.__servicoExcluir === o.id);
         return '<div class="list-item">' +
-          '<div class="g"><b class="link-auth" onclick="verPedido(\'' + p.id + '\')">' + esc(p.titulo) + '</b>' +
-          '<small>' + esc(p.categoria) + ' · ' + esc(dataBR(p.criado_em)) +
-          ' · ' + (p.status === 'aberto' ? 'aberto' : 'fechado') + '</small></div>' +
+          '<div class="g"><b class="link-auth" onclick="verServico(\'' + o.id + '\')">' + esc(o.titulo) + '</b>' +
+          '<small>' + esc(o.area) + ' · ' + esc(precoServico(o)) + ' · ' + esc(dataBR(o.criado_em)) + '</small></div>' +
           (confirmando
-            ? '<span style="display:flex;gap:6px;"><button class="btn btn-sm" style="background:#DC2626;color:#fff;" onclick="excluirPedido(\'' + p.id + '\', true)">Confirmar</button>' +
-              '<button class="btn btn-ghost btn-sm" onclick="window.__pedidoExcluir=null;carregarMeusServicos(true)">Cancelar</button></span>'
+            ? '<span style="display:flex;gap:6px;"><button class="btn btn-sm" style="background:#DC2626;color:#fff;" onclick="excluirServico(\'' + o.id + '\', true)">Confirmar</button>' +
+              '<button class="btn btn-ghost btn-sm" onclick="window.__servicoExcluir=null;carregarMeusServicos(true)">Cancelar</button></span>'
             : '<span style="display:flex;gap:6px;">' +
-              (p.status === 'fechado'
-                ? '<button class="btn btn-primary btn-sm" onclick="verTrabalho(\'' + p.id + '\')">Trabalho</button>'
-                : '<button class="btn btn-ghost btn-sm" onclick="editarPedido(\'' + p.id + '\')">Editar</button>') +
-              '<button class="btn btn-ghost btn-sm" onclick="excluirPedido(\'' + p.id + '\')">Excluir</button></span>') +
+              '<button class="btn btn-ghost btn-sm" onclick="editarServico(\'' + o.id + '\')">Editar</button>' +
+              '<button class="btn btn-ghost btn-sm" onclick="excluirServico(\'' + o.id + '\')">Excluir</button></span>') +
         '</div>';
       }).join('');
     }
   }
 
-  /* propostas que eu enviei */
-  var rq;
-  try {
-    rq = await sb.from('propostas')
-      .select('id, valor, prazo_dias, status, criado_em, pedido_id, pedidos:pedido_id(id, titulo, status)')
-      .eq('profissional_id', usuario.id)
-      .order('criado_em', { ascending: false });
-  } catch(e){ rq = { error: { message: 'relation does not exist' }, data: [] }; }
-
-  var cxQ = document.getElementById('minhas-propostas');
-  if(cxQ){
-    if(rq.error || (rq.data || []).length === 0){
-      cxQ.innerHTML = '<p class="muted" style="font-size:.88rem;line-height:1.6;">Você ainda não enviou nenhuma proposta. ' +
-        '<b class="link-auth" onclick="go(\'servicos\')">Veja o mural</b> — é de graça propor.</p>';
-    } else {
-      var cores = { enviada:['#EFF6FF','#1D4ED8','aguardando'], aceita:['#DCFCE7','#166534','aceita'], recusada:['#F3F4F6','#6B7280','não escolhida'] };
-      cxQ.innerHTML = rq.data.map(function(x){
-        var ped = x.pedidos || {};
-        var e = cores[x.status] || cores.enviada;
-        return '<div class="list-item">' +
-          '<div class="g"><b class="link-auth" onclick="verPedido(\'' + (ped.id || x.pedido_id) + '\')">' + esc(ped.titulo || 'pedido') + '</b>' +
-          '<small>' + (Number(x.valor) > 0 ? esc(moeda(x.valor)) : 'gratuito') +
-          (x.prazo_dias ? ' · ' + x.prazo_dias + ' dias' : '') + ' · ' + esc(dataBR(x.criado_em)) + '</small></div>' +
-          '<span style="display:flex;gap:8px;align-items:center;">' +
-            '<span class="tag" style="background:' + e[0] + ';color:' + e[1] + ';border:0;">' + e[2] + '</span>' +
-            (x.status === 'aceita' ? '<button class="btn btn-primary btn-sm" onclick="verTrabalho(\'' + (ped.id || x.pedido_id) + '\')">Trabalho</button>' : '') +
-          '</span>' +
-        '</div>';
-      }).join('');
-    }
-  }
-
-  /* trabalhos em andamento: pedidos meus fechados + propostas minhas aceitas */
+  /* trabalhos: compras de serviço, dos dois lados */
   var cxT = document.getElementById('meus-trabalhos');
-  if(cxT){
-    var trabalhos = [];
-    (rp.data || []).forEach(function(p){
-      if(p.status === 'fechado') trabalhos.push({ id: p.id, titulo: p.titulo, papel: 'você pediu' });
-    });
-    (rq.data || []).forEach(function(x){
-      if(x.status === 'aceita' && x.pedidos) trabalhos.push({ id: x.pedidos.id, titulo: x.pedidos.titulo, papel: 'você está fazendo' });
-    });
+  if(!cxT) return;
 
-    cxT.innerHTML = trabalhos.length
-      ? trabalhos.map(function(t){
-          return '<div class="list-item"><div class="g"><b>' + esc(t.titulo) + '</b><small>' + t.papel + '</small></div>' +
-                 '<button class="btn btn-primary btn-sm" onclick="verTrabalho(\'' + t.id + '\')">Abrir</button></div>';
-        }).join('')
-      : '<p class="muted" style="font-size:.88rem;line-height:1.6;">Nenhum trabalho em andamento. Assim que uma proposta for aceita, ele aparece aqui com a área de arquivos.</p>';
-  }
+  var rt;
+  try {
+    rt = await sb.from('compras')
+      .select('id, titulo, valor, status, criado_em, comprador_id, vendedor_id, ' +
+              'comprador:comprador_id(nome), vendedor:vendedor_id(nome)')
+      .eq('tipo', 'servico').eq('status', 'paga')
+      .order('criado_em', { ascending: false });
+  } catch(e){ rt = { error: { message: 'indisponivel' }, data: [] }; }
+
+  var trabalhos = (rt.data || []).filter(function(c){
+    return c.comprador_id === usuario.id || c.vendedor_id === usuario.id;
+  });
+
+  cxT.innerHTML = trabalhos.length
+    ? trabalhos.map(function(c){
+        var souCliente = c.comprador_id === usuario.id;
+        var outro = souCliente ? c.vendedor : c.comprador;
+        return '<div class="list-item"><div class="g"><b>' + esc(c.titulo) + '</b>' +
+          '<small>' + (souCliente ? 'você contratou' : 'você está fazendo') +
+          (outro && outro.nome ? ' · com ' + esc(outro.nome) : '') +
+          ' · ' + (Number(c.valor) > 0 ? esc(moeda(c.valor)) : 'gratuito') + '</small></div>' +
+          '<button class="btn btn-primary btn-sm" onclick="verTrabalho(\'' + c.id + '\')">Abrir</button></div>';
+      }).join('')
+    : '<p class="muted" style="font-size:.88rem;line-height:1.6;">Nenhum trabalho em andamento. ' +
+      'Assim que alguém contratar um serviço seu — ou você contratar o de alguém —, ele aparece aqui com a área de arquivos.</p>';
 }
 
 
