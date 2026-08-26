@@ -1169,6 +1169,7 @@ ul{margin:0;padding:0;list-style:none;}
             Só você e a outra pessoa deste trabalho enxergam o que está aqui. Nem a plataforma mostra isso para mais ninguém.
           </p>
 
+          <div id="tr-envio">
           <div class="field">
             <label>Enviar um arquivo</label>
             <input type="file" id="tr-arquivo" onchange="arquivoTrabalhoEscolhido()">
@@ -1189,6 +1190,7 @@ ul{margin:0;padding:0;list-style:none;}
           <div id="tr-msg" style="display:none;padding:12px 14px;border-radius:10px;font-size:.88rem;line-height:1.45;margin-bottom:14px;"></div>
 
           <button class="btn btn-accent" id="tr-enviar" onclick="enviarArquivoTrabalho()">Enviar arquivo</button>
+          </div>
 
           <div style="border-top:1px solid var(--line-2);margin:24px 0 0;padding-top:20px;">
             <div id="tr-lista"></div>
@@ -4927,6 +4929,30 @@ function meioLegivel(m){
 }
 
 
+/* ---------------- nomes das pessoas de uma compra ----------------
+
+   O banco guarda em compras apenas o número de identificação de quem
+   comprou e de quem vendeu, e esse número aponta para a tabela de
+   login — não para a tabela de perfis. Por isso não dá para pedir o
+   nome junto com a compra numa consulta só: o servidor responde com
+   erro e a tela fica sem nada.
+
+   Então pedimos os nomes à parte e juntamos aqui.                    */
+async function nomesDePerfis(ids){
+  var mapa = {};
+  var limpos = (ids || []).filter(function(v, i, a){ return v && a.indexOf(v) === i; });
+  if(!sb || limpos.length === 0) return mapa;
+
+  var r;
+  try {
+    r = await sb.from('perfis').select('id, nome, telefone').in('id', limpos);
+  } catch(e){ return mapa; }
+
+  (r && r.data ? r.data : []).forEach(function(p){ mapa[p.id] = p; });
+  return mapa;
+}
+
+
 /* ---------------- minhas vendas, no painel ---------------- */
 async function carregarMinhasVendas(){
   var caixa = document.getElementById('painel-vendas');
@@ -4936,7 +4962,7 @@ async function carregarMinhasVendas(){
   if(!sb || !usuario || !vendasLigadas()){ caixa.style.display = 'none'; return; }
 
   var r = await sb.from('compras')
-    .select('id, tipo, titulo, valor, comissao, status, criado_em, pago_em, comprador_id, aula_confirmada_em, perfis:comprador_id(nome)')
+    .select('id, tipo, titulo, valor, comissao, status, criado_em, pago_em, comprador_id, aula_confirmada_em')
     .eq('vendedor_id', usuario.id)
     .order('criado_em', { ascending: false })
     .limit(100);
@@ -4944,6 +4970,9 @@ async function carregarMinhasVendas(){
   if(r.error){ caixa.style.display = 'none'; return; }
 
   var vendas = (r.data || []).filter(function(v){ return v.status !== 'pendente'; });
+
+  var quemComprou = await nomesDePerfis(vendas.map(function(v){ return v.comprador_id; }));
+  vendas.forEach(function(v){ v.perfis = quemComprou[v.comprador_id] || null; });
   caixa.style.display = '';
 
   if(vendas.length === 0){
@@ -5589,8 +5618,7 @@ async function carregarTrabalho(){
   var r;
   try {
     r = await sb.from('compras')
-      .select('id, titulo, valor, status, tipo, criado_em, comprador_id, vendedor_id, oferta_id, ' +
-              'comprador:comprador_id(nome, telefone), vendedor:vendedor_id(nome, telefone)')
+      .select('id, titulo, valor, status, tipo, criado_em, comprador_id, vendedor_id, oferta_id')
       .eq('id', trabalhoAberto).maybeSingle();
   } catch(e){ r = { error: { message: 'indisponivel' }, data: null }; }
 
@@ -5599,10 +5627,15 @@ async function carregarTrabalho(){
     sub.textContent = 'Ou ele não existe, ou o pagamento ainda não foi confirmado, ou você não faz parte dele.';
     if(lado) lado.innerHTML = '<button class="btn btn-ghost btn-block btn-sm" onclick="go(\'servicos\')">Ver serviços</button>';
     document.getElementById('tr-lista').innerHTML = '';
+    mostrarCaixaEnvio(false);
     return;
   }
 
   var c = r.data;
+  var pessoas = await nomesDePerfis([c.comprador_id, c.vendedor_id]);
+  c.comprador = pessoas[c.comprador_id] || null;
+  c.vendedor  = pessoas[c.vendedor_id]  || null;
+
   var souCliente = usuario.id === c.comprador_id;
   var outro = souCliente ? c.vendedor : c.comprador;
 
@@ -5623,7 +5656,16 @@ async function carregarTrabalho(){
       '<button class="btn btn-ghost btn-block btn-sm" style="margin-top:10px;" onclick="go(\'meus-servicos\')">Meus serviços</button>';
   }
 
+  mostrarCaixaEnvio(true);
   await carregarArquivosTrabalho();
+}
+
+/* Sem isto, a tela dizia "Trabalho não encontrado" e mesmo assim
+   mostrava o botão de enviar. O arquivo subia, mas ninguém do outro
+   lado via — foi exatamente o que aconteceu no teste da Juliana. */
+function mostrarCaixaEnvio(mostrar){
+  var caixa = document.getElementById('tr-envio');
+  if(caixa) caixa.style.display = mostrar ? '' : 'none';
 }
 
 function arquivoTrabalhoEscolhido(){
@@ -5801,14 +5843,21 @@ async function carregarMeusServicos(forcar){
   var rt;
   try {
     rt = await sb.from('compras')
-      .select('id, titulo, valor, status, criado_em, comprador_id, vendedor_id, ' +
-              'comprador:comprador_id(nome), vendedor:vendedor_id(nome)')
+      .select('id, titulo, valor, status, criado_em, comprador_id, vendedor_id')
       .eq('tipo', 'servico').eq('status', 'paga')
       .order('criado_em', { ascending: false });
   } catch(e){ rt = { error: { message: 'indisponivel' }, data: [] }; }
 
   var trabalhos = (rt.data || []).filter(function(c){
     return c.comprador_id === usuario.id || c.vendedor_id === usuario.id;
+  });
+
+  var pessoas = await nomesDePerfis(
+    trabalhos.map(function(c){ return c.comprador_id; })
+      .concat(trabalhos.map(function(c){ return c.vendedor_id; })));
+  trabalhos.forEach(function(c){
+    c.comprador = pessoas[c.comprador_id] || null;
+    c.vendedor  = pessoas[c.vendedor_id]  || null;
   });
 
   cxT.innerHTML = trabalhos.length
