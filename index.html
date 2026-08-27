@@ -106,6 +106,37 @@ ul{margin:0;padding:0;list-style:none;}
 .topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px;}
 .burger{display:none;font-size:1.5rem;padding:6px 10px;border-radius:10px;color:var(--brand-700);}
 
+/* ---- o sininho de avisos ---- */
+.sino-area{position:relative;display:flex;align-items:center;}
+.sino{position:relative;font-size:1.25rem;line-height:1;padding:8px 10px;border-radius:11px;
+      background:transparent;transition:background .15s;}
+.sino:hover{background:var(--brand-50);}
+.sino-bolha{position:absolute;top:1px;right:1px;min-width:18px;height:18px;padding:0 5px;
+      border-radius:99px;background:#DC2626;color:#fff;font-size:.68rem;font-weight:800;
+      display:none;align-items:center;justify-content:center;line-height:1;
+      box-shadow:0 0 0 2px #fff;}
+.avisos-caixa{position:absolute;top:calc(100% + 12px);right:0;width:360px;max-width:calc(100vw - 32px);
+      background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:var(--sh-3);
+      z-index:120;display:none;overflow:hidden;}
+.avisos-caixa.aberta{display:block;}
+.avisos-topo{display:flex;align-items:center;justify-content:space-between;gap:10px;
+      padding:14px 18px;border-bottom:1px solid var(--line);}
+.avisos-topo h4{font-size:.95rem;margin:0;}
+.avisos-lista{max-height:min(60vh,420px);overflow-y:auto;}
+.aviso-item{display:block;width:100%;text-align:left;padding:14px 18px;border-bottom:1px solid var(--line);
+      background:transparent;transition:background .12s;}
+.aviso-item:last-child{border-bottom:0;}
+.aviso-item:hover{background:var(--brand-50);}
+.aviso-item.novo{background:#F0F5FD;}
+.aviso-item.novo:hover{background:var(--brand-100);}
+.aviso-item b{display:block;font-size:.9rem;line-height:1.4;margin-bottom:3px;}
+.aviso-item small{display:block;font-size:.8rem;line-height:1.45;color:var(--ink-2);}
+.aviso-item .quando{font-size:.74rem;color:var(--ink-3);margin-top:5px;}
+.avisos-vazio{padding:34px 24px;text-align:center;font-size:.88rem;line-height:1.6;color:var(--ink-2);}
+@media (max-width:520px){
+  .avisos-caixa{position:fixed;top:64px;right:12px;left:12px;width:auto;}
+}
+
 /* ---------- SEÇÕES ---------- */
 .section{padding:76px 0;}
 .section-sm{padding:52px 0;}
@@ -485,7 +516,7 @@ ul{margin:0;padding:0;list-style:none;}
 </head>
 <body>
 
-<div class="proto">🔎 <b>Contas, ofertas, materiais e pagamentos já funcionam de verdade.</b> Só a aba Serviços ainda é uma tela de exemplo.</div>
+<div class="proto">🌱 <b>Plataforma nova, feita em Ji-Paraná.</b> Aulas, materiais, serviços e pagamentos já funcionam de verdade. Achou algo estranho? Fale com a gente no WhatsApp.</div>
 
 <!-- ========================= HEADER ========================= -->
 <header class="topbar">
@@ -510,6 +541,17 @@ ul{margin:0;padding:0;list-style:none;}
       </span>
       <!-- aparece quando ALGUÉM está logado -->
       <span id="area-logado" style="display:none;align-items:center;gap:8px;">
+        <span class="sino-area">
+          <button class="sino" id="sino" onclick="alternarAvisos(event)"
+                  aria-label="Avisos" title="Avisos">🔔<span class="sino-bolha" id="sino-bolha">0</span></button>
+          <div class="avisos-caixa" id="avisos-caixa">
+            <div class="avisos-topo">
+              <h4>Avisos</h4>
+              <button class="btn btn-ghost btn-sm" id="btn-marcar-lidos" onclick="marcarAvisosLidos()">Marcar como lidos</button>
+            </div>
+            <div class="avisos-lista" id="avisos-lista"></div>
+          </div>
+        </span>
         <button class="btn btn-ghost btn-sm" onclick="abrirMeuPainel()">Meu painel</button>
         <button class="btn btn-primary btn-sm" onclick="sair()">Sair</button>
       </span>
@@ -2289,6 +2331,9 @@ function go(view){
   if(view === 'servicos')      carregarServicos(true);
   if(view === 'publicar-servico'){ atualizarModoServico(); previaServico(); }
   if(view === 'meus-servicos') carregarMeusServicos(true);
+
+  fecharAvisos();
+  if(usuario && !avisosIndisponivel) carregarAvisos();
 }
 function pick(el){
   var p = el.parentElement;
@@ -2464,6 +2509,11 @@ async function carregarSessao(){
        a parte de vendas. */
     try { await verificarMercadoPago(); } catch(e){ mpConectado = false; }
     try { await carregarCompras(true); } catch(e){ minhasCompras = []; comprasCarregadas = false; }
+    try { await carregarAvisos(); } catch(e){}
+    ligarRelogioDeAvisos();
+  } else {
+    avisos = [];
+    fecharAvisos();
   }
   atualizarInterface();
 }
@@ -2486,7 +2536,164 @@ function atualizarInterface(){
   pintarPainelAssinatura();
   pintarResumoCadastro();
   pintarPainelModeracao();
+  pintarAvisos();
 }
+
+/* ================= AVISOS (o sininho) =================
+
+   Quem escreve os avisos é o banco, por gatilho, na hora em que a
+   coisa acontece. Aqui só lemos, mostramos e marcamos como lidos.
+
+   Não há aviso em tempo real: buscamos ao entrar, ao trocar de tela
+   e de minuto em minuto. É o suficiente, e não fica cutucando o
+   servidor à toa.                                                  */
+
+var avisos          = [];
+var avisosRelogio   = null;
+var avisosIndisponivel = false;   /* banco-etapa10.sql ainda não rodou */
+
+async function carregarAvisos(){
+  if(!sb || !usuario || avisosIndisponivel){ pintarAvisos(); return; }
+
+  var r;
+  try {
+    r = await sb.from('notificacoes')
+      .select('id, tipo, titulo, texto, link, lida, criado_em')
+      .eq('pessoa_id', usuario.id)
+      .order('criado_em', { ascending: false })
+      .limit(30);
+  } catch(e){ r = { error: { message: 'indisponivel' }, data: [] }; }
+
+  if(r.error){
+    /* tabela ainda não existe: desliga o sininho em silêncio, em vez
+       de encher o console de erro a cada minuto */
+    if(/does not exist|schema cache/i.test(r.error.message || '')) avisosIndisponivel = true;
+    avisos = [];
+  } else {
+    avisos = r.data || [];
+  }
+  pintarAvisos();
+}
+
+function avisosNaoLidos(){
+  return avisos.filter(function(a){ return !a.lida; }).length;
+}
+
+function pintarAvisos(){
+  var bolha = document.getElementById('sino-bolha');
+  var lista = document.getElementById('avisos-lista');
+  var sino  = document.getElementById('sino');
+  if(!bolha || !lista) return;
+
+  if(sino) sino.style.display = avisosIndisponivel ? 'none' : '';
+
+  var n = avisosNaoLidos();
+  bolha.textContent = n > 9 ? '9+' : String(n);
+  bolha.style.display = n > 0 ? 'flex' : 'none';
+
+  var btn = document.getElementById('btn-marcar-lidos');
+  if(btn) btn.style.display = n > 0 ? '' : 'none';
+
+  if(avisos.length === 0){
+    lista.innerHTML = '<div class="avisos-vazio">Nada por aqui ainda.<br>' +
+      'Quando alguém comprar, contratar ou mandar um arquivo, o aviso aparece aqui.</div>';
+    return;
+  }
+
+  lista.innerHTML = avisos.map(function(a){
+    return '<button class="aviso-item' + (a.lida ? '' : ' novo') + '" ' +
+      'onclick="abrirAviso(\'' + a.id + '\', \'' + String(a.link || '').replace(/'/g, "\\'") + '\')">' +
+      '<b>' + iconeAviso(a.tipo) + ' ' + esc(a.titulo) + '</b>' +
+      (a.texto ? '<small>' + esc(a.texto) + '</small>' : '') +
+      '<span class="quando">' + esc(quandoFoi(a.criado_em)) + '</span>' +
+    '</button>';
+  }).join('');
+}
+
+function iconeAviso(tipo){
+  return ({
+    servico_contratado: '💼',
+    material_vendido:   '📚',
+    aula_contratada:    '🎓',
+    compra_confirmada:  '✅',
+    arquivo_trabalho:   '📎',
+    boas_vindas:        '👋'
+  })[tipo] || '🔔';
+}
+
+/* "há 5 minutos" diz mais do que uma data seca num aviso */
+function quandoFoi(quando){
+  var t = new Date(quando).getTime();
+  if(!t) return '';
+  var seg = Math.floor((Date.now() - t) / 1000);
+  if(seg < 60)    return 'agora há pouco';
+  if(seg < 3600)  { var m = Math.floor(seg / 60);   return 'há ' + m + (m === 1 ? ' minuto' : ' minutos'); }
+  if(seg < 86400) { var h = Math.floor(seg / 3600); return 'há ' + h + (h === 1 ? ' hora' : ' horas'); }
+  if(seg < 172800) return 'ontem';
+  var d = Math.floor(seg / 86400);
+  if(d < 30) return 'há ' + d + ' dias';
+  return dataBR(quando);
+}
+
+function alternarAvisos(ev){
+  if(ev) ev.stopPropagation();
+  var caixa = document.getElementById('avisos-caixa');
+  if(!caixa) return;
+  var abrindo = !caixa.classList.contains('aberta');
+  caixa.classList.toggle('aberta', abrindo);
+  if(abrindo) carregarAvisos();
+}
+
+function fecharAvisos(){
+  var caixa = document.getElementById('avisos-caixa');
+  if(caixa) caixa.classList.remove('aberta');
+}
+
+async function abrirAviso(id, link){
+  var a = avisos.filter(function(x){ return x.id === id; })[0];
+
+  if(a && !a.lida){
+    a.lida = true;
+    pintarAvisos();
+    try { await sb.from('notificacoes').update({ lida: true }).eq('id', id); } catch(e){}
+  }
+
+  fecharAvisos();
+  if(!link) return;
+
+  /* o link pode ser #trabalho/<id> ou só #painel-prof */
+  location.hash = link;
+  if(typeof fromHash === 'function') fromHash();
+}
+
+async function marcarAvisosLidos(){
+  avisos.forEach(function(a){ a.lida = true; });
+  pintarAvisos();
+  if(!sb) return;
+  try { await sb.rpc('marcar_avisos_lidos'); } catch(e){}
+}
+
+/* de minuto em minuto, enquanto houver alguém logado */
+function ligarRelogioDeAvisos(){
+  if(avisosRelogio) clearInterval(avisosRelogio);
+  avisosRelogio = setInterval(function(){
+    if(usuario && !avisosIndisponivel && !document.hidden) carregarAvisos();
+  }, 60000);
+}
+
+document.addEventListener('click', function(ev){
+  var caixa = document.getElementById('avisos-caixa');
+  if(!caixa || !caixa.classList.contains('aberta')) return;
+  if(caixa.contains(ev.target)) return;
+  var sino = document.getElementById('sino');
+  if(sino && sino.contains(ev.target)) return;
+  fecharAvisos();
+});
+
+document.addEventListener('keydown', function(ev){
+  if(ev.key === 'Escape') fecharAvisos();
+});
+
 
 function abrirMeuPainel(){
   var papel = perfil && perfil.papel;
@@ -2496,6 +2703,9 @@ function abrirMeuPainel(){
 async function sair(){
   if(sb) await sb.auth.signOut();
   usuario = null; perfil = null;
+  avisos = [];
+  fecharAvisos();
+  if(avisosRelogio){ clearInterval(avisosRelogio); avisosRelogio = null; }
   atualizarInterface();
   go('home');
 }
