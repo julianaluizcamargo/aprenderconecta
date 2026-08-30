@@ -513,6 +513,46 @@ ul{margin:0;padding:0;list-style:none;}
 .link-auth:hover{text-decoration:underline;}
 #auth-msg b{font-weight:700;}
 </style>
+
+<!-- ============================================================
+     META PIXEL — AprenderConecta
+     ID do conjunto de dados: 1754486205756527
+     Eventos enviados: PageView (todas as visitas),
+     CompleteRegistration (conta criada) e Contact (clique no WhatsApp).
+     ============================================================ -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window,document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+
+fbq('init', '1754486205756527');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1754486205756527&ev=PageView&noscript=1"
+alt=""></noscript>
+
+<script>
+/* Atalho seguro: se o Pixel não tiver carregado (bloqueador de anúncios,
+   internet ruim), o site continua funcionando normalmente. */
+window.acEvento = function(nome, dados){
+  try { if (typeof fbq === 'function') fbq('track', nome, dados || {}); } catch(e){}
+};
+
+/* Evento "Contact": qualquer clique em link do WhatsApp na página.
+   Pega o botão flutuante e os links gerados pelos anúncios de aula. */
+document.addEventListener('click', function(ev){
+  var a = ev.target && ev.target.closest ? ev.target.closest('a[href*="wa.me"]') : null;
+  if (a) window.acEvento('Contact', { content_name: 'whatsapp' });
+}, true);
+</script>
+<!-- ===================== FIM DO META PIXEL ===================== -->
+
 </head>
 <body>
 
@@ -2441,6 +2481,10 @@ async function enviarAuth(){
         options: { data: { nome: nome, papel: papel } }
       });
       if(r.error) throw r.error;
+
+      /* Meta Pixel: conta criada com sucesso. É este evento que o
+         Gerenciador de Anúncios usa para saber quais anúncios deram gente. */
+      if(window.acEvento) window.acEvento('CompleteRegistration', { content_name: papel });
 
       if(!r.data.session){
         mostrarMsg('Conta criada! Enviamos um e-mail de confirmação para <b>' + email +
