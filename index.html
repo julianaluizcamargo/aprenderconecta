@@ -1074,7 +1074,6 @@ ul{margin:0;padding:0;list-style:none;}
             <div class="pill-row" id="sv-cobranca" style="margin-bottom:0;">
               <button class="pill on" onclick="escolherCobrancaServico(this, 'site')">Preço fixo, pago pelo site</button>
               <button class="pill" onclick="escolherCobrancaServico(this, 'gratis')">Gratuito</button>
-              <button class="pill" onclick="escolherCobrancaServico(this, 'combinar')">A combinar por WhatsApp</button>
             </div>
             <small id="sv-nota-cobranca" style="display:block;margin-top:10px;"></small>
           </div>
@@ -1113,7 +1112,7 @@ ul{margin:0;padding:0;list-style:none;}
                   <span class="tag" id="sv-pv-tipo">Tipo</span>
                 </div>
               </div>
-              <div class="budget"><b id="sv-pv-valor">a combinar</b><small>preço</small></div>
+              <div class="budget"><b id="sv-pv-valor">sem preço</b><small>preço</small></div>
             </div>
             <p class="muted" style="font-size:.86rem;line-height:1.6;" id="sv-pv-desc">A descrição aparece aqui.</p>
             <div class="job-meta"><span id="sv-pv-prazo">sem prazo definido</span></div>
@@ -1127,7 +1126,8 @@ ul{margin:0;padding:0;list-style:none;}
             já com a comissão da plataforma descontada. A área de arquivos abre no momento do pagamento.
           </p>
           <p class="muted" style="font-size:.85rem;line-height:1.65;margin-top:10px;">
-            Com <b>a combinar</b>, o site só apresenta vocês dois — não há pagamento nem área de arquivos.
+            Com <b>gratuito</b>, não há cobrança nenhuma: quem contratar entra direto na área de arquivos com você.
+            Serve para quem está começando e quer os primeiros trabalhos.
           </p>
         </div>
       </aside>
@@ -5266,7 +5266,7 @@ var servicoEditando    = null;
 var servicoAberto      = null;   /* id da oferta na tela v-servico */
 var trabalhoAberto     = null;   /* id da COMPRA na tela v-trabalho */
 var arquivoTrabalho    = null;
-var cobrancaServico    = 'site'; /* site | gratis | combinar */
+var cobrancaServico    = 'site'; /* site | gratis */
 
 var MAX_TRABALHO = 50 * 1024 * 1024;
 
@@ -5371,7 +5371,7 @@ function precoServico(o){
   var v = Number(o.valor) || 0;
   if(v > 0 && o.pagar_pelo_site) return moeda(v);
   if(v > 0) return moeda(v) + '*';
-  return o.pagar_pelo_site ? 'Gratuito' : 'a combinar';
+  return o.pagar_pelo_site ? 'Gratuito' : 'indisponível';
 }
 
 function cardServico(o){
@@ -5427,9 +5427,7 @@ function previaServico(){
   document.getElementById('sv-pv-cat').textContent    = c || 'Categoria';
   document.getElementById('sv-pv-tipo').textContent   = tp || 'Tipo';
   document.getElementById('sv-pv-valor').textContent  =
-    cobrancaServico === 'gratis' ? 'Gratuito' :
-    cobrancaServico === 'combinar' ? 'a combinar' :
-    (v > 0 ? moeda(v) : 'sem preço');
+    cobrancaServico === 'gratis' ? 'Gratuito' : (v > 0 ? moeda(v) : 'sem preço');
   document.getElementById('sv-pv-prazo').textContent = pz ? ('⏱ Entrega em ' + pz + ' dias') : 'sem prazo definido';
 }
 
@@ -5459,10 +5457,8 @@ function pintarNotaCobranca(){
       (comissaoPct() > 0 ? 'A plataforma fica com <b>' + comissaoPct() + '%</b>; o resto cai na sua conta do Mercado Pago.'
                          : 'O valor cai direto na sua conta do Mercado Pago.') +
       ' A área de arquivos abre no pagamento.';
-  } else if(cobrancaServico === 'gratis'){
-    el.innerHTML = 'Sem cobrança. Quem contratar entra direto na área de arquivos com você.';
   } else {
-    el.innerHTML = 'O site só apresenta vocês dois. Sem pagamento e <b>sem área de arquivos</b> — vocês combinam tudo por WhatsApp.';
+    el.innerHTML = 'Sem cobrança. Quem contratar entra direto na área de arquivos com você.';
   }
 }
 
@@ -5522,15 +5518,12 @@ function lerFormServico(){
   var titulo = (document.getElementById('sv-titulo').value || '').trim();
   if(titulo.length < 8){ mostrarMsgServico('Escreva um título com pelo menos 8 letras.', 'erro'); return null; }
 
-  var valor = 0, pagaSite = false;
+  /* Só existem dois caminhos, e os dois passam pelo site: com preço
+     ou de graça. Não há mais "combinar por fora". */
+  var valor = 0, pagaSite = true;
   if(cobrancaServico === 'site'){
     valor = Number(document.getElementById('sv-valor').value);
     if(!(valor >= 1)){ mostrarMsgServico('Informe um preço de pelo menos R$ 1,00 — ou escolha Gratuito.', 'erro'); return null; }
-    pagaSite = true;
-  } else if(cobrancaServico === 'gratis'){
-    valor = 0; pagaSite = true;    /* contrata pelo site, sem cobrança */
-  } else {
-    valor = 0; pagaSite = false;   /* a combinar */
   }
 
   var prazo = document.getElementById('sv-prazo').value;
@@ -5615,10 +5608,10 @@ async function editarServico(id){
   document.getElementById('sv-prazo').value = o.prazo_dias != null ? o.prazo_dias : '';
   document.getElementById('sv-msg').style.display = 'none';
 
-  cobrancaServico = !o.pagar_pelo_site ? 'combinar' : (Number(o.valor) > 0 ? 'site' : 'gratis');
+  cobrancaServico = (o.pagar_pelo_site && Number(o.valor) > 0) ? 'site' : 'gratis';
   marcarPill('sv-cobranca',
     cobrancaServico === 'site' ? 'Preço fixo, pago pelo site' :
-    cobrancaServico === 'gratis' ? 'Gratuito' : 'A combinar por WhatsApp');
+    'Gratuito');
   var cx = document.getElementById('sv-caixa-valor');
   if(cx) cx.style.display = (cobrancaServico === 'site') ? '' : 'none';
 
@@ -5756,16 +5749,14 @@ async function pintarAcaoServico(o, meu){
     return;
   }
 
+  /* Registro antigo, de quando existia a opção "a combinar". Não
+     existe mais: todo serviço é contratado pelo site. */
   if(!o.pagar_pelo_site){
-    var tel = o.perfis && o.perfis.telefone;
     acao.innerHTML =
-      '<h4 style="margin-bottom:10px;">Combinado direto</h4>' +
-      '<p class="muted" style="font-size:.88rem;line-height:1.6;">Este serviço não é contratado pelo site. Fale com quem publicou e combinem valor e prazo.</p>' +
-      (tel
-        ? '<a class="btn btn-accent btn-block btn-sm" style="margin-top:14px;" target="_blank" rel="noopener" href="' +
-          esc(linkWhatsapp(tel, o.perfis.nome, o.titulo)) + '">Chamar no WhatsApp</a>'
-        : '<p class="muted" style="font-size:.82rem;margin-top:12px;">Quem publicou não deixou WhatsApp no perfil.</p>') +
-      '<p class="muted" style="font-size:.8rem;line-height:1.55;margin-top:12px;">Combinando por fora, não há área de arquivos nem registro no site.</p>';
+      '<h4 style="margin-bottom:10px;">Anúncio desatualizado</h4>' +
+      '<p class="muted" style="font-size:.88rem;line-height:1.6;">Este serviço foi publicado num formato que não existe mais. ' +
+      'Quem publicou precisa editá-lo e escolher um preço, ou marcá-lo como gratuito.</p>' +
+      '<button class="btn btn-ghost btn-block btn-sm" style="margin-top:14px;" onclick="go(\'servicos\')">Ver outros serviços</button>';
     return;
   }
 
