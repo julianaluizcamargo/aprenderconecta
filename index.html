@@ -2278,6 +2278,12 @@ var modoRecuperacao = (location.hash || '').indexOf('type=recovery') !== -1;
 
 var sb = bancoConfigurado ? window.supabase.createClient(SUPABASE_URL, SUPABASE_CHAVE) : null;
 
+/* O endereço exatamente como a página abriu.
+   A biblioteca do Supabase apaga o "#access_token=..." da barra assim
+   que termina de ler — e às vezes antes de o site olhar. Guardamos aqui,
+   na mesma linha em que a página nasce, para não depender disso. */
+var HASH_DE_ENTRADA = location.hash || '';
+
 var usuario   = null;   // quem está logado (e-mail, id)
 var perfil    = null;   // nome e papel, vindos da tabela "perfis"
 var modoAtual = 'criar';
@@ -2471,9 +2477,18 @@ async function enviarAuth(){
 
 async function entrarComGoogle(){
   if(!sb){ mostrarMsg(textoSemConfig(), 'erro'); return; }
+
+  /* Um bilhete para nós mesmos: "saí daqui indo para o Google".
+     Na volta é ele que diz para levar a pessoa ao painel — porque a
+     essa altura o endereço já pode ter sido limpo pela biblioteca. */
+  marcarLoginEmAndamento();
+
+  /* NÃO ponha "#alguma-coisa" aqui. O Supabase devolve a sessão depois
+     de um "#", e dois "#" no mesmo endereço fazem a biblioteca não
+     enxergar o login. Foi esse o defeito. */
   var r = await sb.auth.signInWithOAuth({
     provider: 'google',
-    options: { redirectTo: location.origin + location.pathname + '#painel' }
+    options: { redirectTo: location.origin + location.pathname }
   });
   if(r.error){
     mostrarMsg('O login com Google ainda não foi ativado neste site. Por enquanto, use e-mail e senha.', 'aviso');
@@ -4975,6 +4990,87 @@ async function tratarVoltaMP(){
   return true;
 }
 
+/* ---------------- a volta do login com Google ----------------
+
+   O endereço chega assim:
+       https://site/#access_token=...&expires_in=...&token_type=bearer
+   ou, se algo deu errado:
+       https://site/#error=access_denied&error_description=...
+
+   Só que a biblioteca do Supabase lê e apaga isso sozinha, e às vezes
+   antes de o site olhar. Por isso não dá para depender do endereço:
+   guardamos um bilhete na saída e conferimos na volta.               */
+
+function marcarLoginEmAndamento(){
+  try { sessionStorage.setItem('ac_login_social', '1'); } catch(e){}
+}
+
+/* lê e já apaga: serve uma vez só */
+function tinhaLoginEmAndamento(){
+  try {
+    var v = sessionStorage.getItem('ac_login_social');
+    sessionStorage.removeItem('ac_login_social');
+    return v === '1';
+  } catch(e){ return false; }
+}
+
+function ehVoltaDeLogin(){
+  var h = HASH_DE_ENTRADA || location.hash || '';
+  if(/type=recovery/.test(h)) return false;   /* isso é senha nova, outro caminho */
+  return /(?:^|[#&])(access_token|error|error_description)=/.test(h);
+}
+
+function erroDoLogin(){
+  var h = (HASH_DE_ENTRADA || location.hash || '').replace(/^#/, '');
+  if(!/error/.test(h)) return null;
+  var p = new URLSearchParams(h);
+  var d = p.get('error_description') || p.get('error');
+  return d ? decodeURIComponent(String(d).replace(/\+/g, ' ')) : null;
+}
+
+async function esperarSessao(){
+  for(var i = 0; i < 24; i++){          /* até uns 3,5 segundos */
+    try {
+      var s = await sb.auth.getSession();
+      if(s && s.data && s.data.session) return true;
+    } catch(e){}
+    await new Promise(function(ok){ setTimeout(ok, 150); });
+  }
+  return false;
+}
+
+async function tratarVoltaDoLogin(){
+  if(!sb) return false;
+  if(/type=recovery/.test(HASH_DE_ENTRADA || location.hash || '')) return false;
+
+  var noEndereco = ehVoltaDeLogin();
+  var tinhaBilhete = tinhaLoginEmAndamento();
+  if(!noEndereco && !tinhaBilhete) return false;
+
+  var recado = erroDoLogin();
+  var entrou = recado ? false : await esperarSessao();
+
+  /* o token não tem por que ficar no histórico do navegador */
+  if(history.replaceState && /access_token|error/.test(location.hash || '')){
+    history.replaceState(null, '', location.pathname);
+  }
+
+  await carregarSessao();
+
+  if(!entrou){
+    go('entrar');
+    modoAuth('entrar');
+    mostrarMsg(recado
+      ? 'O Google não concluiu o login: ' + esc(recado)
+      : 'O login com o Google não foi concluído. Tente de novo, ou entre com e-mail e senha.', 'erro');
+    return true;
+  }
+
+  abrirMeuPainel();
+  return true;
+}
+
+
 function guardarRetornoMP(consulta){
   var p = new URLSearchParams(consulta);
   if(p.get('mp')) retornoMP = p.get('mp');
@@ -6105,6 +6201,11 @@ window.addEventListener('DOMContentLoaded', async function(){
 
   /* veio do link do e-mail? então abre direto a tela de nova senha */
   if(modoRecuperacao){ go('nova-senha'); return; }
+
+  /* voltou do login com Google? então a sessão veio no endereço */
+  var voltouDeLogin = false;
+  try { voltouDeLogin = await tratarVoltaDoLogin(); } catch(e){ voltouDeLogin = false; }
+  if(voltouDeLogin) return;
 
   /* voltou do Mercado Pago? então é para o painel, com o recado */
   var voltouDoMP = false;
