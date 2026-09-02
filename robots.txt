@@ -1,0 +1,6 @@
+# AprenderConecta — o que os buscadores podem ler
+User-agent: *
+Allow: /
+
+# As páginas de cada material ficam listadas aqui
+Sitemap: https://www.aprenderconecta.com.br/sitemap.xml

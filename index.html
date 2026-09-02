@@ -5,6 +5,56 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AprenderConecta — Conhecimento que conecta pessoas</title>
 <meta name="description" content="Plataforma que conecta quem quer aprender com quem tem conhecimento para ensinar. Aulas, cursos, serviços educacionais e materiais didáticos em um só lugar.">
+
+<!-- ============================================================
+     COMO O SITE APARECE QUANDO ALGUÉM COMPARTILHA O LINK
+     ------------------------------------------------------------
+     Sem estas linhas, mandar o site no WhatsApp mostra um retângulo
+     cinza sem imagem nem explicação — e quase ninguém clica.
+     Com elas, aparece o título, a frase e a imagem de capa.
+
+     A mesma coisa vale para Facebook, Instagram (na bio), LinkedIn,
+     Telegram e a pré-visualização do Google.
+     ============================================================ -->
+<link rel="canonical" href="https://www.aprenderconecta.com.br/">
+<meta name="robots" content="index, follow">
+<meta name="author" content="AprenderConecta">
+<meta name="theme-color" content="#0B2545">
+
+<meta property="og:type"        content="website">
+<meta property="og:site_name"   content="AprenderConecta">
+<meta property="og:locale"      content="pt_BR">
+<meta property="og:url"         content="https://www.aprenderconecta.com.br/">
+<meta property="og:title"       content="AprenderConecta — aprenda com quem sabe, ensine o que você domina">
+<meta property="og:description" content="Aulas particulares, mentorias, materiais didáticos para baixar e serviços educacionais sob encomenda. Publicar é grátis; o pagamento é pelo site, com Pix ou cartão.">
+<meta property="og:image"       content="https://www.aprenderconecta.com.br/capa-compartilhar.png">
+<meta property="og:image:width"  content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt"   content="AprenderConecta — aprenda com quem sabe, ensine o que você domina.">
+
+<meta name="twitter:card"        content="summary_large_image">
+<meta name="twitter:title"       content="AprenderConecta — aprenda com quem sabe, ensine o que você domina">
+<meta name="twitter:description" content="Aulas, materiais didáticos e serviços educacionais em um só lugar. Publicar é grátis.">
+<meta name="twitter:image"       content="https://www.aprenderconecta.com.br/capa-compartilhar.png">
+
+<!-- Ficha que o Google usa para entender o que é o site -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "AprenderConecta",
+  "url": "https://www.aprenderconecta.com.br/",
+  "inLanguage": "pt-BR",
+  "description": "Plataforma que conecta quem quer aprender com quem tem conhecimento para ensinar: aulas, materiais didáticos e serviços educacionais.",
+  "publisher": {
+    "@type": "Organization",
+    "name": "AprenderConecta",
+    "url": "https://www.aprenderconecta.com.br/",
+    "logo": "https://www.aprenderconecta.com.br/capa-compartilhar.png",
+    "areaServed": "BR"
+  }
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -1081,7 +1131,8 @@ ul{margin:0;padding:0;list-style:none;}
           <div class="grid g2" style="gap:16px;" id="sv-caixa-valor">
             <div class="field">
               <label>Preço (R$)</label>
-              <input type="number" id="sv-valor" min="0" step="0.01" placeholder="350" oninput="previaServico()">
+              <input type="text" id="sv-valor" inputmode="decimal" autocomplete="off" placeholder="350,00"
+                     oninput="previaServico()" onblur="arrumarCampoDinheiro(this); previaServico();">
             </div>
             <div class="field">
               <label>Prazo de entrega (dias)</label>
@@ -1357,7 +1408,8 @@ ul{margin:0;padding:0;list-style:none;}
             </div>
             <div id="mt-caixa-preco" style="display:none;margin-top:14px;">
               <label>Preço (R$)</label>
-              <input type="number" id="mt-preco" min="1" step="0.01" placeholder="19,90" oninput="previaMaterial()">
+              <input type="text" id="mt-preco" inputmode="decimal" autocomplete="off" placeholder="19,90"
+                     oninput="previaMaterial()" onblur="arrumarCampoDinheiro(this); previaMaterial();">
               <small id="mt-nota-preco">O aluno paga pelo site, com Pix, cartão de crédito ou débito.</small>
             </div>
             <div id="mt-aviso-mp" style="display:none;padding:14px 16px;border-radius:11px;font-size:.88rem;line-height:1.55;margin-top:14px;"></div>
@@ -2760,6 +2812,57 @@ function corAvatar(texto){
 function moeda(v){
   var n = Number(v) || 0;
   return 'R$ ' + n.toLocaleString('pt-BR', {minimumFractionDigits: (n % 1 ? 2 : 0), maximumFractionDigits: 2});
+}
+
+/* ---------------------------------------------------------------
+   LER DINHEIRO ESCRITO DO JEITO BRASILEIRO
+   ---------------------------------------------------------------
+   No Brasil a gente escreve 19,90. O campo antigo era do tipo
+   "número", que só entende ponto — a vírgula sumia e 19,90 virava
+   1990. Um material de vinte reais ia para a loja custando mil
+   novecentos e noventa.
+
+   Esta função entende os dois jeitos:
+       "19,90"     ->  19.9
+       "19.90"     ->  19.9
+       "1.234,56"  ->  1234.56
+       "1.234"     ->  1234      (três casas depois do ponto = milhar)
+   Devolve NaN quando não dá para entender.
+   --------------------------------------------------------------- */
+function lerDinheiro(texto){
+  var t = String(texto == null ? '' : texto).trim();
+  if(!t) return NaN;
+  t = t.replace(/[R$\s ]/g, '');
+  if(!/^[0-9.,]+$/.test(t)) return NaN;
+  if(!/[0-9]/.test(t)) return NaN;   /* "..", ",," e afins nao sao preco */
+
+  var temPonto = t.indexOf('.') >= 0, temVirgula = t.indexOf(',') >= 0;
+
+  if(temPonto && temVirgula){
+    /* o que vier por último manda: é o separador dos centavos */
+    if(t.lastIndexOf(',') > t.lastIndexOf('.')) t = t.replace(/\./g, '').replace(',', '.');
+    else                                        t = t.replace(/,/g, '');
+  } else if(temVirgula){
+    t = t.replace(/\./g, '').replace(',', '.');
+  } else if(temPonto){
+    /* só ponto: 19.90 são centavos, 1.234 é separador de milhar */
+    var pedacos = t.split('.');
+    if(pedacos.length > 2 || (pedacos.length === 2 && pedacos[1].length === 3 && pedacos[0].length > 0)){
+      t = pedacos.join('');
+    }
+  }
+
+  var n = Number(t);
+  return isFinite(n) ? n : NaN;
+}
+
+/* deixa o campo bonitinho quando a pessoa sai dele: 19,90 */
+function arrumarCampoDinheiro(el){
+  if(!el) return;
+  var n = lerDinheiro(el.value);
+  if(!isFinite(n) || n <= 0){ return; }
+  el.value = (Math.round(n * 100) / 100)
+    .toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
 }
 function textoDoPillLigado(idContainer, padrao){
   var el = document.querySelector('#' + idContainer + ' .pill.on');
@@ -4819,7 +4922,7 @@ function escolherTipoMaterial(botao, pago){
 /** devolve o preço, ou false se o que está escrito não serve */
 function precoDoFormulario(){
   if(!vendasLigadas() || !materialPago) return 0;
-  var v = Number((document.getElementById('mt-preco') || {}).value);
+  var v = lerDinheiro((document.getElementById('mt-preco') || {}).value);
   if(!(v >= 1)) return false;
   return Math.round(v * 100) / 100;
 }
@@ -4831,7 +4934,11 @@ function aplicarPrecoNoFormulario(preco){
   var cx = document.getElementById('mt-caixa-preco');
   if(cx) cx.style.display = pago ? 'block' : 'none';
   var el = document.getElementById('mt-preco');
-  if(el) el.value = pago ? preco : '';
+  if(el){
+    el.value = pago
+      ? Number(preco).toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})
+      : '';
+  }
   pintarCampoPrecoMaterial();
 }
 
@@ -5531,7 +5638,7 @@ function previaServico(){
   var c  = (document.getElementById('sv-categoria') || {}).value || '';
   var tp = (document.getElementById('sv-tipo') || {}).value || '';
   var pz = (document.getElementById('sv-prazo') || {}).value || '';
-  var v  = Number((document.getElementById('sv-valor') || {}).value) || 0;
+  var v  = lerDinheiro((document.getElementById('sv-valor') || {}).value) || 0;
 
   document.getElementById('sv-pv-titulo').textContent = t || 'O que você faz';
   document.getElementById('sv-pv-desc').textContent   = d || 'A descrição aparece aqui.';
@@ -5633,8 +5740,9 @@ function lerFormServico(){
      ou de graça. Não há mais "combinar por fora". */
   var valor = 0, pagaSite = true;
   if(cobrancaServico === 'site'){
-    valor = Number(document.getElementById('sv-valor').value);
+    valor = lerDinheiro(document.getElementById('sv-valor').value);
     if(!(valor >= 1)){ mostrarMsgServico('Informe um preço de pelo menos R$ 1,00 — ou escolha Gratuito.', 'erro'); return null; }
+    valor = Math.round(valor * 100) / 100;
   }
 
   var prazo = document.getElementById('sv-prazo').value;
@@ -5715,7 +5823,9 @@ async function editarServico(id){
   if(o.area) document.getElementById('sv-categoria').value = o.area;
   montarTiposServico();
   if(o.formato) document.getElementById('sv-tipo').value = o.formato;
-  document.getElementById('sv-valor').value = o.valor != null ? o.valor : '';
+  document.getElementById('sv-valor').value = (o.valor != null && Number(o.valor) > 0)
+    ? Number(o.valor).toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})
+    : '';
   document.getElementById('sv-prazo').value = o.prazo_dias != null ? o.prazo_dias : '';
   document.getElementById('sv-msg').style.display = 'none';
 

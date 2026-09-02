@@ -1,0 +1,271 @@
+/* ============================================================
+   A PÁGINA DE CADA MATERIAL
+   ------------------------------------------------------------
+   Endereço: https://www.aprenderconecta.com.br/m/<id do material>
+
+   POR QUE ISTO EXISTE
+   -------------------
+   O site inteiro é uma página só, e cada material vive atrás de
+   um "#" no endereço. O Google não consegue ler nada depois do
+   "#": ele indexa a página inicial e mais nada. Resultado: quem
+   pesquisa "atividades de alfabetização BNCC" nunca chega aqui.
+
+   Este arquivo resolve isso. Ele monta, no servidor, uma página
+   de verdade para cada material — com título, descrição, imagem
+   e preço — que o Google lê, lista, e manda gente.
+
+   A mesma página serve para o WhatsApp: quando alguém compartilha
+   o link de um material, aparece o cartão com a capa e o preço.
+
+   Não é uma página diferente para robô e para gente. É a mesma
+   para os dois, com o botão levando para a loja.
+   ============================================================ */
+
+const SUPABASE_URL = 'https://pmpwkunsyuanrazrmomb.supabase.co';
+const CHAVE = 'sb_publishable_eSh0TNQPFfJEb15Oxl6ZIQ_1TA0w-Ko';
+const SITE = 'https://www.aprenderconecta.com.br';
+
+/* texto que vem do banco nunca entra cru no HTML */
+function esc(t) {
+  return String(t == null ? '' : t)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+function moeda(v) {
+  const n = Number(v) || 0;
+  return n <= 0 ? 'Gratuito'
+    : n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+}
+
+function tamanho(bytes) {
+  const b = Number(bytes) || 0;
+  if (!b) return '';
+  if (b < 1048576) return Math.round(b / 1024) + ' KB';
+  return (b / 1048576).toFixed(1).replace('.', ',') + ' MB';
+}
+
+/* A ficha do Google vai dentro de uma tag <script>. Se o título de um
+   material contiver "</script>", ele FECHA a tag e o resto do texto passa
+   a valer como HTML — quem publicasse um material com um título preparado
+   conseguiria rodar código na página de todo mundo.
+
+   Trocar < > & pelos códigos equivalentes fecha essa porta. O JSON
+   continua válido; o navegador desfaz a troca ao ler. */
+function jsonSeguro(obj) {
+  return JSON.stringify(obj)
+    .replace(/</g, '\\u003c')
+    .replace(/>/g, '\\u003e')
+    .replace(/&/g, '\\u0026')
+    .replace(/\u2028/g, '\\u2028')
+    .replace(/\u2029/g, '\\u2029');
+}
+
+function cortar(t, n) {
+  const s = String(t || '').replace(/\s+/g, ' ').trim();
+  return s.length <= n ? s : s.slice(0, n - 1).trimEnd() + '…';
+}
+
+/* uma página inteira, sem depender de JavaScript no navegador */
+function pagina({ titulo, descricao, capa, corpo, url, robots }) {
+  return `<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>${esc(titulo)}</title>
+<meta name="description" content="${esc(descricao)}">
+<meta name="robots" content="${robots || 'index, follow'}">
+<link rel="canonical" href="${esc(url)}">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="AprenderConecta">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:url" content="${esc(url)}">
+<meta property="og:title" content="${esc(titulo)}">
+<meta property="og:description" content="${esc(descricao)}">
+<meta property="og:image" content="${esc(capa)}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${esc(titulo)}">
+<meta name="twitter:description" content="${esc(descricao)}">
+<meta name="twitter:image" content="${esc(capa)}">
+<meta name="theme-color" content="#0B2545">
+<style>
+  :root{--ink:#0B2545;--ink2:#41506B;--brand:#1D53A3;--accent:#F08A24;
+        --line:#E4EAF3;--paper:#F4F6FA;--surface:#fff;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);
+       font:400 17px/1.6 -apple-system,"Segoe UI",Roboto,Arial,sans-serif;}
+  a{color:var(--brand)}
+  .topo{background:var(--ink);padding:16px 0}
+  .wrap{max-width:820px;margin:0 auto;padding:0 20px}
+  .marca{display:flex;align-items:center;gap:11px;color:#fff;
+         text-decoration:none;font-weight:800;font-size:19px}
+  .marca i{width:34px;height:34px;border-radius:10px;background:#fff;color:var(--brand);
+           display:flex;align-items:center;justify-content:center;font-style:normal}
+  .marca span{color:var(--accent)}
+  main{padding:34px 0 70px}
+  .migalha{font-size:.85rem;color:var(--ink2);margin-bottom:14px}
+  h1{font-size:clamp(1.7rem,4.6vw,2.5rem);line-height:1.15;margin:0 0 14px;
+     letter-spacing:-.02em;text-wrap:balance}
+  .por{color:var(--ink2);margin:0 0 22px;font-size:1rem}
+  .cartao{background:var(--surface);border:1px solid var(--line);border-radius:14px;
+          overflow:hidden;box-shadow:0 1px 2px rgba(11,37,69,.05)}
+  .capa{display:block;width:100%;height:auto;background:#E9EEF6}
+  .corpo{padding:24px}
+  .tags{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}
+  .tag{background:#EEF3FB;color:var(--brand);border-radius:999px;
+       padding:5px 13px;font-size:.82rem;font-weight:600}
+  .desc{white-space:pre-wrap;margin:0 0 22px;color:var(--ink2)}
+  .pe{display:flex;align-items:center;justify-content:space-between;gap:16px;
+      flex-wrap:wrap;border-top:1px solid var(--line);padding-top:20px}
+  .preco{font-size:1.7rem;font-weight:800}
+  .gratis{color:#166534}
+  .btn{display:inline-block;background:var(--accent);color:#fff;text-decoration:none;
+       font-weight:700;padding:13px 26px;border-radius:11px;font-size:1rem}
+  .btn.ghost{background:transparent;color:var(--brand);border:1.5px solid var(--line)}
+  .sobre{margin-top:34px;font-size:.95rem;color:var(--ink2)}
+  footer{border-top:1px solid var(--line);margin-top:44px;padding:26px 0;
+         font-size:.88rem;color:var(--ink2)}
+</style>
+</head>
+<body>
+  <div class="topo"><div class="wrap">
+    <a class="marca" href="${SITE}/"><i>A</i>Aprender<span>Conecta</span></a>
+  </div></div>
+  <main class="wrap">${corpo}</main>
+  <footer><div class="wrap">
+    <a href="${SITE}/">AprenderConecta</a> · Conhecimento que conecta pessoas ·
+    <a href="${SITE}/#loja">Todos os materiais</a>
+  </div></footer>
+</body>
+</html>`;
+}
+
+export default async function handler(req, res) {
+  const id = String((req.query && req.query.id) || '').trim();
+
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
+
+  if (!/^[0-9a-fA-F-]{20,40}$/.test(id)) {
+    res.status(404).send(pagina({
+      titulo: 'Material não encontrado — AprenderConecta',
+      descricao: 'Este material não existe ou saiu do ar.',
+      capa: `${SITE}/capa-compartilhar.png`,
+      url: `${SITE}/#loja`,
+      robots: 'noindex, follow',
+      corpo: `<h1>Material não encontrado</h1>
+        <p class="por">O endereço está errado, ou o material saiu do ar.</p>
+        <a class="btn" href="${SITE}/#loja">Ver todos os materiais</a>`,
+    }));
+    return;
+  }
+
+  let m = null;
+  try {
+    const campos = 'id,titulo,descricao,area,nivel,preco,capa_url,tamanho_bytes,' +
+                   'downloads,criado_em,professor_id,perfis(nome,cidade)';
+    const r = await fetch(
+      `${SUPABASE_URL}/rest/v1/materiais?id=eq.${encodeURIComponent(id)}` +
+      `&ativo=eq.true&select=${encodeURIComponent(campos)}`,
+      { headers: { apikey: CHAVE, Authorization: `Bearer ${CHAVE}` } },
+    );
+    const linhas = await r.json();
+    m = Array.isArray(linhas) ? linhas[0] : null;
+  } catch (e) {
+    m = null;
+  }
+
+  if (!m) {
+    res.status(404).send(pagina({
+      titulo: 'Material não encontrado — AprenderConecta',
+      descricao: 'Este material não existe ou saiu do ar.',
+      capa: `${SITE}/capa-compartilhar.png`,
+      url: `${SITE}/#loja`,
+      robots: 'noindex, follow',
+      corpo: `<h1>Material não encontrado</h1>
+        <p class="por">Ele pode ter sido retirado por quem publicou.</p>
+        <a class="btn" href="${SITE}/#loja">Ver todos os materiais</a>`,
+    }));
+    return;
+  }
+
+  const autor = (m.perfis && m.perfis.nome) || 'um professor';
+  const cidade = (m.perfis && m.perfis.cidade) || '';
+  const pago = Number(m.preco) > 0;
+  const capa = m.capa_url || `${SITE}/capa-compartilhar.png`;
+  const url = `${SITE}/m/${m.id}`;
+  const baixados = Number(m.downloads) || 0;
+
+  const descricaoCurta = cortar(
+    m.descricao || `${m.titulo} — material de ${m.area} publicado por ${autor} no AprenderConecta.`,
+    155,
+  );
+
+  /* a ficha que o Google usa para mostrar preço e nota na busca */
+  const ficha = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: m.titulo,
+    description: cortar(m.descricao || m.titulo, 400),
+    image: capa,
+    url,
+    brand: { '@type': 'Brand', name: 'AprenderConecta' },
+    category: m.area,
+    offers: {
+      '@type': 'Offer',
+      price: pago ? Number(m.preco).toFixed(2) : '0.00',
+      priceCurrency: 'BRL',
+      availability: 'https://schema.org/InStock',
+      url,
+      seller: { '@type': 'Person', name: autor },
+    },
+  };
+
+  const corpo = `
+    <p class="migalha"><a href="${SITE}/">Início</a> ›
+       <a href="${SITE}/#loja">Materiais</a> › ${esc(m.area || 'Material')}</p>
+    <h1>${esc(m.titulo)}</h1>
+    <p class="por">por <strong>${esc(autor)}</strong>${cidade ? ' · ' + esc(cidade) : ''}</p>
+
+    <article class="cartao">
+      ${m.capa_url ? `<img class="capa" src="${esc(m.capa_url)}" alt="Capa de ${esc(m.titulo)}" loading="lazy">` : ''}
+      <div class="corpo">
+        <div class="tags">
+          ${m.area ? `<span class="tag">${esc(m.area)}</span>` : ''}
+          ${m.nivel ? `<span class="tag">${esc(m.nivel)}</span>` : ''}
+          ${m.tamanho_bytes ? `<span class="tag">${esc(tamanho(m.tamanho_bytes))}</span>` : ''}
+          ${baixados ? `<span class="tag">${baixados} download${baixados === 1 ? '' : 's'}</span>` : ''}
+        </div>
+        <p class="desc">${esc(m.descricao || 'Sem descrição.')}</p>
+        <div class="pe">
+          <span class="preco ${pago ? '' : 'gratis'}">${esc(moeda(m.preco))}</span>
+          <span style="display:flex;gap:10px;flex-wrap:wrap">
+            <a class="btn" href="${SITE}/#loja">${pago ? 'Comprar na loja' : 'Baixar na loja'}</a>
+            <a class="btn ghost" href="${SITE}/">Conhecer o site</a>
+          </span>
+        </div>
+      </div>
+    </article>
+
+    <p class="sobre">
+      Este material foi publicado por ${esc(autor)} no <strong>AprenderConecta</strong>,
+      uma plataforma brasileira onde professores publicam aulas, materiais e serviços
+      educacionais. ${pago
+        ? 'O pagamento é feito pelo site, com Pix ou cartão, e o valor vai direto para quem produziu o material.'
+        : 'Este material é gratuito: basta criar uma conta para baixar.'}
+    </p>
+
+    <script type="application/ld+json">${jsonSeguro(ficha)}</script>
+  `;
+
+  /* o Google e o WhatsApp podem guardar por 10 minutos; a Vercel
+     serve a cópia guardada por até um dia enquanto busca a nova */
+  res.setHeader('Cache-Control', 's-maxage=600, stale-while-revalidate=86400');
+  res.status(200).send(pagina({
+    titulo: `${m.titulo} — AprenderConecta`,
+    descricao: descricaoCurta,
+    capa,
+    url,
+    corpo,
+  }));
+}
