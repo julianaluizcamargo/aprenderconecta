@@ -234,7 +234,10 @@ export default async function handler(req, res) {
      não desistimos do material: buscamos ele sozinho e o nome depois.
      Uma página sem o nome do autor é muito melhor que um erro 404.
      ------------------------------------------------------------------ */
-  const base = 'id,titulo,descricao,area,nivel,preco,capa_url,tamanho_bytes,' +
+  /* Os nomes aqui têm que ser EXATAMENTE os da tabela. Se um só estiver
+     errado, o banco recusa a consulta inteira e a página vira 404 — foi
+     o que aconteceu quando eu escrevi "capa_url" no lugar de "capa_path". */
+  const base = 'id,titulo,descricao,area,nivel,preco,capa_path,tamanho_bytes,' +
                'downloads,criado_em,professor_id';
   let m = null;
 
@@ -281,7 +284,13 @@ export default async function handler(req, res) {
   const autor = (m.perfis && m.perfis.nome) || 'um professor';
   const cidade = (m.perfis && m.perfis.cidade) || '';
   const pago = Number(m.preco) > 0;
-  const capa = m.capa_url || `${SITE}/capa-compartilhar.png`;
+  /* a tabela guarda só o caminho do arquivo; o endereço público é montado
+     do mesmo jeito que o site monta (bucket "materiais") */
+  const capaPropria = m.capa_path
+    ? `${SUPABASE_URL}/storage/v1/object/public/materiais/` +
+      String(m.capa_path).split('/').map(encodeURIComponent).join('/')
+    : '';
+  const capa = capaPropria || `${SITE}/capa-compartilhar.png`;
   const url = `${SITE}/m/${m.id}`;
   const baixados = Number(m.downloads) || 0;
 
@@ -317,7 +326,7 @@ export default async function handler(req, res) {
     <p class="por">por <strong>${esc(autor)}</strong>${cidade ? ' · ' + esc(cidade) : ''}</p>
 
     <article class="cartao">
-      ${m.capa_url ? `<img class="capa" src="${esc(m.capa_url)}" alt="Capa de ${esc(m.titulo)}" loading="lazy">` : ''}
+      ${capaPropria ? `<img class="capa" src="${esc(capaPropria)}" alt="Capa de ${esc(m.titulo)}" loading="lazy">` : ''}
       <div class="corpo">
         <div class="tags">
           ${m.area ? `<span class="tag">${esc(m.area)}</span>` : ''}
