@@ -141,8 +141,76 @@ function pagina({ titulo, descricao, capa, corpo, url, robots }) {
 </html>`;
 }
 
+/* ------------------------------------------------------------------
+   DE ONDE VEM O ID
+   ------------------------------------------------------------------
+   O caminho normal é req.query.id, que a Vercel monta sozinha. Mas
+   quando o endereço passa pela regra de reescrita (/m/<id>), esse
+   campo às vezes chega vazio, ou chega com o mesmo valor duas vezes
+   (uma da rota, outra da query) — e aí vira uma lista, não um texto.
+
+   Então não confiamos em um caminho só: tentamos os três.
+   ------------------------------------------------------------------ */
+function lerId(req) {
+  let q = req && req.query ? req.query.id : null;
+  if (Array.isArray(q)) q = q[0];
+  if (q) return String(q).trim();
+
+  try {
+    const u = new URL(String((req && req.url) || ''), 'https://x');
+    const naQuery = u.searchParams.get('id');
+    if (naQuery) return String(naQuery).trim();
+    const noCaminho = u.pathname.match(/\/m\/([^/?#]+)/);
+    if (noCaminho) return decodeURIComponent(noCaminho[1]).trim();
+  } catch (e) { /* endereço torto: cai no vazio */ }
+
+  return '';
+}
+
+/* pergunta ao banco; devolve { status, corpo } sem estourar */
+async function perguntar(caminho) {
+  const r = await fetch(`${SUPABASE_URL}/rest/v1/${caminho}`, {
+    headers: { apikey: CHAVE, Authorization: `Bearer ${CHAVE}` },
+  });
+  const texto = await r.text();
+  let corpo = null;
+  try { corpo = JSON.parse(texto); } catch (e) { corpo = texto; }
+  return { status: r.status, corpo };
+}
+
 export default async function handler(req, res) {
-  const id = String((req.query && req.query.id) || '').trim();
+  const id = lerId(req);
+
+  /* ------------------------------------------------------------------
+     MODO CONFERÊNCIA
+     Abrir /api/material?id=...&diag=1 devolve, em texto puro, o que
+     esta função enxergou: o endereço que chegou, o id que ela leu e
+     o que o banco respondeu. Serve para descobrir onde travou sem
+     ter que adivinhar. Não mostra nada secreto.
+     ------------------------------------------------------------------ */
+  const conferir = String((req.query && req.query.diag) || '') === '1' ||
+                   /[?&]diag=1(?:&|$)/.test(String(req.url || ''));
+  if (conferir) {
+    const linhas = [
+      'endereco que chegou: ' + String(req.url || '(vazio)'),
+      'req.query existe:    ' + (req.query ? 'sim' : 'nao'),
+      'campos de req.query: ' + (req.query ? Object.keys(req.query).join(', ') : '-'),
+      'id lido:             ' + (id || '(vazio)'),
+      'id passa na regra:   ' + (/^[0-9a-fA-F-]{20,40}$/.test(id) ? 'sim' : 'NAO'),
+    ];
+    try {
+      const r = await perguntar(
+        `materiais?id=eq.${encodeURIComponent(id)}&ativo=eq.true&select=id,titulo`);
+      linhas.push('banco respondeu:     HTTP ' + r.status);
+      linhas.push('banco devolveu:      ' + JSON.stringify(r.corpo).slice(0, 400));
+    } catch (e) {
+      linhas.push('banco deu erro:      ' + String(e && e.message || e));
+    }
+    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    res.setHeader('Cache-Control', 'no-store');
+    res.status(200).send(linhas.join('\n'));
+    return;
+  }
 
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
 
@@ -160,19 +228,40 @@ export default async function handler(req, res) {
     return;
   }
 
+  /* ------------------------------------------------------------------
+     Buscar o material. Primeiro tentamos trazer o nome de quem publicou
+     junto, numa consulta só. Se essa junção falhar por qualquer motivo,
+     não desistimos do material: buscamos ele sozinho e o nome depois.
+     Uma página sem o nome do autor é muito melhor que um erro 404.
+     ------------------------------------------------------------------ */
+  const base = 'id,titulo,descricao,area,nivel,preco,capa_url,tamanho_bytes,' +
+               'downloads,criado_em,professor_id';
   let m = null;
+
   try {
-    const campos = 'id,titulo,descricao,area,nivel,preco,capa_url,tamanho_bytes,' +
-                   'downloads,criado_em,professor_id,perfis(nome,cidade)';
-    const r = await fetch(
-      `${SUPABASE_URL}/rest/v1/materiais?id=eq.${encodeURIComponent(id)}` +
-      `&ativo=eq.true&select=${encodeURIComponent(campos)}`,
-      { headers: { apikey: CHAVE, Authorization: `Bearer ${CHAVE}` } },
-    );
-    const linhas = await r.json();
-    m = Array.isArray(linhas) ? linhas[0] : null;
-  } catch (e) {
-    m = null;
+    const r = await perguntar(
+      `materiais?id=eq.${encodeURIComponent(id)}&ativo=eq.true` +
+      `&select=${encodeURIComponent(base + ',perfis(nome,cidade)')}`);
+    if (r.status === 200 && Array.isArray(r.corpo)) m = r.corpo[0] || null;
+  } catch (e) { m = null; }
+
+  if (!m) {
+    try {
+      const r = await perguntar(
+        `materiais?id=eq.${encodeURIComponent(id)}&ativo=eq.true` +
+        `&select=${encodeURIComponent(base)}`);
+      if (r.status === 200 && Array.isArray(r.corpo)) m = r.corpo[0] || null;
+
+      /* e o nome do autor por fora, numa segunda pergunta */
+      if (m && m.professor_id) {
+        try {
+          const p = await perguntar(
+            `perfis?id=eq.${encodeURIComponent(m.professor_id)}` +
+            `&select=${encodeURIComponent('nome,cidade')}`);
+          if (p.status === 200 && Array.isArray(p.corpo) && p.corpo[0]) m.perfis = p.corpo[0];
+        } catch (e) { /* sem o nome, tudo bem */ }
+      }
+    } catch (e) { m = null; }
   }
 
   if (!m) {
