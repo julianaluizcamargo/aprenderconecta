@@ -30,15 +30,14 @@ function dia(d) {
 export default async function handler(req, res) {
   const hoje = dia();
 
-  /* as telas fixas do site */
+  /* As telas fixas do site.
+     Os endereços com "#" saíram daqui de propósito: o Google joga fora
+     tudo o que vem depois do "#", então /#loja e /#aprender chegavam
+     nele como cópias da página inicial. Cinco linhas de lixo num mapa
+     de sete. Ficaram só os endereços que existem de verdade. */
   const fixas = [
     { u: `${SITE}/`, p: '1.0', f: 'daily' },
-    { u: `${SITE}/#aprender`, p: '0.9', f: 'daily' },
-    { u: `${SITE}/#loja`, p: '0.9', f: 'daily' },
-    { u: `${SITE}/#servicos`, p: '0.8', f: 'weekly' },
-    { u: `${SITE}/#ensinar`, p: '0.7', f: 'monthly' },
-    { u: `${SITE}/#termos`, p: '0.3', f: 'yearly' },
-    { u: `${SITE}/#privacidade`, p: '0.3', f: 'yearly' },
+    { u: `${SITE}/como-funciona`, p: '0.9', f: 'monthly' },
   ];
 
   let materiais = [];

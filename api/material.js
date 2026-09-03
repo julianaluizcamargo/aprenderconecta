@@ -181,37 +181,6 @@ async function perguntar(caminho) {
 export default async function handler(req, res) {
   const id = lerId(req);
 
-  /* ------------------------------------------------------------------
-     MODO CONFERÊNCIA
-     Abrir /api/material?id=...&diag=1 devolve, em texto puro, o que
-     esta função enxergou: o endereço que chegou, o id que ela leu e
-     o que o banco respondeu. Serve para descobrir onde travou sem
-     ter que adivinhar. Não mostra nada secreto.
-     ------------------------------------------------------------------ */
-  const conferir = String((req.query && req.query.diag) || '') === '1' ||
-                   /[?&]diag=1(?:&|$)/.test(String(req.url || ''));
-  if (conferir) {
-    const linhas = [
-      'endereco que chegou: ' + String(req.url || '(vazio)'),
-      'req.query existe:    ' + (req.query ? 'sim' : 'nao'),
-      'campos de req.query: ' + (req.query ? Object.keys(req.query).join(', ') : '-'),
-      'id lido:             ' + (id || '(vazio)'),
-      'id passa na regra:   ' + (/^[0-9a-fA-F-]{20,40}$/.test(id) ? 'sim' : 'NAO'),
-    ];
-    try {
-      const r = await perguntar(
-        `materiais?id=eq.${encodeURIComponent(id)}&ativo=eq.true&select=id,titulo`);
-      linhas.push('banco respondeu:     HTTP ' + r.status);
-      linhas.push('banco devolveu:      ' + JSON.stringify(r.corpo).slice(0, 400));
-    } catch (e) {
-      linhas.push('banco deu erro:      ' + String(e && e.message || e));
-    }
-    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
-    res.setHeader('Cache-Control', 'no-store');
-    res.status(200).send(linhas.join('\n'));
-    return;
-  }
-
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
 
   if (!/^[0-9a-fA-F-]{20,40}$/.test(id)) {
