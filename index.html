@@ -4860,6 +4860,12 @@ var materialPago        = false;   /* estado do formulário de material */
 var materialGavetaAtual = 'materiais';
 var ofertaPagaSite      = false;
 var minhasCompras       = [];
+/* Os dados de arquivo de cada material COMPRADO, buscados direto do banco.
+   Antes a tela de compras procurava o material na lista da loja — e quando
+   alguém volta do Mercado Pago a página recarrega do zero, com a lista da
+   loja vazia. Resultado: quem tinha acabado de pagar via "material saiu do
+   ar" no lugar do botão de baixar. */
+var arquivosComprados   = {};
 var comprasCarregadas   = false;
 var retornoMP           = null;
 
@@ -5305,8 +5311,32 @@ async function carregarCompras(forcar){
 
   minhasCompras = r.data || [];
   comprasCarregadas = true;
+  await buscarArquivosComprados();
   pintarCompras();
   filtrarMateriais();   /* o botão do card muda de Comprar para Baixar */
+}
+
+/* Pergunta ao banco onde está o arquivo de cada material que esta pessoa
+   comprou. Não depende da tela da loja ter sido aberta antes — e é isso
+   que faz o botão Baixar aparecer para quem acabou de voltar do
+   Mercado Pago, com a página recém-recarregada. */
+async function buscarArquivosComprados(){
+  arquivosComprados = {};
+  if(!sb) return;
+
+  var ids = minhasCompras
+    .filter(function(c){ return c.status === 'paga' && c.tipo === 'material' && c.material_id; })
+    .map(function(c){ return c.material_id; })
+    .filter(function(v, i, a){ return a.indexOf(v) === i; });
+  if(ids.length === 0) return;
+
+  var r;
+  try { r = await sb.from('materiais')
+          .select('id, titulo, arquivo_path, arquivo_bucket, arquivo_nome')
+          .in('id', ids); }
+  catch(e){ return; }
+
+  (r && r.data ? r.data : []).forEach(function(m){ arquivosComprados[m.id] = m; });
 }
 
 function pintarCompras(){
@@ -5323,7 +5353,21 @@ function pintarCompras(){
   }
 
   cx.innerHTML = '<div class="panel" style="padding:22px;">' +
-    minhasCompras.map(blocoCompra).join('') + '</div>';
+    compraslistaLimpa().map(blocoCompra).join('') + '</div>';
+}
+
+/* Quando alguém abre o Mercado Pago e desiste, fica uma compra
+   "aguardando pagamento" para sempre. Se depois a pessoa comprou o mesmo
+   material de verdade, essa linha velha só confunde — parece que ela deve
+   alguma coisa. Some com ela; a compra paga fica. */
+function compraslistaLimpa(){
+  var pagos = {};
+  minhasCompras.forEach(function(c){
+    if(c.status === 'paga' && c.material_id) pagos[c.material_id] = true;
+  });
+  return minhasCompras.filter(function(c){
+    return !(c.status === 'pendente' && c.material_id && pagos[c.material_id]);
+  });
 }
 
 function blocoCompra(c){
@@ -5337,11 +5381,14 @@ function blocoCompra(c){
 
   var acao = '';
   if(c.status === 'paga' && c.tipo === 'material'){
-    var m = materiais.filter(function(x){ return x.id === c.material_id; })[0];
+    var m = arquivosComprados[c.material_id] ||
+            materiais.filter(function(x){ return x.id === c.material_id; })[0];
     acao = m
       ? '<button class="btn btn-primary btn-sm" onclick="baixarMaterial(\'' + m.id + '\', \'' +
         String(m.arquivo_path).replace(/'/g, "\\'") + '\', \'' + (m.arquivo_bucket || 'materiais') + '\')">Baixar</button>'
-      : '<span class="muted" style="font-size:.82rem;">material saiu do ar</span>';
+      : '<span class="muted" style="font-size:.82rem;">' +
+        'arquivo indisponível — <b class="link-auth" onclick="carregarCompras(true)">tentar de novo</b>' +
+        '</span>';
   }
   if(c.status === 'paga' && c.tipo === 'oferta'){
     acao = '<button class="btn btn-ghost btn-sm" onclick="verPerfil(\'' + c.vendedor_id + '\')">Falar com quem ensina</button>';
