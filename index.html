@@ -5,6 +5,56 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AprenderConecta — Conhecimento que conecta pessoas</title>
 <meta name="description" content="Plataforma que conecta quem quer aprender com quem tem conhecimento para ensinar. Aulas, cursos, serviços educacionais e materiais didáticos em um só lugar.">
+
+<!-- ============================================================
+     COMO O SITE APARECE QUANDO ALGUÉM COMPARTILHA O LINK
+     ------------------------------------------------------------
+     Sem estas linhas, mandar o site no WhatsApp mostra um retângulo
+     cinza sem imagem nem explicação — e quase ninguém clica.
+     Com elas, aparece o título, a frase e a imagem de capa.
+
+     A mesma coisa vale para Facebook, Instagram (na bio), LinkedIn,
+     Telegram e a pré-visualização do Google.
+     ============================================================ -->
+<link rel="canonical" href="https://www.aprenderconecta.com.br/">
+<meta name="robots" content="index, follow">
+<meta name="author" content="AprenderConecta">
+<meta name="theme-color" content="#0B2545">
+
+<meta property="og:type"        content="website">
+<meta property="og:site_name"   content="AprenderConecta">
+<meta property="og:locale"      content="pt_BR">
+<meta property="og:url"         content="https://www.aprenderconecta.com.br/">
+<meta property="og:title"       content="AprenderConecta — aprenda com quem sabe, ensine o que você domina">
+<meta property="og:description" content="Aulas particulares, mentorias, materiais didáticos para baixar e serviços educacionais sob encomenda. Publicar é grátis; o pagamento é pelo site, com Pix ou cartão.">
+<meta property="og:image"       content="https://www.aprenderconecta.com.br/capa-compartilhar.png">
+<meta property="og:image:width"  content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt"   content="AprenderConecta — aprenda com quem sabe, ensine o que você domina.">
+
+<meta name="twitter:card"        content="summary_large_image">
+<meta name="twitter:title"       content="AprenderConecta — aprenda com quem sabe, ensine o que você domina">
+<meta name="twitter:description" content="Aulas, materiais didáticos e serviços educacionais em um só lugar. Publicar é grátis.">
+<meta name="twitter:image"       content="https://www.aprenderconecta.com.br/capa-compartilhar.png">
+
+<!-- Ficha que o Google usa para entender o que é o site -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "AprenderConecta",
+  "url": "https://www.aprenderconecta.com.br/",
+  "inLanguage": "pt-BR",
+  "description": "Plataforma que conecta quem quer aprender com quem tem conhecimento para ensinar: aulas, materiais didáticos e serviços educacionais.",
+  "publisher": {
+    "@type": "Organization",
+    "name": "AprenderConecta",
+    "url": "https://www.aprenderconecta.com.br/",
+    "logo": "https://www.aprenderconecta.com.br/capa-compartilhar.png",
+    "areaServed": "BR"
+  }
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -574,6 +624,19 @@ ul{margin:0;padding:0;list-style:none;}
         <span>Aprender</span><span>Ensinar</span><span>Compartilhar</span><span>Trabalhar</span>
       </div>
 
+      <!-- Link para a página de vídeos. É um link de verdade (href), não um
+           onclick, porque ele leva para outra página e precisa poder ser
+           copiado, mandado no WhatsApp e lido pelo Google. -->
+      <p style="margin:6px 0 0;">
+        <a href="/como-funciona"
+           style="display:inline-flex;align-items:center;gap:8px;color:#fff;
+                  text-decoration:none;font-weight:600;font-size:.95rem;
+                  background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);
+                  border-radius:999px;padding:9px 18px;">
+          ▶ Ver como funciona — 6 vídeos curtos
+        </a>
+      </p>
+
       <div class="searchbar">
         <i>🔎</i>
         <input type="text" placeholder="O que você deseja aprender ou contratar?" aria-label="Buscar">
@@ -1081,7 +1144,8 @@ ul{margin:0;padding:0;list-style:none;}
           <div class="grid g2" style="gap:16px;" id="sv-caixa-valor">
             <div class="field">
               <label>Preço (R$)</label>
-              <input type="number" id="sv-valor" min="0" step="0.01" placeholder="350" oninput="previaServico()">
+              <input type="text" id="sv-valor" inputmode="decimal" autocomplete="off" placeholder="350,00"
+                     oninput="previaServico()" onblur="arrumarCampoDinheiro(this); previaServico();">
             </div>
             <div class="field">
               <label>Prazo de entrega (dias)</label>
@@ -1357,7 +1421,8 @@ ul{margin:0;padding:0;list-style:none;}
             </div>
             <div id="mt-caixa-preco" style="display:none;margin-top:14px;">
               <label>Preço (R$)</label>
-              <input type="number" id="mt-preco" min="1" step="0.01" placeholder="19,90" oninput="previaMaterial()">
+              <input type="text" id="mt-preco" inputmode="decimal" autocomplete="off" placeholder="19,90"
+                     oninput="previaMaterial()" onblur="arrumarCampoDinheiro(this); previaMaterial();">
               <small id="mt-nota-preco">O aluno paga pelo site, com Pix, cartão de crédito ou débito.</small>
             </div>
             <div id="mt-aviso-mp" style="display:none;padding:14px 16px;border-radius:11px;font-size:.88rem;line-height:1.55;margin-top:14px;"></div>
@@ -2031,6 +2096,24 @@ ul{margin:0;padding:0;list-style:none;}
             <small style="color:#92400E;">⚠️ Este número fica <b>visível para qualquer pessoa</b> que abrir seu perfil — é assim que o aluno fala com você hoje. Se preferir não mostrar, deixe em branco.</small>
           </div>
 
+          <!-- Avisos por e-mail. Fica logo antes do botão salvar, e não
+               escondido num menu: quem quer parar de receber tem que
+               achar em dez segundos, senão marca como spam — e aí todos
+               os e-mails do site param de chegar, para todo mundo. -->
+          <div class="field" style="margin-top:22px;padding-top:20px;border-top:1px solid var(--linha);">
+            <label>Avisos por e-mail</label>
+            <label style="display:flex;gap:11px;align-items:flex-start;cursor:pointer;font-weight:400;margin-top:6px;">
+              <input type="checkbox" id="ep-quer-email" style="margin-top:4px;width:18px;height:18px;flex:none;cursor:pointer;">
+              <span style="font-size:.93rem;line-height:1.55;">
+                Quero receber e-mail quando <b>alguém comprar</b> o que eu publiquei
+                e quando <b>chegar um arquivo</b> num trabalho meu.
+                <small style="display:block;margin-top:4px;">
+                  O sininho aqui dentro do site continua avisando de tudo, marcando ou não.
+                </small>
+              </span>
+            </label>
+          </div>
+
           <div id="ep-msg" style="display:none;padding:12px 14px;border-radius:10px;font-size:.88rem;line-height:1.45;margin-top:18px;"></div>
 
           <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:26px;">
@@ -2162,7 +2245,7 @@ ul{margin:0;padding:0;list-style:none;}
       <div>
         <h5>Institucional</h5>
         <ul>
-          <li><a href="#" onclick="go('home');return false;">Como funciona</a></li>
+          <li><a href="/como-funciona">Como funciona</a></li>
           <li><a href="mailto:julianaluizcamargo@gmail.com">Falar conosco</a></li>
         </ul>
       </div>
@@ -2518,9 +2601,25 @@ async function carregarSessao(){
   comprasCarregadas = false;
 
   if(usuario){
+    /* A coluna quer_email nasce na etapa 13. Se este banco ainda não
+       rodou aquele arquivo, pedir por ela faz o Postgres recusar a
+       consulta INTEIRA — e o login cairia junto, por causa de uma
+       caixinha de preferência. Então pergunto com ela e, se der erro,
+       pergunto de novo sem. */
+    var COLUNAS_PERFIL13 = 'nome, papel, cidade, bio, telefone, titulo_profissional, ' +
+                           'assinatura_ate, admin, criado_em, quer_email';
+    var COLUNAS_PERFIL12 = 'nome, papel, cidade, bio, telefone, titulo_profissional, ' +
+                           'assinatura_ate, admin, criado_em';
+
     var p = await sb.from('perfis')
-      .select('nome, papel, cidade, bio, telefone, titulo_profissional, assinatura_ate, admin, criado_em')
+      .select(COLUNAS_PERFIL13)
       .eq('id', usuario.id).maybeSingle();
+
+    if(p.error && /quer_email|column/i.test(p.error.message || '')){
+      p = await sb.from('perfis')
+        .select(COLUNAS_PERFIL12)
+        .eq('id', usuario.id).maybeSingle();
+    }
     perfil = p.data || null;
 
     /* A conta do Mercado Pago e as compras desta pessoa.
@@ -2760,6 +2859,57 @@ function corAvatar(texto){
 function moeda(v){
   var n = Number(v) || 0;
   return 'R$ ' + n.toLocaleString('pt-BR', {minimumFractionDigits: (n % 1 ? 2 : 0), maximumFractionDigits: 2});
+}
+
+/* ---------------------------------------------------------------
+   LER DINHEIRO ESCRITO DO JEITO BRASILEIRO
+   ---------------------------------------------------------------
+   No Brasil a gente escreve 19,90. O campo antigo era do tipo
+   "número", que só entende ponto — a vírgula sumia e 19,90 virava
+   1990. Um material de vinte reais ia para a loja custando mil
+   novecentos e noventa.
+
+   Esta função entende os dois jeitos:
+       "19,90"     ->  19.9
+       "19.90"     ->  19.9
+       "1.234,56"  ->  1234.56
+       "1.234"     ->  1234      (três casas depois do ponto = milhar)
+   Devolve NaN quando não dá para entender.
+   --------------------------------------------------------------- */
+function lerDinheiro(texto){
+  var t = String(texto == null ? '' : texto).trim();
+  if(!t) return NaN;
+  t = t.replace(/[R$\s ]/g, '');
+  if(!/^[0-9.,]+$/.test(t)) return NaN;
+  if(!/[0-9]/.test(t)) return NaN;   /* "..", ",," e afins nao sao preco */
+
+  var temPonto = t.indexOf('.') >= 0, temVirgula = t.indexOf(',') >= 0;
+
+  if(temPonto && temVirgula){
+    /* o que vier por último manda: é o separador dos centavos */
+    if(t.lastIndexOf(',') > t.lastIndexOf('.')) t = t.replace(/\./g, '').replace(',', '.');
+    else                                        t = t.replace(/,/g, '');
+  } else if(temVirgula){
+    t = t.replace(/\./g, '').replace(',', '.');
+  } else if(temPonto){
+    /* só ponto: 19.90 são centavos, 1.234 é separador de milhar */
+    var pedacos = t.split('.');
+    if(pedacos.length > 2 || (pedacos.length === 2 && pedacos[1].length === 3 && pedacos[0].length > 0)){
+      t = pedacos.join('');
+    }
+  }
+
+  var n = Number(t);
+  return isFinite(n) ? n : NaN;
+}
+
+/* deixa o campo bonitinho quando a pessoa sai dele: 19,90 */
+function arrumarCampoDinheiro(el){
+  if(!el) return;
+  var n = lerDinheiro(el.value);
+  if(!isFinite(n) || n <= 0){ return; }
+  el.value = (Math.round(n * 100) / 100)
+    .toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
 }
 function textoDoPillLigado(idContainer, padrao){
   var el = document.querySelector('#' + idContainer + ' .pill.on');
@@ -3197,8 +3347,8 @@ async function carregarPerfilPublico(id){
 
   /* ofertas da pessoa */
   var o = await sb.from('ofertas')
-    .select('id, titulo, area, nivel, formato, descricao, valor, cobranca, modalidade, criado_em')
-    .eq('professor_id', id).eq('ativa', true)
+    .select('id, titulo, area, nivel, formato, descricao, valor, cobranca, modalidade, criado_em, pagar_pelo_site, tipo')
+    .eq('professor_id', id).eq('ativa', true).neq('tipo', 'servico')
     .order('criado_em', { ascending: false });
 
   var lista = (o.error ? [] : (o.data || []));
@@ -3216,6 +3366,12 @@ async function carregarPerfilPublico(id){
         '<div class="g"><b>' + esc(of.titulo) + '</b><small>' + esc(of.formato) + ' · ' + esc(of.modalidade) +
           (of.nivel ? ' · ' + esc(of.nivel) : '') + '</small></div>' +
         '<span class="price">' + moeda(of.valor) + '<small>/' + esc(String(of.cobranca).toLowerCase()) + '</small></span>' +
+        /* Faltava isto: a oferta dizia "paga pelo site" e o aluno não
+           tinha por onde pagar. Sem o botão, a escolha do professor no
+           formulário não valia nada. */
+        (!souEu && of.pagar_pelo_site && Number(of.valor) > 0
+          ? '<button class="btn btn-accent btn-sm" onclick="comprar(\'oferta\', \'' + of.id + '\')">Contratar</button>'
+          : '') +
       '</div>';
     }).join('');
   }
@@ -3243,7 +3399,11 @@ async function carregarPerfilPublico(id){
     acao.innerHTML = '<a class="btn btn-accent" href="' + zap + '" target="_blank" rel="noopener">💬 Chamar no WhatsApp</a>';
     contato.innerHTML = '<h4>Falar com ' + esc(String(pe.nome).split(' ')[0]) + '</h4>' +
       '<a class="btn btn-primary btn-block" href="' + zap + '" target="_blank" rel="noopener">💬 Chamar no WhatsApp</a>' +
-      '<p class="muted" style="font-size:.8rem;margin-top:14px;line-height:1.55;">Horário e pagamento são combinados diretamente entre vocês. A plataforma ainda não intermedia pagamentos.</p>' +
+      '<p class="muted" style="font-size:.8rem;margin-top:14px;line-height:1.55;">' +
+        (lista.some(function(x){ return x.pagar_pelo_site && Number(x.valor) > 0; })
+          ? 'As aulas com o botão <b>Contratar</b> são pagas aqui pelo site, com Pix ou cartão. O horário vocês combinam pelo WhatsApp.'
+          : 'Horário e pagamento são combinados diretamente entre vocês.') +
+      '</p>' +
       '<p style="font-size:.8rem;margin-top:12px;text-align:center;"><b class="link-auth" onclick="abrirDenuncia(\'perfil\', \'' + pe.id + '\', \'' + String(pe.nome).replace(/'/g, "\\'") + '\')">⚑ Denunciar este perfil</b></p>';
   } else {
     acao.innerHTML = '<p style="font-size:.85rem;color:rgba(255,255,255,.75);">Esta pessoa ainda não informou um contato.</p>';
@@ -3278,6 +3438,10 @@ function carregarFormPerfil(){
   document.getElementById('ep-papel').value  = (perfil && perfil.papel)  || 'aluno';
   document.getElementById('ep-titulo').value = (perfil && perfil.titulo_profissional) || '';
   document.getElementById('ep-cidade').value = (perfil && perfil.cidade) || '';
+  var cxEmail = document.getElementById('ep-quer-email');
+  /* nasce marcado: se a coluna ainda não existe no banco, o valor vem
+     indefinido, e o certo é mostrar ligado — que é o padrão do banco */
+  if(cxEmail) cxEmail.checked = !(perfil && perfil.quer_email === false);
   document.getElementById('ep-bio').value    = (perfil && perfil.bio)    || '';
   document.getElementById('ep-tel').value    = (perfil && perfil.telefone) || '';
   document.getElementById('ep-msg').style.display = 'none';
@@ -3337,6 +3501,7 @@ async function salvarPerfil(){
     papel:               document.getElementById('ep-papel').value,
     titulo_profissional: (document.getElementById('ep-titulo').value || '').trim() || null,
     cidade:              (document.getElementById('ep-cidade').value || '').trim() || null,
+    quer_email:          !!(document.getElementById('ep-quer-email') || {}).checked,
     bio:                 (document.getElementById('ep-bio').value || '').trim() || null,
     telefone:            tel || null
   }).eq('id', usuario.id);
@@ -3345,7 +3510,9 @@ async function salvarPerfil(){
 
   if(r.error){
     var m = r.error.message || '';
-    if(/titulo_profissional|column .* does not exist/i.test(m)){
+    if(/quer_email/i.test(m)){
+      mostrarMsgPerfil('Falta rodar o <b>banco-etapa13.sql</b> no Supabase — a coluna dos avisos por e-mail ainda não existe.', 'erro');
+    } else if(/titulo_profissional|column .* does not exist/i.test(m)){
       mostrarMsgPerfil('Falta rodar o <b>banco-etapa3.sql</b> no Supabase — a coluna do título profissional ainda não existe.', 'erro');
     } else {
       mostrarMsgPerfil('Não deu certo: ' + esc(m), 'erro');
@@ -4734,6 +4901,12 @@ var materialPago        = false;   /* estado do formulário de material */
 var materialGavetaAtual = 'materiais';
 var ofertaPagaSite      = false;
 var minhasCompras       = [];
+/* Os dados de arquivo de cada material COMPRADO, buscados direto do banco.
+   Antes a tela de compras procurava o material na lista da loja — e quando
+   alguém volta do Mercado Pago a página recarrega do zero, com a lista da
+   loja vazia. Resultado: quem tinha acabado de pagar via "material saiu do
+   ar" no lugar do botão de baixar. */
+var arquivosComprados   = {};
 var comprasCarregadas   = false;
 var retornoMP           = null;
 
@@ -4809,7 +4982,7 @@ function escolherTipoMaterial(botao, pago){
 /** devolve o preço, ou false se o que está escrito não serve */
 function precoDoFormulario(){
   if(!vendasLigadas() || !materialPago) return 0;
-  var v = Number((document.getElementById('mt-preco') || {}).value);
+  var v = lerDinheiro((document.getElementById('mt-preco') || {}).value);
   if(!(v >= 1)) return false;
   return Math.round(v * 100) / 100;
 }
@@ -4821,7 +4994,11 @@ function aplicarPrecoNoFormulario(preco){
   var cx = document.getElementById('mt-caixa-preco');
   if(cx) cx.style.display = pago ? 'block' : 'none';
   var el = document.getElementById('mt-preco');
-  if(el) el.value = pago ? preco : '';
+  if(el){
+    el.value = pago
+      ? Number(preco).toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})
+      : '';
+  }
   pintarCampoPrecoMaterial();
 }
 
@@ -5175,8 +5352,32 @@ async function carregarCompras(forcar){
 
   minhasCompras = r.data || [];
   comprasCarregadas = true;
+  await buscarArquivosComprados();
   pintarCompras();
   filtrarMateriais();   /* o botão do card muda de Comprar para Baixar */
+}
+
+/* Pergunta ao banco onde está o arquivo de cada material que esta pessoa
+   comprou. Não depende da tela da loja ter sido aberta antes — e é isso
+   que faz o botão Baixar aparecer para quem acabou de voltar do
+   Mercado Pago, com a página recém-recarregada. */
+async function buscarArquivosComprados(){
+  arquivosComprados = {};
+  if(!sb) return;
+
+  var ids = minhasCompras
+    .filter(function(c){ return c.status === 'paga' && c.tipo === 'material' && c.material_id; })
+    .map(function(c){ return c.material_id; })
+    .filter(function(v, i, a){ return a.indexOf(v) === i; });
+  if(ids.length === 0) return;
+
+  var r;
+  try { r = await sb.from('materiais')
+          .select('id, titulo, arquivo_path, arquivo_bucket, arquivo_nome')
+          .in('id', ids); }
+  catch(e){ return; }
+
+  (r && r.data ? r.data : []).forEach(function(m){ arquivosComprados[m.id] = m; });
 }
 
 function pintarCompras(){
@@ -5193,7 +5394,21 @@ function pintarCompras(){
   }
 
   cx.innerHTML = '<div class="panel" style="padding:22px;">' +
-    minhasCompras.map(blocoCompra).join('') + '</div>';
+    compraslistaLimpa().map(blocoCompra).join('') + '</div>';
+}
+
+/* Quando alguém abre o Mercado Pago e desiste, fica uma compra
+   "aguardando pagamento" para sempre. Se depois a pessoa comprou o mesmo
+   material de verdade, essa linha velha só confunde — parece que ela deve
+   alguma coisa. Some com ela; a compra paga fica. */
+function compraslistaLimpa(){
+  var pagos = {};
+  minhasCompras.forEach(function(c){
+    if(c.status === 'paga' && c.material_id) pagos[c.material_id] = true;
+  });
+  return minhasCompras.filter(function(c){
+    return !(c.status === 'pendente' && c.material_id && pagos[c.material_id]);
+  });
 }
 
 function blocoCompra(c){
@@ -5207,11 +5422,14 @@ function blocoCompra(c){
 
   var acao = '';
   if(c.status === 'paga' && c.tipo === 'material'){
-    var m = materiais.filter(function(x){ return x.id === c.material_id; })[0];
+    var m = arquivosComprados[c.material_id] ||
+            materiais.filter(function(x){ return x.id === c.material_id; })[0];
     acao = m
       ? '<button class="btn btn-primary btn-sm" onclick="baixarMaterial(\'' + m.id + '\', \'' +
         String(m.arquivo_path).replace(/'/g, "\\'") + '\', \'' + (m.arquivo_bucket || 'materiais') + '\')">Baixar</button>'
-      : '<span class="muted" style="font-size:.82rem;">material saiu do ar</span>';
+      : '<span class="muted" style="font-size:.82rem;">' +
+        'arquivo indisponível — <b class="link-auth" onclick="carregarCompras(true)">tentar de novo</b>' +
+        '</span>';
   }
   if(c.status === 'paga' && c.tipo === 'oferta'){
     acao = '<button class="btn btn-ghost btn-sm" onclick="verPerfil(\'' + c.vendedor_id + '\')">Falar com quem ensina</button>';
@@ -5521,7 +5739,7 @@ function previaServico(){
   var c  = (document.getElementById('sv-categoria') || {}).value || '';
   var tp = (document.getElementById('sv-tipo') || {}).value || '';
   var pz = (document.getElementById('sv-prazo') || {}).value || '';
-  var v  = Number((document.getElementById('sv-valor') || {}).value) || 0;
+  var v  = lerDinheiro((document.getElementById('sv-valor') || {}).value) || 0;
 
   document.getElementById('sv-pv-titulo').textContent = t || 'O que você faz';
   document.getElementById('sv-pv-desc').textContent   = d || 'A descrição aparece aqui.';
@@ -5623,8 +5841,9 @@ function lerFormServico(){
      ou de graça. Não há mais "combinar por fora". */
   var valor = 0, pagaSite = true;
   if(cobrancaServico === 'site'){
-    valor = Number(document.getElementById('sv-valor').value);
+    valor = lerDinheiro(document.getElementById('sv-valor').value);
     if(!(valor >= 1)){ mostrarMsgServico('Informe um preço de pelo menos R$ 1,00 — ou escolha Gratuito.', 'erro'); return null; }
+    valor = Math.round(valor * 100) / 100;
   }
 
   var prazo = document.getElementById('sv-prazo').value;
@@ -5705,7 +5924,9 @@ async function editarServico(id){
   if(o.area) document.getElementById('sv-categoria').value = o.area;
   montarTiposServico();
   if(o.formato) document.getElementById('sv-tipo').value = o.formato;
-  document.getElementById('sv-valor').value = o.valor != null ? o.valor : '';
+  document.getElementById('sv-valor').value = (o.valor != null && Number(o.valor) > 0)
+    ? Number(o.valor).toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})
+    : '';
   document.getElementById('sv-prazo').value = o.prazo_dias != null ? o.prazo_dias : '';
   document.getElementById('sv-msg').style.display = 'none';
 
