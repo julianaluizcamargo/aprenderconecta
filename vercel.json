@@ -1,0 +1,19 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "rewrites": [
+    { "source": "/m/:id", "destination": "/api/material?id=:id" },
+    { "source": "/como-funciona", "destination": "/como-funciona.html" },
+    { "source": "/materiais.xml", "destination": "/api/sitemap" },
+    { "source": "/sitemap.xml", "destination": "/api/sitemap" }
+  ],
+  "headers": [
+    {
+      "source": "/capa-compartilhar.png",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400" }]
+    },
+    {
+      "source": "/videos/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=604800, immutable" }]
+    }
+  ]
+}
