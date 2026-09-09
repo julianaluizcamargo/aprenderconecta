@@ -3047,7 +3047,10 @@ async function publicarOferta(){
   }
 
   if(titulo.length < 5){ mostrarMsgOferta('Escreva um título com pelo menos 5 letras.', 'erro'); return; }
+<<<<<<< HEAD
   if(!exigirMercadoPagoNaOferta()) return;
+=======
+>>>>>>> 900190c38b600abe962301782491e0e7e6d793bd
 
   var btn = document.getElementById('btn-publicar');
   btn.disabled = true; btn.textContent = 'Publicando…';
@@ -3474,7 +3477,15 @@ async function carregarPerfilPublico(id){
         /* A aula paga vai pelo Mercado Pago; a gratuita entra direto.
            Sem este segundo caso, escolher "Gratuito" no formulário daria
            uma oferta que ninguém consegue pegar. */
+<<<<<<< HEAD
         (souEu ? '' : botaoDaOferta(of, zap)) +
+=======
+        (souEu ? '' :
+          (of.pagar_pelo_site && Number(of.valor) > 0
+            ? '<button class="btn btn-accent btn-sm" onclick="comprar(\'oferta\', \'' + of.id + '\')">Contratar</button>'
+            : (Number(of.valor) > 0 ? ''
+               : '<button class="btn btn-accent btn-sm" onclick="contratarAulaGratis(\'' + of.id + '\', this)">Participar</button>'))) +
+>>>>>>> 900190c38b600abe962301782491e0e7e6d793bd
       '</div>';
     }).join('');
   }
