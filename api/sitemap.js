@@ -40,18 +40,25 @@ export default async function handler(req, res) {
     { u: `${SITE}/como-funciona`, p: '0.9', f: 'monthly' },
   ];
 
-  let materiais = [];
-  try {
-    const r = await fetch(
-      `${SUPABASE_URL}/rest/v1/materiais?ativo=eq.true` +
-      `&select=id,criado_em&order=criado_em.desc&limit=2000`,
-      { headers: { apikey: CHAVE, Authorization: `Bearer ${CHAVE}` } },
-    );
-    const linhas = await r.json();
-    if (Array.isArray(linhas)) materiais = linhas;
-  } catch (e) {
-    materiais = [];   /* sem banco, devolvemos ao menos as telas fixas */
+  async function buscar(caminho) {
+    try {
+      const r = await fetch(`${SUPABASE_URL}/rest/v1/${caminho}`,
+        { headers: { apikey: CHAVE, Authorization: `Bearer ${CHAVE}` } });
+      const linhas = await r.json();
+      return Array.isArray(linhas) ? linhas : [];
+    } catch (e) {
+      return [];   /* sem banco, devolvemos ao menos as telas fixas */
+    }
   }
+
+  /* Faltava a metade do site aqui. O mapa só listava os materiais, então
+     as aulas e os serviços que as pessoas publicavam ficavam invisíveis
+     para o Google — o Bruno e o Marcos publicaram aula e não tinham como
+     ser achados por ninguém de fora. Agora os três entram. */
+  const [materiais, ofertas] = await Promise.all([
+    buscar('materiais?ativo=eq.true&select=id,criado_em&order=criado_em.desc&limit=2000'),
+    buscar('ofertas?ativa=eq.true&select=id,criado_em&order=criado_em.desc&limit=2000'),
+  ]);
 
   const linhas = [
     ...fixas.map((x) =>
@@ -60,6 +67,10 @@ export default async function handler(req, res) {
     ...materiais.map((m) =>
       `  <url>\n    <loc>${esc(SITE + '/m/' + m.id)}</loc>\n` +
       `    <lastmod>${dia(m.criado_em)}</lastmod>\n` +
+      `    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>`),
+    ...ofertas.map((o) =>
+      `  <url>\n    <loc>${esc(SITE + '/a/' + o.id)}</loc>\n` +
+      `    <lastmod>${dia(o.criado_em)}</lastmod>\n` +
       `    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>`),
   ];
 
