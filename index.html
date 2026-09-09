@@ -945,11 +945,12 @@ ul{margin:0;padding:0;list-style:none;}
             <textarea rows="4" id="of-desc" placeholder="Conte como são suas aulas, que material você usa e o que o aluno leva de resultado." oninput="atualizarPrevia()"></textarea>
           </div>
 
-          <div class="grid g2" style="gap:16px;">
+          <div class="grid g2" style="gap:16px;" id="of-caixa-valor">
             <div class="field">
               <label>Valor (R$)</label>
-              <input type="number" id="of-valor" min="0" step="0.01" placeholder="40" oninput="atualizarPrevia()">
-              <small id="of-liquido">Combinado direto com o aluno, por WhatsApp.</small>
+              <input type="text" id="of-valor" inputmode="decimal" autocomplete="off" placeholder="40,00"
+                     oninput="atualizarPrevia()" onblur="arrumarCampoDinheiro(this); atualizarPrevia();">
+              <small id="of-liquido"></small>
             </div>
             <div class="field">
               <label>Cobrança por</label>
@@ -957,13 +958,16 @@ ul{margin:0;padding:0;list-style:none;}
             </div>
           </div>
 
+          <!-- Só existem dois caminhos, e os dois passam pelo site: com preço
+               ou de graça. "Combina comigo" saiu — quando o site não entra no
+               meio, ele não tem como garantir nada a ninguém. -->
           <div class="field" id="of-campo-pagamento" style="display:none;">
-            <label>Como o aluno paga</label>
+            <label>Como você quer receber</label>
             <div class="pill-row" id="of-pagamento" style="margin-bottom:0;">
-              <button class="pill on" onclick="escolherPagamentoOferta(this, false)">Combina comigo</button>
-              <button class="pill" onclick="escolherPagamentoOferta(this, true)">Paga pelo site</button>
+              <button class="pill on" onclick="escolherPagamentoOferta(this, true)">Preço fixo, pago pelo site</button>
+              <button class="pill" onclick="escolherPagamentoOferta(this, false)">Gratuito</button>
             </div>
-            <small style="display:block;margin-top:10px;">Pagando pelo site, o dinheiro cai na sua conta do Mercado Pago já com a comissão da plataforma descontada. Combinando com você, o site não entra no meio.</small>
+            <small id="of-nota-cobranca" style="display:block;margin-top:10px;"></small>
             <div id="of-aviso-mp" style="display:none;padding:14px 16px;border-radius:11px;font-size:.88rem;line-height:1.55;margin-top:14px;"></div>
           </div>
 
@@ -2411,7 +2415,11 @@ function go(view){
   if(history.replaceState) history.replaceState(null,'','#'+view);
 
   if(view === 'aprender')      carregarOfertas();
-  if(view === 'ensinar')       { atualizarPortaoEnsinar(); avisoAssinaturaEnsinar(); atualizarModoOferta(); atualizarPrevia(); pintarCampoPagamentoOferta(); }
+  if(view === 'ensinar')       { atualizarPortaoEnsinar(); avisoAssinaturaEnsinar(); atualizarModoOferta();
+                                 if(!ofertaEditando && typeof aplicarPagamentoNoFormulario === 'function'){
+                                   aplicarPagamentoNoFormulario(true);
+                                 }
+                                 atualizarPrevia(); pintarCampoPagamentoOferta(); }
   if(view === 'painel')        { pintarResumoCadastro(); }
   if(view === 'painel-prof')   { carregarMinhasOfertas(); carregarMeusMateriais(); pintarPainelAssinatura(); pintarResumoCadastro(); pintarStatsProf(); pintarPainelModeracao(); pintarPainelMP(); carregarMinhasVendas(); }
   if(view === 'home')          carregarHome();
@@ -2996,16 +3004,17 @@ function atualizarPrevia(){
   document.getElementById('pv-desc').textContent   = desc || 'A descrição aparece aqui conforme você digita.';
   document.getElementById('pv-tags').innerHTML     =
     '<span class="tag tag-b">' + esc(formato) + '</span><span class="tag">' + esc(modo) + '</span>';
-  document.getElementById('pv-preco').innerHTML    =
-    moeda(valor) + ' <small>/' + esc(String(cobranca).toLowerCase()) + '</small>';
+  /* O campo de valor virou texto (para aceitar vírgula), então Number()
+     não serve mais: "150,00" viraria NaN e a prévia mostraria R$ 0,00. */
+  var nValor = lerDinheiro(valor) || 0;
+  document.getElementById('pv-preco').innerHTML = ofertaPagaSite || !vendasLigadas()
+    ? moeda(nValor) + ' <small>/' + esc(String(cobranca).toLowerCase()) + '</small>'
+    : '<span style="color:var(--green-600);">Gratuito</span>';
 
-  var liq = document.getElementById('of-liquido');
-  if(liq){
-    var n = Number(valor) || 0;
-    liq.textContent = n > 0
-      ? 'Você recebe ' + moeda(n * 0.9) + ' por ' + String(cobranca).toLowerCase() + ' (comissão de 10%).'
-      : 'A plataforma fica com 10% de comissão.';
-  }
+  /* O texto do "quanto sobra para você" tem UM dono: atualizarNotaLiquido,
+     chamado logo acima. Aqui existia uma segunda versão, com os 10% escritos
+     na mão — as duas escreviam no mesmo lugar e a de baixo ganhava. Foi ela
+     que passou a mostrar R$ 0,00 quando o campo virou texto. */
 }
 
 function limparOferta(){
@@ -3024,10 +3033,20 @@ async function publicarOferta(){
 
   var titulo = (document.getElementById('of-titulo').value || '').trim();
   var desc   = (document.getElementById('of-desc').value || '').trim();
-  var valor  = Number(document.getElementById('of-valor').value);
+  /* Gratuito é gratuito: o valor não vem do campo, vem da escolha.
+     Antes o professor podia escolher "de graça" e deixar um preço escrito
+     no campo — e o preço é que ia para o banco. */
+  var valor = 0;
+  if(ofertaPagaSite){
+    valor = lerDinheiro(document.getElementById('of-valor').value);
+    if(!(valor >= 1)){
+      mostrarMsgOferta('Informe um valor de pelo menos R$ 1,00 — ou escolha Gratuito.', 'erro');
+      return;
+    }
+    valor = Math.round(valor * 100) / 100;
+  }
 
   if(titulo.length < 5){ mostrarMsgOferta('Escreva um título com pelo menos 5 letras.', 'erro'); return; }
-  if(!(valor >= 0))    { mostrarMsgOferta('Informe um valor. Use 0 se a oferta for gratuita.', 'erro'); return; }
 
   var btn = document.getElementById('btn-publicar');
   btn.disabled = true; btn.textContent = 'Publicando…';
@@ -3075,7 +3094,10 @@ function limparOfertaSemMensagem(){
   });
   marcarPill('of-formato', null);
   marcarPill('of-modalidade', null);
-  if(typeof aplicarPagamentoNoFormulario === 'function') aplicarPagamentoNoFormulario(false);
+  /* Nasce em "pago pelo site", que é o botão que já vem marcado na tela.
+     Antes nascia em falso e o campo de preço sumia sozinho — a tela dizia
+     uma coisa e a memória do site dizia outra. */
+  if(typeof aplicarPagamentoNoFormulario === 'function') aplicarPagamentoNoFormulario(true);
   atualizarPrevia();
 }
 
@@ -3365,13 +3387,20 @@ async function carregarPerfilPublico(id){
         '<div class="path-ico ' + (cores[of.formato] || 'i-blue') + '" style="width:42px;height:42px;margin:0;font-size:1.1rem;border-radius:12px;">' + (icones[of.formato] || '🎓') + '</div>' +
         '<div class="g"><b>' + esc(of.titulo) + '</b><small>' + esc(of.formato) + ' · ' + esc(of.modalidade) +
           (of.nivel ? ' · ' + esc(of.nivel) : '') + '</small></div>' +
-        '<span class="price">' + moeda(of.valor) + '<small>/' + esc(String(of.cobranca).toLowerCase()) + '</small></span>' +
+        '<span class="price">' + (Number(of.valor) > 0
+            ? moeda(of.valor) + '<small>/' + esc(String(of.cobranca).toLowerCase()) + '</small>'
+            : '<span style="color:var(--green-600);">Gratuito</span>') + '</span>' +
         /* Faltava isto: a oferta dizia "paga pelo site" e o aluno não
            tinha por onde pagar. Sem o botão, a escolha do professor no
            formulário não valia nada. */
-        (!souEu && of.pagar_pelo_site && Number(of.valor) > 0
-          ? '<button class="btn btn-accent btn-sm" onclick="comprar(\'oferta\', \'' + of.id + '\')">Contratar</button>'
-          : '') +
+        /* A aula paga vai pelo Mercado Pago; a gratuita entra direto.
+           Sem este segundo caso, escolher "Gratuito" no formulário daria
+           uma oferta que ninguém consegue pegar. */
+        (souEu ? '' :
+          (of.pagar_pelo_site && Number(of.valor) > 0
+            ? '<button class="btn btn-accent btn-sm" onclick="comprar(\'oferta\', \'' + of.id + '\')">Contratar</button>'
+            : (Number(of.valor) > 0 ? ''
+               : '<button class="btn btn-accent btn-sm" onclick="contratarAulaGratis(\'' + of.id + '\', this)">Participar</button>'))) +
       '</div>';
     }).join('');
   }
@@ -4622,7 +4651,9 @@ async function editarOferta(id){
   var o = r.data;
   document.getElementById('of-titulo').value = o.titulo || '';
   document.getElementById('of-desc').value   = o.descricao || '';
-  document.getElementById('of-valor').value  = o.valor != null ? o.valor : '';
+  document.getElementById('of-valor').value = (o.valor != null && Number(o.valor) > 0)
+    ? Number(o.valor).toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})
+    : '';
   if(o.area)     document.getElementById('of-area').value     = o.area;
   if(o.nivel)    document.getElementById('of-nivel').value    = o.nivel;
   if(o.cobranca) document.getElementById('of-cobranca').value = o.cobranca;
@@ -4645,7 +4676,15 @@ function cancelarEdicaoOferta(){
 
 async function salvarEdicaoOferta(){
   var titulo = (document.getElementById('of-titulo').value || '').trim();
-  var valor  = Number(document.getElementById('of-valor').value);
+  var valor = 0;
+  if(ofertaPagaSite){
+    valor = lerDinheiro(document.getElementById('of-valor').value);
+    if(!(valor >= 1)){
+      mostrarMsgOferta('Informe um valor de pelo menos R$ 1,00 — ou escolha Gratuito.', 'erro');
+      return;
+    }
+    valor = Math.round(valor * 100) / 100;
+  }
   if(titulo.length < 5){ mostrarMsgOferta('Escreva um título com pelo menos 5 letras.', 'erro'); return; }
   if(!(valor >= 0))    { mostrarMsgOferta('Informe um valor. Use 0 se a oferta for gratuita.', 'erro'); return; }
 
@@ -5009,6 +5048,21 @@ function pintarCampoPagamentoOferta(){
   if(!campo) return;
   campo.style.display = vendasLigadas() ? '' : 'none';
   if(!vendasLigadas()){ ofertaPagaSite = false; }
+
+  /* Gratuito não tem preço para mostrar. Mas com as vendas desligadas
+     não existe escolha nenhuma, e a oferta continua tendo um valor de
+     anúncio — então o campo tem que aparecer. */
+  var cx = document.getElementById('of-caixa-valor');
+  if(cx) cx.style.display = (!vendasLigadas() || ofertaPagaSite) ? '' : 'none';
+
+  var nota = document.getElementById('of-nota-cobranca');
+  if(nota){
+    nota.innerHTML = ofertaPagaSite
+      ? ('O aluno paga aqui, com Pix ou cartão. O valor cai na sua conta do Mercado Pago' +
+         (comissaoPct() > 0 ? ', com <b>' + comissaoPct() + '%</b> de comissão descontada.' : '.'))
+      : 'Sem cobrança. O aluno se inscreve pelo site e vocês combinam o resto.';
+  }
+
   avisoMercadoPago('of-aviso-mp', ofertaPagaSite);
   atualizarNotaLiquido();
 }
@@ -5021,13 +5075,20 @@ function escolherPagamentoOferta(botao, pelosite){
   }
   pick(botao);
   ofertaPagaSite = !!pelosite;
-  avisoMercadoPago('of-aviso-mp', ofertaPagaSite);
-  atualizarNotaLiquido();
+  if(!ofertaPagaSite){
+    var v = document.getElementById('of-valor');
+    if(v) v.value = '';
+  }
+  pintarCampoPagamentoOferta();
+  /* Sem esta linha o cartão de prévia continuava mostrando "R$ 40 /hora"
+     depois de a professora escolher Gratuito. A tela dizia uma coisa e o
+     que ia ser publicado era outra. */
+  atualizarPrevia();
 }
 
 function aplicarPagamentoNoFormulario(pelosite){
   ofertaPagaSite = !!pelosite && vendasLigadas();
-  marcarPill('of-pagamento', ofertaPagaSite ? 'Paga pelo site' : 'Combina comigo');
+  marcarPill('of-pagamento', ofertaPagaSite ? 'Preço fixo, pago pelo site' : 'Gratuito');
   pintarCampoPagamentoOferta();
 }
 
@@ -5035,10 +5096,10 @@ function atualizarNotaLiquido(){
   var el = document.getElementById('of-liquido');
   if(!el) return;
   if(!ofertaPagaSite){
-    el.textContent = 'Combinado direto com o aluno, por WhatsApp.';
+    el.textContent = '';
     return;
   }
-  var v = Number((document.getElementById('of-valor') || {}).value) || 0;
+  var v = lerDinheiro((document.getElementById('of-valor') || {}).value) || 0;
   var fica = Math.round(v * (100 - comissaoPct())) / 100;
   el.innerHTML = comissaoPct() > 0
     ? 'A plataforma fica com ' + comissaoPct() + '%. Você recebe <b>' + esc(moeda(fica)) + '</b> por aula.'
@@ -6095,6 +6156,36 @@ async function pintarAcaoServico(o, meu){
     '<button class="btn btn-accent btn-block btn-sm" style="margin-top:16px;" id="se-contratar" onclick="contratarServico(\'' +
       o.id + '\', ' + (gratis ? 'true' : 'false') + ')">' +
       (gratis ? 'Contratar' : 'Contratar e pagar') + '</button>';
+}
+
+/* Aula gratuita: entra direto, sem Mercado Pago. Cria o mesmo registro
+   de compra que uma aula paga criaria (com valor zero), para o professor
+   ser avisado e para a aula aparecer em "Minhas compras" do aluno. */
+async function contratarAulaGratis(ofertaId, botao){
+  if(!sb) return;
+  if(!usuario){ irParaEntrar('entrar'); return; }
+
+  var texto = botao ? botao.textContent : '';
+  if(botao){ botao.disabled = true; botao.textContent = 'Um instante…'; }
+
+  var r;
+  try { r = await sb.rpc('contratar_gratis', { oferta: ofertaId }); }
+  catch(e){ r = { error: e }; }
+
+  if(botao){ botao.disabled = false; botao.textContent = texto; }
+
+  if(r && r.error && /function|does not exist/i.test(r.error.message || '')){
+    alert('Falta rodar o banco-etapa14.sql no Supabase — o banco ainda não sabe '
+        + 'inscrever alguém numa aula gratuita.');
+    return;
+  }
+  if(!r || r.error || !r.data){
+    alert('Não consegui inscrever você. Recarregue a página e tente de novo.');
+    return;
+  }
+
+  await carregarCompras(true);
+  go('compras');
 }
 
 async function contratarServico(ofertaId, gratis){
