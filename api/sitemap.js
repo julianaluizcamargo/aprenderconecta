@@ -38,6 +38,7 @@ export default async function handler(req, res) {
   const fixas = [
     { u: `${SITE}/`, p: '1.0', f: 'daily' },
     { u: `${SITE}/como-funciona`, p: '0.9', f: 'monthly' },
+    { u: `${SITE}/kit`, p: '0.7', f: 'monthly' },
   ];
 
   async function buscar(caminho) {

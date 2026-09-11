@@ -1392,6 +1392,10 @@ ul{margin:0;padding:0;list-style:none;}
     <div class="wrap split" style="grid-template-columns:1fr 340px;">
 
       <div class="panel" style="padding:30px;">
+        <!-- O aviso do kit. Uma promessa que ninguém vê não empurra
+             ninguém a publicar — e era esse o ponto dela. -->
+        <div id="mt-aviso-kit" style="display:none;background:#FFF8E1;border:1px solid #FDE68A;border-radius:12px;padding:14px 16px;margin-bottom:22px;font-size:.9rem;line-height:1.6;color:#78350F;"></div>
+
         <div id="portao-material" style="display:none;padding:18px 20px;border-radius:12px;margin-bottom:24px;"></div>
 
         <div id="form-material">
@@ -2467,7 +2471,7 @@ function go(view){
   if(view === 'editar-perfil') carregarFormPerfil();
   if(view === 'nova-senha')    prepararNovaSenha();
   if(view === 'loja')          carregarMateriais();
-  if(view === 'publicar-material') { atualizarPortaoMaterial(); atualizarModoMaterial(); previaMaterial(); pintarCampoPrecoMaterial(); }
+  if(view === 'publicar-material') { atualizarPortaoMaterial(); atualizarModoMaterial(); previaMaterial(); pintarCampoPrecoMaterial(); pintarAvisoKit(); }
   if(view === 'moderacao')     carregarDenuncias(true);
   if(view === 'compras')       carregarCompras(true);
   if(view === 'servicos')      carregarServicos(true);
@@ -3571,6 +3575,55 @@ function copiarLink(caminho, botao){
   } else {
     window.prompt('Copie o link para divulgar:', url);
   }
+}
+
+/* ------------------------------------------------------------------
+   O AVISO DO KIT, NA TELA DE PUBLICAR MATERIAL
+   ------------------------------------------------------------------
+   Quem publica um material ganha três arquivos: a página sobre o
+   dinheiro que entra por fora, a planilha de controle de ganhos e a de
+   notas e frequência. O e-mail sai sozinho, pelo banco.
+
+   Mas promessa que ninguém vê não empurra ninguém a publicar. Por isso
+   o aviso aparece aqui, na tela onde a decisão é tomada — e some
+   sozinho quando a pessoa já recebeu, porque aí ele só ocuparia
+   espaço.
+
+   Se a etapa 17 ainda não tiver sido rodada no banco, a função não
+   existe e o aviso simplesmente não aparece. A tela não pode quebrar
+   por causa de um brinde. */
+async function pintarAvisoKit(){
+  var cx = document.getElementById('mt-aviso-kit');
+  if(!cx) return;
+  cx.style.display = 'none';
+  if(!sb || !usuario) return;
+
+  try {
+    var jaTem = await sb.from('kits_entregues').select('numero').eq('professor_id', usuario.id).maybeSingle();
+    if(jaTem && jaTem.data){
+      cx.innerHTML = '🎁 <b>Você já tem o kit do professor.</b> ' +
+        '<a href="/kit" target="_blank" rel="noopener" style="color:#78350F;"><b>Baixar de novo</b></a>';
+      cx.style.display = '';
+      return;
+    }
+  } catch(e){ return; }
+
+  var r;
+  try { r = await sb.rpc('kits_restantes'); } catch(e){ return; }
+  if(!r || r.error) return;
+
+  var faltam = Number(r.data);
+  if(!isFinite(faltam)) return;
+
+  cx.innerHTML = faltam > 0
+    ? ('🎁 <b>Publique e ganhe o kit do professor.</b> Uma página sobre o dinheiro que entra ' +
+       'por fora — quando declarar, se vale abrir MEI — e duas planilhas: controle de ganhos ' +
+       'e notas e frequência. Chega no seu e-mail assim que você publicar.<br>' +
+       '<b>Faltam ' + faltam + '</b> dos 30 primeiros.')
+    : ('🎁 <b>Publique e ganhe o kit do professor.</b> Uma página sobre o dinheiro que entra ' +
+       'por fora — quando declarar, se vale abrir MEI — e duas planilhas: controle de ganhos ' +
+       'e notas e frequência. Chega no seu e-mail assim que você publicar.');
+  cx.style.display = '';
 }
 
 /* O botão que dá à pessoa o endereço da própria página.
