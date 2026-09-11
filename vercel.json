@@ -3,6 +3,7 @@
   "rewrites": [
     { "source": "/m/:id", "destination": "/api/material?id=:id" },
     { "source": "/a/:id", "destination": "/api/aula?id=:id" },
+    { "source": "/p/:id", "destination": "/api/profissional?id=:id" },
     { "source": "/como-funciona", "destination": "/como-funciona.html" },
     { "source": "/materiais.xml", "destination": "/api/sitemap" },
     { "source": "/sitemap.xml", "destination": "/api/sitemap" }

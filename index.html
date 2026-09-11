@@ -581,7 +581,7 @@ ul{margin:0;padding:0;list-style:none;}
       <a href="#" data-v="ensinar" onclick="go('ensinar');return false;">Ensinar</a>
       <a href="#" data-v="servicos" onclick="go('servicos');return false;">Serviços</a>
       <a href="#" data-v="loja" onclick="go('loja');return false;">Materiais</a>
-      <a href="#" data-v="perfil" onclick="go('perfil');return false;">Profissionais</a>
+      <a href="#" data-v="profissionais" onclick="go('profissionais');return false;">Profissionais</a>
     </nav>
     <div class="topbar-right">
       <!-- aparece quando NINGUÉM está logado -->
@@ -1491,6 +1491,45 @@ ul{margin:0;padding:0;list-style:none;}
         </div>
       </aside>
 
+    </div>
+  </div>
+</section>
+
+<!-- ===================== PROFISSIONAIS ====================== -->
+<!-- Esta aba existia no menu desde o começo, mas levava para a tela de
+     perfil sem perfil nenhum escolhido: quem clicava lia "Nenhum perfil
+     escolhido" e não tinha o que fazer. Agora ela é a lista de quem
+     ensina aqui. Só entra quem já publicou alguma coisa — um perfil
+     vazio frustra quem clica e não ajuda quem publicou. -->
+<section class="view" id="v-profissionais">
+  <div class="page-head">
+    <div class="wrap">
+      <div class="crumb">Início › Profissionais</div>
+      <h1>Quem ensina no AprenderConecta</h1>
+      <p>Professores e profissionais da educação que já têm aulas, serviços ou materiais publicados aqui. Filtre por área ou pela cidade e fale direto com quem você escolher.</p>
+    </div>
+  </div>
+
+  <div class="section-sm">
+    <div class="wrap">
+      <div class="toolbar">
+        <span class="count" id="contador-profissionais">Carregando…</span>
+        <select id="pr-area" style="margin-left:auto;" onchange="filtrarProfissionais()">
+          <option value="">Todas as áreas</option>
+        </select>
+        <select id="pr-cidade" onchange="filtrarProfissionais()">
+          <option value="">Todas as cidades</option>
+        </select>
+      </div>
+
+      <div class="grid g2" id="lista-profissionais"></div>
+
+      <div id="vazio-profissionais" style="display:none;text-align:center;padding:54px 20px;">
+        <div style="font-size:2.4rem;margin-bottom:10px;">👩‍🏫</div>
+        <h3 class="h3" style="margin-bottom:8px;">Ninguém por aqui com esse filtro</h3>
+        <p class="muted" style="font-size:.92rem;max-width:440px;margin:0 auto 20px;">Tente outra área ou outra cidade. A lista mostra quem já publicou pelo menos uma aula, serviço ou material.</p>
+        <button class="btn btn-ghost" onclick="limparFiltrosProfissionais()">Ver todo mundo</button>
+      </div>
     </div>
   </div>
 </section>
@@ -2415,6 +2454,7 @@ function go(view){
   if(history.replaceState) history.replaceState(null,'','#'+view);
 
   if(view === 'aprender')      carregarOfertas();
+  if(view === 'profissionais') carregarProfissionais();
   if(view === 'ensinar')       { atualizarPortaoEnsinar(); avisoAssinaturaEnsinar(); atualizarModoOferta();
                                  if(!ofertaEditando && typeof aplicarPagamentoNoFormulario === 'function'){
                                    aplicarPagamentoNoFormulario(true);
@@ -3226,6 +3266,194 @@ function cardOferta(o){
     '<div class="offer-foot">' +
       '<span class="price">' + moeda(o.valor) + ' <small>/' + esc(String(o.cobranca).toLowerCase()) + '</small></span>' +
       '<button class="btn btn-primary btn-sm" onclick="verPerfil(\'' + o.professor_id + '\')">Ver perfil</button>' +
+    '</div>' +
+  '</article>';
+}
+
+/* ================================================================
+   A ABA PROFISSIONAIS
+   ================================================================
+   Quem entra na lista: só quem já publicou alguma coisa — uma aula,
+   um serviço ou um material. Um perfil vazio frustra quem clica e não
+   ajuda quem publicou; e ficar de fora é um motivo concreto para
+   publicar o primeiro.
+
+   A conta é feita aqui no navegador, juntando três consultas simples,
+   em vez de uma função nova no banco. Com algumas dezenas de pessoas
+   isso é instantâneo, e economiza uma etapa de SQL para você rodar.
+   Se um dia forem milhares, a gente troca por uma consulta só.
+   ================================================================ */
+var profissionais = [];
+var profissionaisCarregados = false;
+
+/* "JI-PARANÁ-RO" e "Ji-Paraná, RO" são a mesma cidade escrita de dois
+   jeitos — e cada pessoa digita do seu. Sem juntar as duas, o filtro
+   mostraria Ji-Paraná duas vezes e nenhuma delas traria todo mundo. */
+function chaveCidade(texto){
+  return String(texto || '')
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .toUpperCase().replace(/[^A-Z0-9]/g, '');
+}
+
+function encurtar(texto, n){
+  var s = String(texto || '').replace(/\s+/g, ' ').trim();
+  return s.length <= n ? s : s.slice(0, n - 1).trimEnd() + '…';
+}
+
+async function carregarProfissionais(forcar){
+  var lista = document.getElementById('lista-profissionais');
+  if(!lista || !sb) return;
+  if(profissionaisCarregados && !forcar){ filtrarProfissionais(); return; }
+
+  lista.innerHTML = '<p class="muted">Carregando…</p>';
+
+  var ro, rm;
+  try {
+    ro = await sb.from('ofertas').select('professor_id, area, tipo').eq('ativa', true).limit(2000);
+    rm = await sb.from('materiais').select('professor_id, area').eq('ativo', true).limit(2000);
+  } catch(e){
+    lista.innerHTML = '<p class="muted">Não consegui carregar agora. Tente de novo em instantes.</p>';
+    return;
+  }
+  if(ro.error || rm.error){
+    lista.innerHTML = '<p class="muted">Não consegui carregar: ' + esc((ro.error || rm.error).message) + '</p>';
+    return;
+  }
+
+  var conta = {};
+  function somar(pid, area, qual){
+    if(!pid) return;
+    if(!conta[pid]) conta[pid] = { aulas:0, servicos:0, materiais:0, areas:[] };
+    conta[pid][qual]++;
+    if(area && conta[pid].areas.indexOf(area) === -1) conta[pid].areas.push(area);
+  }
+  (ro.data || []).forEach(function(o){
+    somar(o.professor_id, o.area, o.tipo === 'servico' ? 'servicos' : 'aulas');
+  });
+  (rm.data || []).forEach(function(m){ somar(m.professor_id, m.area, 'materiais'); });
+
+  var ids = Object.keys(conta);
+  if(ids.length === 0){
+    profissionais = []; profissionaisCarregados = true; filtrarProfissionais(); return;
+  }
+
+  var rp = await sb.from('perfis')
+    .select('id, nome, cidade, bio, titulo_profissional, papel')
+    .in('id', ids);
+  if(rp.error){
+    lista.innerHTML = '<p class="muted">Não consegui carregar os perfis: ' + esc(rp.error.message) + '</p>';
+    return;
+  }
+
+  profissionais = (rp.data || []).map(function(p){
+    var c = conta[p.id];
+    return {
+      id: p.id, nome: p.nome || 'Sem nome', cidade: p.cidade || '',
+      bio: p.bio || '', titulo: p.titulo_profissional || '',
+      areas: c.areas, aulas: c.aulas, servicos: c.servicos, materiais: c.materiais,
+      total: c.aulas + c.servicos + c.materiais
+    };
+  }).sort(function(a, b){
+    if(b.total !== a.total) return b.total - a.total;
+    return a.nome.localeCompare(b.nome, 'pt-BR');
+  });
+
+  profissionaisCarregados = true;
+  pintarFiltrosProfissionais();
+  filtrarProfissionais();
+}
+
+function pintarFiltrosProfissionais(){
+  var selA = document.getElementById('pr-area');
+  var selC = document.getElementById('pr-cidade');
+  if(!selA || !selC) return;
+
+  var areas = [];
+  profissionais.forEach(function(p){
+    p.areas.forEach(function(a){ if(a && areas.indexOf(a) === -1) areas.push(a); });
+  });
+  areas.sort(function(a, b){ return a.localeCompare(b, 'pt-BR'); });
+
+  /* uma entrada por cidade de verdade, mostrando a grafia mais usada */
+  var cidades = {};
+  profissionais.forEach(function(p){
+    var k = chaveCidade(p.cidade);
+    if(!k) return;
+    if(!cidades[k]) cidades[k] = {};
+    cidades[k][p.cidade] = (cidades[k][p.cidade] || 0) + 1;
+  });
+  var listaCidades = Object.keys(cidades).map(function(k){
+    var grafias = cidades[k];
+    var melhor = Object.keys(grafias).sort(function(a, b){ return grafias[b] - grafias[a]; })[0];
+    return { chave: k, rotulo: melhor };
+  }).sort(function(a, b){ return a.rotulo.localeCompare(b.rotulo, 'pt-BR'); });
+
+  selA.innerHTML = '<option value="">Todas as áreas</option>' +
+    areas.map(function(a){ return '<option value="' + esc(a) + '">' + esc(a) + '</option>'; }).join('');
+  selC.innerHTML = '<option value="">Todas as cidades</option>' +
+    listaCidades.map(function(c){ return '<option value="' + esc(c.chave) + '">' + esc(c.rotulo) + '</option>'; }).join('');
+}
+
+function limparFiltrosProfissionais(){
+  var a = document.getElementById('pr-area');   if(a) a.value = '';
+  var c = document.getElementById('pr-cidade'); if(c) c.value = '';
+  filtrarProfissionais();
+}
+
+function filtrarProfissionais(){
+  var lista = document.getElementById('lista-profissionais');
+  var vazio = document.getElementById('vazio-profissionais');
+  var contador = document.getElementById('contador-profissionais');
+  if(!lista) return;
+
+  var area   = ((document.getElementById('pr-area')   || {}).value) || '';
+  var cidade = ((document.getElementById('pr-cidade') || {}).value) || '';
+
+  var res = profissionais.filter(function(p){
+    if(area && p.areas.indexOf(area) === -1) return false;
+    if(cidade && chaveCidade(p.cidade) !== cidade) return false;
+    return true;
+  });
+
+  if(contador){
+    contador.textContent = profissionais.length === 0
+      ? 'Ninguém publicou nada ainda'
+      : (res.length === 1 ? '1 profissional' : res.length + ' profissionais');
+  }
+  if(vazio) vazio.style.display = (res.length === 0 && profissionais.length > 0) ? '' : 'none';
+
+  if(profissionais.length === 0){
+    lista.innerHTML = '<p class="muted" style="font-size:.95rem;line-height:1.6;">' +
+      'Ninguém publicou nada ainda. Quem publicar a primeira aula ou o primeiro material aparece aqui. ' +
+      '<b class="link-auth" onclick="go(\'ensinar\')">Quero ser o primeiro</b></p>';
+    return;
+  }
+  lista.innerHTML = res.map(cardProfissional).join('');
+}
+
+function cardProfissional(p){
+  var partes = [];
+  if(p.aulas)     partes.push(p.aulas + (p.aulas === 1 ? ' aula' : ' aulas'));
+  if(p.servicos)  partes.push(p.servicos + (p.servicos === 1 ? ' serviço' : ' serviços'));
+  if(p.materiais) partes.push(p.materiais + (p.materiais === 1 ? ' material' : ' materiais'));
+
+  var linha2 = [p.titulo, p.cidade].filter(Boolean).join(' · ');
+
+  return '' +
+  '<article class="card card-h offer">' +
+    '<div class="offer-top">' +
+      '<div class="ava ' + corAvatar(p.nome) + '">' + esc(iniciais(p.nome)) + '</div>' +
+      '<div class="offer-who"><b>' + esc(p.nome) + '</b><small>' + esc(linha2 || 'Profissional da educação') + '</small></div>' +
+    '</div>' +
+    '<div class="offer-body">' +
+      '<p>' + esc(encurtar(p.bio, 150) || 'Esta pessoa ainda não escreveu uma apresentação.') + '</p>' +
+      '<div class="tags">' +
+        p.areas.slice(0, 3).map(function(a){ return '<span class="tag tag-b">' + esc(a) + '</span>'; }).join('') +
+      '</div>' +
+    '</div>' +
+    '<div class="offer-foot">' +
+      '<span class="muted" style="font-size:.85rem;font-weight:600;">' + esc(partes.join(' · ')) + '</span>' +
+      '<button class="btn btn-primary btn-sm" onclick="verPerfil(\'' + p.id + '\')">Ver perfil</button>' +
     '</div>' +
   '</article>';
 }
@@ -4184,7 +4412,7 @@ async function publicarMaterial(){
   }
   var gaveta = precoDigitado > 0 ? 'materiais-pagos' : 'materiais';
 
-  var nomeSeguro = String(f.name).normalize('NFD').replace(/[̀-ͯ]/g, '')
+  var nomeSeguro = String(f.name).normalize('NFD').replace(/[\u0300-\u036f]/g, '')
                      .replace(/[^a-zA-Z0-9._-]/g, '_');
   var caminho = usuario.id + '/' + Date.now() + '-' + nomeSeguro;
 
@@ -6406,7 +6634,7 @@ async function enviarArquivoTrabalho(){
   document.getElementById('tr-barra').style.display = 'block';
   document.getElementById('tr-barra-fill').style.width = '40%';
 
-  var nomeSeguro = String(f.name).normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-zA-Z0-9._-]/g, '_');
+  var nomeSeguro = String(f.name).normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9._-]/g, '_');
   var caminho = trabalhoAberto + '/' + Date.now() + '-' + nomeSeguro;
 
   var up = await sb.storage.from('trabalhos').upload(caminho, f, { contentType: f.type || undefined });
