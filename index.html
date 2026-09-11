@@ -907,6 +907,11 @@ ul{margin:0;padding:0;list-style:none;}
           <h3 class="h3" style="margin-bottom:6px;" id="of-titulo-form">Criar uma nova oferta</h3>
           <p class="muted" style="font-size:.9rem;margin-bottom:24px;" id="of-sub-form">Preencha os campos abaixo. Você pode editar tudo depois.</p>
 
+          <!-- o kit também vale para quem publica aula: o Bruno e o
+               Marcos publicaram aula e ficavam de fora do presente
+               feito exatamente para a situação deles -->
+          <div id="of-aviso-kit" style="display:none;background:#FFF8E1;border:1px solid #FDE68A;border-radius:12px;padding:14px 16px;margin-bottom:22px;font-size:.9rem;line-height:1.6;color:#78350F;"></div>
+
           <!-- avisos: visitante sem conta, ou conta que ainda não é professor -->
           <div id="portao-ensinar" style="display:none;padding:18px 20px;border-radius:12px;margin-bottom:24px;"></div>
 
@@ -2463,7 +2468,8 @@ function go(view){
                                  if(!ofertaEditando && typeof aplicarPagamentoNoFormulario === 'function'){
                                    aplicarPagamentoNoFormulario(true);
                                  }
-                                 atualizarPrevia(); pintarCampoPagamentoOferta(); }
+                                 atualizarPrevia(); pintarCampoPagamentoOferta();
+                                 pintarAvisoKit('of-aviso-kit'); }
   if(view === 'painel')        { pintarResumoCadastro(); }
   if(view === 'painel-prof')   { carregarMinhasOfertas(); carregarMeusMateriais(); pintarPainelAssinatura(); pintarResumoCadastro(); pintarStatsProf(); pintarPainelModeracao(); pintarPainelMP(); carregarMinhasVendas(); }
   if(view === 'home')          carregarHome();
@@ -3592,8 +3598,14 @@ function copiarLink(caminho, botao){
    Se a etapa 17 ainda não tiver sido rodada no banco, a função não
    existe e o aviso simplesmente não aparece. A tela não pode quebrar
    por causa de um brinde. */
-async function pintarAvisoKit(){
-  var cx = document.getElementById('mt-aviso-kit');
+var CONVITE_KIT =
+  '🎁 <b>Publique e ganhe o kit do professor.</b> Uma página sobre o dinheiro que entra ' +
+  'por fora — quando declarar, se vale abrir MEI — e duas planilhas: controle de ganhos ' +
+  'e notas e frequência. Chega no seu e-mail assim que você publicar sua primeira aula ' +
+  'ou material.';
+
+async function pintarAvisoKit(idCaixa){
+  var cx = document.getElementById(idCaixa || 'mt-aviso-kit');
   if(!cx) return;
   cx.style.display = 'none';
   if(!sb || !usuario) return;
@@ -3616,13 +3628,8 @@ async function pintarAvisoKit(){
   if(!isFinite(faltam)) return;
 
   cx.innerHTML = faltam > 0
-    ? ('🎁 <b>Publique e ganhe o kit do professor.</b> Uma página sobre o dinheiro que entra ' +
-       'por fora — quando declarar, se vale abrir MEI — e duas planilhas: controle de ganhos ' +
-       'e notas e frequência. Chega no seu e-mail assim que você publicar.<br>' +
-       '<b>Faltam ' + faltam + '</b> dos 30 primeiros.')
-    : ('🎁 <b>Publique e ganhe o kit do professor.</b> Uma página sobre o dinheiro que entra ' +
-       'por fora — quando declarar, se vale abrir MEI — e duas planilhas: controle de ganhos ' +
-       'e notas e frequência. Chega no seu e-mail assim que você publicar.');
+    ? (CONVITE_KIT + '<br><b>Faltam ' + faltam + '</b> dos 30 primeiros.')
+    : CONVITE_KIT;
   cx.style.display = '';
 }
 
