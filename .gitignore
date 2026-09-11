@@ -1,0 +1,18 @@
+# ------------------------------------------------------------------
+# Coisas que ficam na pasta mas NÃO fazem parte do site.
+#
+# Tudo o que está no repositório vai para o ar. O zip e o guia que eu
+# te mando são para você, não para quem visita o aprenderconecta.com.br
+# — e arquivo pesado, uma vez enviado, o git guarda para sempre, mesmo
+# depois de apagado.
+#
+# Com estas linhas, eles param de aparecer no GitHub Desktop e você não
+# precisa mais desmarcar na mão toda vez.
+# ------------------------------------------------------------------
+
+Claude outputs/
+
+# lixo que o Windows e o Mac deixam sozinhos dentro das pastas
+Thumbs.db
+desktop.ini
+.DS_Store

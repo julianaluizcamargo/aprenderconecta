@@ -3573,6 +3573,27 @@ function copiarLink(caminho, botao){
   }
 }
 
+/* O botão que dá à pessoa o endereço da própria página.
+
+   Cada profissional tem agora uma página em /p/<id> — é ela que o
+   Google lê e que vira cartão quando o link cai num grupo. Só que o
+   site não tinha nenhum lugar onde pegar esse endereço: a página
+   existia e ninguém conseguia chegar nela para compartilhar.
+
+   Serve para os dois lados: o dono divulga o próprio trabalho, e
+   quem gostou de um professor manda o perfil dele para uma amiga. */
+function botaoDivulgarPerfil(id, souEu){
+  return '<button class="btn btn-ghost btn-block btn-sm" style="margin-top:12px;" ' +
+    'onclick="copiarLink(\'/p/' + id + '\', this)" ' +
+    'title="Copia o endereço desta página para você colar no WhatsApp">🔗 ' +
+    (souEu ? 'Divulgar meu perfil' : 'Compartilhar este perfil') + '</button>' +
+    '<p class="muted" style="font-size:.78rem;margin-top:8px;line-height:1.5;">' +
+      (souEu
+        ? 'Esse link abre uma página sua com tudo o que você publicou — boa para colar em grupo de WhatsApp.'
+        : 'Abre uma página com tudo o que esta pessoa publicou.') +
+    '</p>';
+}
+
 /* Qual botão vai no cartão de uma oferta, no perfil público.
    São três caminhos, e o terceiro é o que estava faltando:
 
@@ -3724,7 +3745,8 @@ async function carregarPerfilPublico(id){
       '<p style="font-size:.78rem;color:rgba(255,255,255,.7);margin-top:10px;">Este é o seu perfil, como os outros veem.</p>';
     contato.innerHTML = '<h4>Seu contato</h4>' + (zap
       ? '<p style="font-size:.9rem;color:var(--ink-2);line-height:1.6;">Quem abrir seu perfil vê um botão para te chamar no WhatsApp.</p>'
-      : '<p style="font-size:.9rem;color:var(--ink-2);line-height:1.6;">Você ainda não informou um WhatsApp, então ninguém consegue te procurar. <b class="link-auth" onclick="go(\'editar-perfil\')">Adicionar agora</b></p>');
+      : '<p style="font-size:.9rem;color:var(--ink-2);line-height:1.6;">Você ainda não informou um WhatsApp, então ninguém consegue te procurar. <b class="link-auth" onclick="go(\'editar-perfil\')">Adicionar agora</b></p>')
+      + botaoDivulgarPerfil(pe.id, true);
   } else if(zap){
     acao.innerHTML = '<a class="btn btn-accent" href="' + zap + '" target="_blank" rel="noopener">💬 Chamar no WhatsApp</a>';
     contato.innerHTML = '<h4>Falar com ' + esc(String(pe.nome).split(' ')[0]) + '</h4>' +
@@ -3734,10 +3756,12 @@ async function carregarPerfilPublico(id){
           ? 'As aulas com o botão <b>Contratar</b> são pagas aqui pelo site, com Pix ou cartão. O horário vocês combinam pelo WhatsApp.'
           : 'Horário e pagamento são combinados diretamente entre vocês.') +
       '</p>' +
+      botaoDivulgarPerfil(pe.id, false) +
       '<p style="font-size:.8rem;margin-top:12px;text-align:center;"><b class="link-auth" onclick="abrirDenuncia(\'perfil\', \'' + pe.id + '\', \'' + String(pe.nome).replace(/'/g, "\\'") + '\')">⚑ Denunciar este perfil</b></p>';
   } else {
     acao.innerHTML = '<p style="font-size:.85rem;color:rgba(255,255,255,.75);">Esta pessoa ainda não informou um contato.</p>';
-    contato.innerHTML = '<h4>Contato</h4><p class="muted" style="font-size:.88rem;line-height:1.55;">Esta pessoa ainda não informou um WhatsApp no perfil.</p>';
+    contato.innerHTML = '<h4>Contato</h4><p class="muted" style="font-size:.88rem;line-height:1.55;">Esta pessoa ainda não informou um WhatsApp no perfil.</p>'
+      + botaoDivulgarPerfil(pe.id, false);
   }
 
   numeros.innerHTML =
