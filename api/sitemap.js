@@ -38,20 +38,48 @@ export default async function handler(req, res) {
   const fixas = [
     { u: `${SITE}/`, p: '1.0', f: 'daily' },
     { u: `${SITE}/como-funciona`, p: '0.9', f: 'monthly' },
+    { u: `${SITE}/kit`, p: '0.7', f: 'monthly' },
   ];
 
-  let materiais = [];
-  try {
-    const r = await fetch(
-      `${SUPABASE_URL}/rest/v1/materiais?ativo=eq.true` +
-      `&select=id,criado_em&order=criado_em.desc&limit=2000`,
-      { headers: { apikey: CHAVE, Authorization: `Bearer ${CHAVE}` } },
-    );
-    const linhas = await r.json();
-    if (Array.isArray(linhas)) materiais = linhas;
-  } catch (e) {
-    materiais = [];   /* sem banco, devolvemos ao menos as telas fixas */
+  async function buscar(caminho) {
+    try {
+      const r = await fetch(`${SUPABASE_URL}/rest/v1/${caminho}`,
+        { headers: { apikey: CHAVE, Authorization: `Bearer ${CHAVE}` } });
+      const linhas = await r.json();
+      return Array.isArray(linhas) ? linhas : [];
+    } catch (e) {
+      return [];   /* sem banco, devolvemos ao menos as telas fixas */
+    }
   }
+
+  /* Faltava a metade do site aqui. O mapa só listava os materiais, então
+     as aulas e os serviços que as pessoas publicavam ficavam invisíveis
+     para o Google — o Bruno e o Marcos publicaram aula e não tinham como
+     ser achados por ninguém de fora. Agora os três entram. */
+  const [materiais, ofertas] = await Promise.all([
+    buscar('materiais?ativo=eq.true&select=id,criado_em,professor_id&order=criado_em.desc&limit=2000'),
+    buscar('ofertas?ativa=eq.true&select=id,criado_em,professor_id&order=criado_em.desc&limit=2000'),
+  ]);
+
+  /* As pessoas também entram no mapa — mas só quem publicou alguma
+     coisa. Um perfil vazio no mapa é um convite para o Google visitar
+     uma página que não tem o que mostrar, e isso derruba o site inteiro
+     no ranking. A data de cada um é a do que ele publicou por último.
+
+     Não precisa de uma consulta nova: quem publicou já está aí em cima,
+     na coluna professor_id do que foi publicado. */
+  const profissionais = [];
+  const vistos = {};
+  materiais.concat(ofertas).forEach((x) => {
+    const pid = x.professor_id;
+    if (!pid) return;
+    if (!vistos[pid]) {
+      vistos[pid] = { id: pid, criado_em: x.criado_em };
+      profissionais.push(vistos[pid]);
+    } else if (String(x.criado_em || '') > String(vistos[pid].criado_em || '')) {
+      vistos[pid].criado_em = x.criado_em;
+    }
+  });
 
   const linhas = [
     ...fixas.map((x) =>
@@ -61,6 +89,14 @@ export default async function handler(req, res) {
       `  <url>\n    <loc>${esc(SITE + '/m/' + m.id)}</loc>\n` +
       `    <lastmod>${dia(m.criado_em)}</lastmod>\n` +
       `    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>`),
+    ...ofertas.map((o) =>
+      `  <url>\n    <loc>${esc(SITE + '/a/' + o.id)}</loc>\n` +
+      `    <lastmod>${dia(o.criado_em)}</lastmod>\n` +
+      `    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>`),
+    ...profissionais.map((p) =>
+      `  <url>\n    <loc>${esc(SITE + '/p/' + p.id)}</loc>\n` +
+      `    <lastmod>${dia(p.criado_em)}</lastmod>\n` +
+      `    <changefreq>weekly</changefreq>\n    <priority>0.7</priority>\n  </url>`),
   ];
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
