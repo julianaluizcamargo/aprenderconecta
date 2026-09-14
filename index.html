@@ -581,7 +581,7 @@ ul{margin:0;padding:0;list-style:none;}
       <a href="#" data-v="ensinar" onclick="go('ensinar');return false;">Ensinar</a>
       <a href="#" data-v="servicos" onclick="go('servicos');return false;">Serviços</a>
       <a href="#" data-v="loja" onclick="go('loja');return false;">Materiais</a>
-      <a href="#" data-v="perfil" onclick="go('perfil');return false;">Profissionais</a>
+      <a href="#" data-v="profissionais" onclick="go('profissionais');return false;">Profissionais</a>
     </nav>
     <div class="topbar-right">
       <!-- aparece quando NINGUÉM está logado -->
@@ -633,7 +633,7 @@ ul{margin:0;padding:0;list-style:none;}
                   text-decoration:none;font-weight:600;font-size:.95rem;
                   background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);
                   border-radius:999px;padding:9px 18px;">
-          ▶ Ver como funciona — 6 vídeos curtos
+          ▶ Ver como funciona — 7 vídeos curtos
         </a>
       </p>
 
@@ -906,6 +906,11 @@ ul{margin:0;padding:0;list-style:none;}
         <div class="panel" style="padding:30px;">
           <h3 class="h3" style="margin-bottom:6px;" id="of-titulo-form">Criar uma nova oferta</h3>
           <p class="muted" style="font-size:.9rem;margin-bottom:24px;" id="of-sub-form">Preencha os campos abaixo. Você pode editar tudo depois.</p>
+
+          <!-- o kit também vale para quem publica aula: o Bruno e o
+               Marcos publicaram aula e ficavam de fora do presente
+               feito exatamente para a situação deles -->
+          <div id="of-aviso-kit" style="display:none;background:#FFF8E1;border:1px solid #FDE68A;border-radius:12px;padding:14px 16px;margin-bottom:22px;font-size:.9rem;line-height:1.6;color:#78350F;"></div>
 
           <!-- avisos: visitante sem conta, ou conta que ainda não é professor -->
           <div id="portao-ensinar" style="display:none;padding:18px 20px;border-radius:12px;margin-bottom:24px;"></div>
@@ -1392,6 +1397,10 @@ ul{margin:0;padding:0;list-style:none;}
     <div class="wrap split" style="grid-template-columns:1fr 340px;">
 
       <div class="panel" style="padding:30px;">
+        <!-- O aviso do kit. Uma promessa que ninguém vê não empurra
+             ninguém a publicar — e era esse o ponto dela. -->
+        <div id="mt-aviso-kit" style="display:none;background:#FFF8E1;border:1px solid #FDE68A;border-radius:12px;padding:14px 16px;margin-bottom:22px;font-size:.9rem;line-height:1.6;color:#78350F;"></div>
+
         <div id="portao-material" style="display:none;padding:18px 20px;border-radius:12px;margin-bottom:24px;"></div>
 
         <div id="form-material">
@@ -1491,6 +1500,45 @@ ul{margin:0;padding:0;list-style:none;}
         </div>
       </aside>
 
+    </div>
+  </div>
+</section>
+
+<!-- ===================== PROFISSIONAIS ====================== -->
+<!-- Esta aba existia no menu desde o começo, mas levava para a tela de
+     perfil sem perfil nenhum escolhido: quem clicava lia "Nenhum perfil
+     escolhido" e não tinha o que fazer. Agora ela é a lista de quem
+     ensina aqui. Só entra quem já publicou alguma coisa — um perfil
+     vazio frustra quem clica e não ajuda quem publicou. -->
+<section class="view" id="v-profissionais">
+  <div class="page-head">
+    <div class="wrap">
+      <div class="crumb">Início › Profissionais</div>
+      <h1>Quem ensina no AprenderConecta</h1>
+      <p>Professores e profissionais da educação que já têm aulas, serviços ou materiais publicados aqui. Filtre por área ou pela cidade e fale direto com quem você escolher.</p>
+    </div>
+  </div>
+
+  <div class="section-sm">
+    <div class="wrap">
+      <div class="toolbar">
+        <span class="count" id="contador-profissionais">Carregando…</span>
+        <select id="pr-area" style="margin-left:auto;" onchange="filtrarProfissionais()">
+          <option value="">Todas as áreas</option>
+        </select>
+        <select id="pr-cidade" onchange="filtrarProfissionais()">
+          <option value="">Todas as cidades</option>
+        </select>
+      </div>
+
+      <div class="grid g2" id="lista-profissionais"></div>
+
+      <div id="vazio-profissionais" style="display:none;text-align:center;padding:54px 20px;">
+        <div style="font-size:2.4rem;margin-bottom:10px;">👩‍🏫</div>
+        <h3 class="h3" style="margin-bottom:8px;">Ninguém por aqui com esse filtro</h3>
+        <p class="muted" style="font-size:.92rem;max-width:440px;margin:0 auto 20px;">Tente outra área ou outra cidade. A lista mostra quem já publicou pelo menos uma aula, serviço ou material.</p>
+        <button class="btn btn-ghost" onclick="limparFiltrosProfissionais()">Ver todo mundo</button>
+      </div>
     </div>
   </div>
 </section>
@@ -2415,11 +2463,13 @@ function go(view){
   if(history.replaceState) history.replaceState(null,'','#'+view);
 
   if(view === 'aprender')      carregarOfertas();
+  if(view === 'profissionais') carregarProfissionais();
   if(view === 'ensinar')       { atualizarPortaoEnsinar(); avisoAssinaturaEnsinar(); atualizarModoOferta();
                                  if(!ofertaEditando && typeof aplicarPagamentoNoFormulario === 'function'){
                                    aplicarPagamentoNoFormulario(true);
                                  }
-                                 atualizarPrevia(); pintarCampoPagamentoOferta(); }
+                                 atualizarPrevia(); pintarCampoPagamentoOferta();
+                                 pintarAvisoKit('of-aviso-kit'); }
   if(view === 'painel')        { pintarResumoCadastro(); }
   if(view === 'painel-prof')   { carregarMinhasOfertas(); carregarMeusMateriais(); pintarPainelAssinatura(); pintarResumoCadastro(); pintarStatsProf(); pintarPainelModeracao(); pintarPainelMP(); carregarMinhasVendas(); }
   if(view === 'home')          carregarHome();
@@ -2427,7 +2477,7 @@ function go(view){
   if(view === 'editar-perfil') carregarFormPerfil();
   if(view === 'nova-senha')    prepararNovaSenha();
   if(view === 'loja')          carregarMateriais();
-  if(view === 'publicar-material') { atualizarPortaoMaterial(); atualizarModoMaterial(); previaMaterial(); pintarCampoPrecoMaterial(); }
+  if(view === 'publicar-material') { atualizarPortaoMaterial(); atualizarModoMaterial(); previaMaterial(); pintarCampoPrecoMaterial(); pintarAvisoKit(); }
   if(view === 'moderacao')     carregarDenuncias(true);
   if(view === 'compras')       carregarCompras(true);
   if(view === 'servicos')      carregarServicos(true);
@@ -3047,6 +3097,7 @@ async function publicarOferta(){
   }
 
   if(titulo.length < 5){ mostrarMsgOferta('Escreva um título com pelo menos 5 letras.', 'erro'); return; }
+  if(!exigirMercadoPagoNaOferta()) return;
 
   var btn = document.getElementById('btn-publicar');
   btn.disabled = true; btn.textContent = 'Publicando…';
@@ -3229,6 +3280,194 @@ function cardOferta(o){
   '</article>';
 }
 
+/* ================================================================
+   A ABA PROFISSIONAIS
+   ================================================================
+   Quem entra na lista: só quem já publicou alguma coisa — uma aula,
+   um serviço ou um material. Um perfil vazio frustra quem clica e não
+   ajuda quem publicou; e ficar de fora é um motivo concreto para
+   publicar o primeiro.
+
+   A conta é feita aqui no navegador, juntando três consultas simples,
+   em vez de uma função nova no banco. Com algumas dezenas de pessoas
+   isso é instantâneo, e economiza uma etapa de SQL para você rodar.
+   Se um dia forem milhares, a gente troca por uma consulta só.
+   ================================================================ */
+var profissionais = [];
+var profissionaisCarregados = false;
+
+/* "JI-PARANÁ-RO" e "Ji-Paraná, RO" são a mesma cidade escrita de dois
+   jeitos — e cada pessoa digita do seu. Sem juntar as duas, o filtro
+   mostraria Ji-Paraná duas vezes e nenhuma delas traria todo mundo. */
+function chaveCidade(texto){
+  return String(texto || '')
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .toUpperCase().replace(/[^A-Z0-9]/g, '');
+}
+
+function encurtar(texto, n){
+  var s = String(texto || '').replace(/\s+/g, ' ').trim();
+  return s.length <= n ? s : s.slice(0, n - 1).trimEnd() + '…';
+}
+
+async function carregarProfissionais(forcar){
+  var lista = document.getElementById('lista-profissionais');
+  if(!lista || !sb) return;
+  if(profissionaisCarregados && !forcar){ filtrarProfissionais(); return; }
+
+  lista.innerHTML = '<p class="muted">Carregando…</p>';
+
+  var ro, rm;
+  try {
+    ro = await sb.from('ofertas').select('professor_id, area, tipo').eq('ativa', true).limit(2000);
+    rm = await sb.from('materiais').select('professor_id, area').eq('ativo', true).limit(2000);
+  } catch(e){
+    lista.innerHTML = '<p class="muted">Não consegui carregar agora. Tente de novo em instantes.</p>';
+    return;
+  }
+  if(ro.error || rm.error){
+    lista.innerHTML = '<p class="muted">Não consegui carregar: ' + esc((ro.error || rm.error).message) + '</p>';
+    return;
+  }
+
+  var conta = {};
+  function somar(pid, area, qual){
+    if(!pid) return;
+    if(!conta[pid]) conta[pid] = { aulas:0, servicos:0, materiais:0, areas:[] };
+    conta[pid][qual]++;
+    if(area && conta[pid].areas.indexOf(area) === -1) conta[pid].areas.push(area);
+  }
+  (ro.data || []).forEach(function(o){
+    somar(o.professor_id, o.area, o.tipo === 'servico' ? 'servicos' : 'aulas');
+  });
+  (rm.data || []).forEach(function(m){ somar(m.professor_id, m.area, 'materiais'); });
+
+  var ids = Object.keys(conta);
+  if(ids.length === 0){
+    profissionais = []; profissionaisCarregados = true; filtrarProfissionais(); return;
+  }
+
+  var rp = await sb.from('perfis')
+    .select('id, nome, cidade, bio, titulo_profissional, papel')
+    .in('id', ids);
+  if(rp.error){
+    lista.innerHTML = '<p class="muted">Não consegui carregar os perfis: ' + esc(rp.error.message) + '</p>';
+    return;
+  }
+
+  profissionais = (rp.data || []).map(function(p){
+    var c = conta[p.id];
+    return {
+      id: p.id, nome: p.nome || 'Sem nome', cidade: p.cidade || '',
+      bio: p.bio || '', titulo: p.titulo_profissional || '',
+      areas: c.areas, aulas: c.aulas, servicos: c.servicos, materiais: c.materiais,
+      total: c.aulas + c.servicos + c.materiais
+    };
+  }).sort(function(a, b){
+    if(b.total !== a.total) return b.total - a.total;
+    return a.nome.localeCompare(b.nome, 'pt-BR');
+  });
+
+  profissionaisCarregados = true;
+  pintarFiltrosProfissionais();
+  filtrarProfissionais();
+}
+
+function pintarFiltrosProfissionais(){
+  var selA = document.getElementById('pr-area');
+  var selC = document.getElementById('pr-cidade');
+  if(!selA || !selC) return;
+
+  var areas = [];
+  profissionais.forEach(function(p){
+    p.areas.forEach(function(a){ if(a && areas.indexOf(a) === -1) areas.push(a); });
+  });
+  areas.sort(function(a, b){ return a.localeCompare(b, 'pt-BR'); });
+
+  /* uma entrada por cidade de verdade, mostrando a grafia mais usada */
+  var cidades = {};
+  profissionais.forEach(function(p){
+    var k = chaveCidade(p.cidade);
+    if(!k) return;
+    if(!cidades[k]) cidades[k] = {};
+    cidades[k][p.cidade] = (cidades[k][p.cidade] || 0) + 1;
+  });
+  var listaCidades = Object.keys(cidades).map(function(k){
+    var grafias = cidades[k];
+    var melhor = Object.keys(grafias).sort(function(a, b){ return grafias[b] - grafias[a]; })[0];
+    return { chave: k, rotulo: melhor };
+  }).sort(function(a, b){ return a.rotulo.localeCompare(b.rotulo, 'pt-BR'); });
+
+  selA.innerHTML = '<option value="">Todas as áreas</option>' +
+    areas.map(function(a){ return '<option value="' + esc(a) + '">' + esc(a) + '</option>'; }).join('');
+  selC.innerHTML = '<option value="">Todas as cidades</option>' +
+    listaCidades.map(function(c){ return '<option value="' + esc(c.chave) + '">' + esc(c.rotulo) + '</option>'; }).join('');
+}
+
+function limparFiltrosProfissionais(){
+  var a = document.getElementById('pr-area');   if(a) a.value = '';
+  var c = document.getElementById('pr-cidade'); if(c) c.value = '';
+  filtrarProfissionais();
+}
+
+function filtrarProfissionais(){
+  var lista = document.getElementById('lista-profissionais');
+  var vazio = document.getElementById('vazio-profissionais');
+  var contador = document.getElementById('contador-profissionais');
+  if(!lista) return;
+
+  var area   = ((document.getElementById('pr-area')   || {}).value) || '';
+  var cidade = ((document.getElementById('pr-cidade') || {}).value) || '';
+
+  var res = profissionais.filter(function(p){
+    if(area && p.areas.indexOf(area) === -1) return false;
+    if(cidade && chaveCidade(p.cidade) !== cidade) return false;
+    return true;
+  });
+
+  if(contador){
+    contador.textContent = profissionais.length === 0
+      ? 'Ninguém publicou nada ainda'
+      : (res.length === 1 ? '1 profissional' : res.length + ' profissionais');
+  }
+  if(vazio) vazio.style.display = (res.length === 0 && profissionais.length > 0) ? '' : 'none';
+
+  if(profissionais.length === 0){
+    lista.innerHTML = '<p class="muted" style="font-size:.95rem;line-height:1.6;">' +
+      'Ninguém publicou nada ainda. Quem publicar a primeira aula ou o primeiro material aparece aqui. ' +
+      '<b class="link-auth" onclick="go(\'ensinar\')">Quero ser o primeiro</b></p>';
+    return;
+  }
+  lista.innerHTML = res.map(cardProfissional).join('');
+}
+
+function cardProfissional(p){
+  var partes = [];
+  if(p.aulas)     partes.push(p.aulas + (p.aulas === 1 ? ' aula' : ' aulas'));
+  if(p.servicos)  partes.push(p.servicos + (p.servicos === 1 ? ' serviço' : ' serviços'));
+  if(p.materiais) partes.push(p.materiais + (p.materiais === 1 ? ' material' : ' materiais'));
+
+  var linha2 = [p.titulo, p.cidade].filter(Boolean).join(' · ');
+
+  return '' +
+  '<article class="card card-h offer">' +
+    '<div class="offer-top">' +
+      '<div class="ava ' + corAvatar(p.nome) + '">' + esc(iniciais(p.nome)) + '</div>' +
+      '<div class="offer-who"><b>' + esc(p.nome) + '</b><small>' + esc(linha2 || 'Profissional da educação') + '</small></div>' +
+    '</div>' +
+    '<div class="offer-body">' +
+      '<p>' + esc(encurtar(p.bio, 150) || 'Esta pessoa ainda não escreveu uma apresentação.') + '</p>' +
+      '<div class="tags">' +
+        p.areas.slice(0, 3).map(function(a){ return '<span class="tag tag-b">' + esc(a) + '</span>'; }).join('') +
+      '</div>' +
+    '</div>' +
+    '<div class="offer-foot">' +
+      '<span class="muted" style="font-size:.85rem;font-weight:600;">' + esc(partes.join(' · ')) + '</span>' +
+      '<button class="btn btn-primary btn-sm" onclick="verPerfil(\'' + p.id + '\')">Ver perfil</button>' +
+    '</div>' +
+  '</article>';
+}
+
 /* --- minhas ofertas, no painel profissional --- */
 async function carregarMinhasOfertas(){
   var caixa = document.getElementById('minhas-ofertas');
@@ -3237,7 +3476,7 @@ async function carregarMinhasOfertas(){
 
   /* serviço aparece em Meus serviços, não aqui */
   var r = await sb.from('ofertas')
-    .select('id, titulo, formato, valor, cobranca, ativa, criado_em')
+    .select('id, titulo, formato, valor, cobranca, ativa, criado_em, pagar_pelo_site')
     .eq('professor_id', usuario.id).neq('tipo', 'servico')
     .order('criado_em', { ascending: false });
 
@@ -3248,14 +3487,32 @@ async function carregarMinhasOfertas(){
     caixa.innerHTML = '<p class="muted" style="font-size:.88rem;">Você ainda não publicou nenhuma oferta.</p>';
     return;
   }
-  caixa.innerHTML = minhas.map(function(o){
+  /* Aviso das ofertas antigas: preço cheio e nenhuma forma de pagar.
+     Elas foram publicadas quando o formulário tinha "Combina comigo".
+     Do lado de fora não aparece botão de contratar — então quem publicou
+     precisa saber disso, senão fica esperando um aluno que não chega. */
+  var pendura = minhas.filter(function(o){ return Number(o.valor) > 0 && !o.pagar_pelo_site; }).length;
+  var aviso = '';
+  if(pendura > 0){
+    aviso = '<div style="background:#FEF3C7;border:1px solid #FDE68A;border-radius:12px;padding:12px 14px;margin-bottom:12px;font-size:.86rem;line-height:1.55;color:#78350F;">' +
+      '<b>⚠ ' + (pendura === 1 ? 'Uma aula sua está' : pendura + ' aulas suas estão') + ' sem forma de pagamento.</b><br>' +
+      'Ela tem preço, mas foi publicada no formato antigo ("combina comigo"), então o aluno não vê o botão <b>Contratar</b> — só o seu WhatsApp. ' +
+      'Clique em <b>Editar</b>, escolha <b>Preço fixo, pago pelo site</b> e salve: aí o pagamento passa a entrar pelo site, com Pix ou cartão.' +
+    '</div>';
+  }
+
+  caixa.innerHTML = aviso + minhas.map(function(o){
     var confirmando = (idParaExcluir === o.id);
+    var semPagamento = (Number(o.valor) > 0 && !o.pagar_pelo_site);
     return '<div class="list-item">' +
-      '<div class="g"><b>' + esc(o.titulo) + '</b><small>' + esc(o.formato) + ' · ' + moeda(o.valor) + '/' + esc(String(o.cobranca).toLowerCase()) + '</small></div>' +
+      '<div class="g"><b>' + esc(o.titulo) + '</b><small>' + esc(o.formato) + ' · ' +
+        (Number(o.valor) > 0 ? moeda(o.valor) + '/' + esc(String(o.cobranca).toLowerCase()) : 'Gratuito') +
+        (semPagamento ? ' · <b style="color:#B45309;">⚠ sem forma de pagamento</b>' : '') + '</small></div>' +
       (confirmando
         ? '<span style="display:flex;gap:6px;"><button class="btn btn-sm" style="background:#DC2626;color:#fff;" onclick="excluirOferta(\'' + o.id + '\', true)">Confirmar</button>' +
           '<button class="btn btn-ghost btn-sm" onclick="idParaExcluir=null;carregarMinhasOfertas()">Cancelar</button></span>'
-        : '<span style="display:flex;gap:6px;align-items:center;">' +
+        : '<span style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end;">' +
+          '<button class="btn btn-ghost btn-sm" onclick="copiarLink(\'/a/' + o.id + '\', this)" title="Copia o endereço desta aula para você colar no WhatsApp">🔗 Divulgar</button>' +
           '<button class="btn btn-ghost btn-sm" onclick="editarOferta(\'' + o.id + '\')">Editar</button>' +
           '<button class="btn btn-ghost btn-sm" onclick="excluirOferta(\'' + o.id + '\')">Excluir</button></span>') +
     '</div>';
@@ -3292,6 +3549,130 @@ function linkWhatsapp(tel, nomeDono, tituloOferta){
   if(tituloOferta) msg += ' e me interessei por "' + tituloOferta + '"';
   msg += '. Podemos conversar?';
   return 'https://wa.me/' + d + '?text=' + encodeURIComponent(msg);
+}
+
+/* ------------------------------------------------------------------
+   O LINK PARA DIVULGAR
+   ------------------------------------------------------------------
+   Cada aula e cada material têm agora uma página própria, montada no
+   servidor: /a/<id> e /m/<id>. Elas existem para o Google achar — mas
+   servem para uma coisa mais imediata e mais útil: dar à professora um
+   endereço que ela pode colar num grupo de WhatsApp e que abre um
+   cartão bonito, com título e preço, em vez de um link seco do site.
+
+   Sem um botão aqui, essas páginas só existiriam no papel: ninguém
+   descobre sozinho que elas estão lá. */
+function copiarLink(caminho, botao){
+  var url = 'https://www.aprenderconecta.com.br' + caminho;
+  function avisar(texto){
+    if(!botao) return;
+    var antes = botao.innerHTML;
+    botao.innerHTML = texto;
+    setTimeout(function(){ botao.innerHTML = antes; }, 2200);
+  }
+  /* O navegador só deixa copiar em página segura, e o Safari antigo nem
+     tem essa função. Nesses casos mostramos o endereço para copiar na
+     mão — melhor do que um botão que não faz nada. */
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(url).then(
+      function(){ avisar('✓ Copiado'); },
+      function(){ window.prompt('Copie o link para divulgar:', url); }
+    );
+  } else {
+    window.prompt('Copie o link para divulgar:', url);
+  }
+}
+
+/* ------------------------------------------------------------------
+   O AVISO DO KIT, NA TELA DE PUBLICAR MATERIAL
+   ------------------------------------------------------------------
+   Quem publica um material ganha três arquivos: a página sobre o
+   dinheiro que entra por fora, a planilha de controle de ganhos e a de
+   notas e frequência. O e-mail sai sozinho, pelo banco.
+
+   Mas promessa que ninguém vê não empurra ninguém a publicar. Por isso
+   o aviso aparece aqui, na tela onde a decisão é tomada — e some
+   sozinho quando a pessoa já recebeu, porque aí ele só ocuparia
+   espaço.
+
+   Se a etapa 17 ainda não tiver sido rodada no banco, a função não
+   existe e o aviso simplesmente não aparece. A tela não pode quebrar
+   por causa de um brinde. */
+var CONVITE_KIT =
+  '🎁 <b>Publique e ganhe o kit do professor.</b> Uma página sobre o dinheiro que entra ' +
+  'por fora — quando declarar, se vale abrir MEI — e duas planilhas: controle de ganhos ' +
+  'e notas e frequência. Chega no seu e-mail assim que você publicar sua primeira aula ' +
+  'ou material.';
+
+async function pintarAvisoKit(idCaixa){
+  var cx = document.getElementById(idCaixa || 'mt-aviso-kit');
+  if(!cx) return;
+  cx.style.display = 'none';
+  if(!sb || !usuario) return;
+
+  try {
+    var jaTem = await sb.from('kits_entregues').select('numero').eq('professor_id', usuario.id).maybeSingle();
+    if(jaTem && jaTem.data){
+      cx.innerHTML = '🎁 <b>Você já tem o kit do professor.</b> ' +
+        '<a href="/kit" target="_blank" rel="noopener" style="color:#78350F;"><b>Baixar de novo</b></a>';
+      cx.style.display = '';
+      return;
+    }
+  } catch(e){ return; }
+
+  var r;
+  try { r = await sb.rpc('kits_restantes'); } catch(e){ return; }
+  if(!r || r.error) return;
+
+  var faltam = Number(r.data);
+  if(!isFinite(faltam)) return;
+
+  cx.innerHTML = faltam > 0
+    ? (CONVITE_KIT + '<br><b>Faltam ' + faltam + '</b> dos 30 primeiros.')
+    : CONVITE_KIT;
+  cx.style.display = '';
+}
+
+/* O botão que dá à pessoa o endereço da própria página.
+
+   Cada profissional tem agora uma página em /p/<id> — é ela que o
+   Google lê e que vira cartão quando o link cai num grupo. Só que o
+   site não tinha nenhum lugar onde pegar esse endereço: a página
+   existia e ninguém conseguia chegar nela para compartilhar.
+
+   Serve para os dois lados: o dono divulga o próprio trabalho, e
+   quem gostou de um professor manda o perfil dele para uma amiga. */
+function botaoDivulgarPerfil(id, souEu){
+  return '<button class="btn btn-ghost btn-block btn-sm" style="margin-top:12px;" ' +
+    'onclick="copiarLink(\'/p/' + id + '\', this)" ' +
+    'title="Copia o endereço desta página para você colar no WhatsApp">🔗 ' +
+    (souEu ? 'Divulgar meu perfil' : 'Compartilhar este perfil') + '</button>' +
+    '<p class="muted" style="font-size:.78rem;margin-top:8px;line-height:1.5;">' +
+      (souEu
+        ? 'Esse link abre uma página sua com tudo o que você publicou — boa para colar em grupo de WhatsApp.'
+        : 'Abre uma página com tudo o que esta pessoa publicou.') +
+    '</p>';
+}
+
+/* Qual botão vai no cartão de uma oferta, no perfil público.
+   São três caminhos, e o terceiro é o que estava faltando:
+
+   1. tem preço e é paga pelo site  -> Contratar (Pix/cartão, com garantia)
+   2. é gratuita                    -> Participar (entra na hora)
+   3. tem preço e NÃO é paga pelo site -> as ofertas antigas, de quando o
+      formulário oferecia "Combina comigo". O site não tem como cobrar,
+      mas isso não pode virar um beco sem saída: quem chega precisa pelo
+      menos saber que o combinado é por fora, e ter por onde falar. */
+function botaoDaOferta(of, zap){
+  var v = Number(of.valor) || 0;
+  if(v > 0 && of.pagar_pelo_site)
+    return '<button class="btn btn-accent btn-sm" onclick="comprar(\'oferta\', \'' + of.id + '\')">Contratar</button>';
+  if(v === 0)
+    return '<button class="btn btn-accent btn-sm" onclick="contratarAulaGratis(\'' + of.id + '\', this)">Participar</button>';
+  if(zap)
+    return '<a class="btn btn-ghost btn-sm" href="' + zap + '" target="_blank" rel="noopener" ' +
+           'title="Esta aula é combinada direto com a professora, fora do site.">💬 Combinar</a>';
+  return '<small class="muted" style="text-align:right;line-height:1.35;">combinado<br>direto</small>';
 }
 
 function mesAno(iso){
@@ -3374,6 +3755,12 @@ async function carregarPerfilPublico(id){
     .order('criado_em', { ascending: false });
 
   var lista = (o.error ? [] : (o.data || []));
+
+  /* O WhatsApp precisa ser calculado ANTES da lista: as ofertas antigas
+     (preço cheio, "combina comigo") não têm botão de pagar, e sem nada
+     no lugar quem chega lê "R$ 100/hora" e não descobre como contratar. */
+  var zap = linkWhatsapp(pe.telefone, pe.nome, lista.length ? lista[0].titulo : '');
+
   var icones = { 'Aula individual':'🎓', 'Turma':'👥', 'Aula ao vivo':'🎥', 'Curso gravado':'📀', 'Mentoria':'🧭', 'Grupo de estudos':'📖' };
   var cores  = { 'Aula individual':'i-blue', 'Turma':'i-green', 'Aula ao vivo':'i-amber', 'Curso gravado':'i-purple', 'Mentoria':'i-blue', 'Grupo de estudos':'i-green' };
 
@@ -3396,11 +3783,7 @@ async function carregarPerfilPublico(id){
         /* A aula paga vai pelo Mercado Pago; a gratuita entra direto.
            Sem este segundo caso, escolher "Gratuito" no formulário daria
            uma oferta que ninguém consegue pegar. */
-        (souEu ? '' :
-          (of.pagar_pelo_site && Number(of.valor) > 0
-            ? '<button class="btn btn-accent btn-sm" onclick="comprar(\'oferta\', \'' + of.id + '\')">Contratar</button>'
-            : (Number(of.valor) > 0 ? ''
-               : '<button class="btn btn-accent btn-sm" onclick="contratarAulaGratis(\'' + of.id + '\', this)">Participar</button>'))) +
+        (souEu ? '' : botaoDaOferta(of, zap)) +
       '</div>';
     }).join('');
   }
@@ -3416,14 +3799,14 @@ async function carregarPerfilPublico(id){
     sobre.style.display = 'none';
   }
 
-  /* contato */
-  var zap = linkWhatsapp(pe.telefone, pe.nome, lista.length ? lista[0].titulo : '');
+  /* contato (o zap já foi calculado lá em cima, antes da lista) */
   if(souEu){
     acao.innerHTML = '<button class="btn btn-accent" onclick="go(\'editar-perfil\')">Editar meu perfil</button>' +
       '<p style="font-size:.78rem;color:rgba(255,255,255,.7);margin-top:10px;">Este é o seu perfil, como os outros veem.</p>';
     contato.innerHTML = '<h4>Seu contato</h4>' + (zap
       ? '<p style="font-size:.9rem;color:var(--ink-2);line-height:1.6;">Quem abrir seu perfil vê um botão para te chamar no WhatsApp.</p>'
-      : '<p style="font-size:.9rem;color:var(--ink-2);line-height:1.6;">Você ainda não informou um WhatsApp, então ninguém consegue te procurar. <b class="link-auth" onclick="go(\'editar-perfil\')">Adicionar agora</b></p>');
+      : '<p style="font-size:.9rem;color:var(--ink-2);line-height:1.6;">Você ainda não informou um WhatsApp, então ninguém consegue te procurar. <b class="link-auth" onclick="go(\'editar-perfil\')">Adicionar agora</b></p>')
+      + botaoDivulgarPerfil(pe.id, true);
   } else if(zap){
     acao.innerHTML = '<a class="btn btn-accent" href="' + zap + '" target="_blank" rel="noopener">💬 Chamar no WhatsApp</a>';
     contato.innerHTML = '<h4>Falar com ' + esc(String(pe.nome).split(' ')[0]) + '</h4>' +
@@ -3433,10 +3816,12 @@ async function carregarPerfilPublico(id){
           ? 'As aulas com o botão <b>Contratar</b> são pagas aqui pelo site, com Pix ou cartão. O horário vocês combinam pelo WhatsApp.'
           : 'Horário e pagamento são combinados diretamente entre vocês.') +
       '</p>' +
+      botaoDivulgarPerfil(pe.id, false) +
       '<p style="font-size:.8rem;margin-top:12px;text-align:center;"><b class="link-auth" onclick="abrirDenuncia(\'perfil\', \'' + pe.id + '\', \'' + String(pe.nome).replace(/'/g, "\\'") + '\')">⚑ Denunciar este perfil</b></p>';
   } else {
     acao.innerHTML = '<p style="font-size:.85rem;color:rgba(255,255,255,.75);">Esta pessoa ainda não informou um contato.</p>';
-    contato.innerHTML = '<h4>Contato</h4><p class="muted" style="font-size:.88rem;line-height:1.55;">Esta pessoa ainda não informou um WhatsApp no perfil.</p>';
+    contato.innerHTML = '<h4>Contato</h4><p class="muted" style="font-size:.88rem;line-height:1.55;">Esta pessoa ainda não informou um WhatsApp no perfil.</p>'
+      + botaoDivulgarPerfil(pe.id, false);
   }
 
   numeros.innerHTML =
@@ -4111,7 +4496,7 @@ async function publicarMaterial(){
   }
   var gaveta = precoDigitado > 0 ? 'materiais-pagos' : 'materiais';
 
-  var nomeSeguro = String(f.name).normalize('NFD').replace(/[̀-ͯ]/g, '')
+  var nomeSeguro = String(f.name).normalize('NFD').replace(/[\u0300-\u036f]/g, '')
                      .replace(/[^a-zA-Z0-9._-]/g, '_');
   var caminho = usuario.id + '/' + Date.now() + '-' + nomeSeguro;
 
@@ -4377,7 +4762,8 @@ async function carregarMeusMateriais(){
       (confirmando
         ? '<span style="display:flex;gap:6px;"><button class="btn btn-sm" style="background:#DC2626;color:#fff;" onclick="excluirMaterial(\'' + m.id + '\', \'' + m.arquivo_path.replace(/'/g, "\\'") + '\', true, \'' + (m.arquivo_bucket || 'materiais') + '\')">Confirmar</button>' +
           '<button class="btn btn-ghost btn-sm" onclick="materialParaExcluir=null;carregarMeusMateriais()">Cancelar</button></span>'
-        : '<span style="display:flex;gap:6px;">' +
+        : '<span style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;">' +
+          '<button class="btn btn-ghost btn-sm" onclick="copiarLink(\'/m/' + m.id + '\', this)" title="Copia o endereço deste material para você colar no WhatsApp">🔗 Divulgar</button>' +
           '<button class="btn btn-ghost btn-sm" onclick="editarMaterial(\'' + m.id + '\')">Editar</button>' +
           '<button class="btn btn-ghost btn-sm" onclick="excluirMaterial(\'' + m.id + '\', \'' + m.arquivo_path.replace(/'/g, "\\'") + '\')">Excluir</button></span>') +
     '</div>';
@@ -4659,7 +5045,13 @@ async function editarOferta(id){
   if(o.cobranca) document.getElementById('of-cobranca').value = o.cobranca;
   marcarPill('of-formato', o.formato);
   marcarPill('of-modalidade', o.modalidade);
-  aplicarPagamentoNoFormulario(!!o.pagar_pelo_site);
+  /* Cuidado aqui. As ofertas antigas têm preço e `pagar_pelo_site = false`
+     (o antigo "combina comigo"). Se o formulário abrisse do jeito que está
+     no banco, o botão marcado seria "Gratuito", o campo de preço sumiria
+     da tela — e salvar apagaria o preço da aula sem ninguém perceber.
+     Então: toda oferta com preço abre como paga pelo site. É para onde ela
+     precisa ir mesmo, e o preço fica à vista o tempo todo. */
+  aplicarPagamentoNoFormulario(Number(o.valor) > 0 ? true : !!o.pagar_pelo_site);
   document.getElementById('msg-oferta').style.display = 'none';
 
   atualizarModoOferta();
@@ -4687,6 +5079,7 @@ async function salvarEdicaoOferta(){
   }
   if(titulo.length < 5){ mostrarMsgOferta('Escreva um título com pelo menos 5 letras.', 'erro'); return; }
   if(!(valor >= 0))    { mostrarMsgOferta('Informe um valor. Use 0 se a oferta for gratuita.', 'erro'); return; }
+  if(!exigirMercadoPagoNaOferta()) return;
 
   var btn = document.getElementById('btn-publicar');
   btn.disabled = true; btn.textContent = 'Salvando…';
@@ -5108,6 +5501,20 @@ function atualizarNotaLiquido(){
 
 
 /* ---------------- o aviso de conta não conectada ---------------- */
+/* Cobrar pelo site sem a conta do Mercado Pago conectada não é meio
+   caminho: é uma aula anunciada com preço e um botão "Contratar" que
+   morre na mão do aluno. Antes isso só era barrado na hora de clicar no
+   botão de pagamento; agora é barrado também na hora de publicar e de
+   salvar, que é por onde as ofertas antigas voltam a passar. */
+function exigirMercadoPagoNaOferta(){
+  if(!ofertaPagaSite || mpConectado) return true;
+  avisoMercadoPago('of-aviso-mp', true);
+  mostrarMsgOferta('Para cobrar por aqui, falta conectar sua conta do Mercado Pago — é rápido, fica no seu painel. ' +
+    'Enquanto isso você pode publicar como <b>Gratuito</b>. ' +
+    '<button class="btn btn-ghost btn-sm" style="margin-top:10px;" onclick="go(\'painel-prof\')">Ir ao painel</button>', 'aviso');
+  return false;
+}
+
 function avisoMercadoPago(idCaixa, precisa){
   var cx = document.getElementById(idCaixa);
   if(!cx) return;
@@ -6311,7 +6718,7 @@ async function enviarArquivoTrabalho(){
   document.getElementById('tr-barra').style.display = 'block';
   document.getElementById('tr-barra-fill').style.width = '40%';
 
-  var nomeSeguro = String(f.name).normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-zA-Z0-9._-]/g, '_');
+  var nomeSeguro = String(f.name).normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9._-]/g, '_');
   var caminho = trabalhoAberto + '/' + Date.now() + '-' + nomeSeguro;
 
   var up = await sb.storage.from('trabalhos').upload(caminho, f, { contentType: f.type || undefined });
